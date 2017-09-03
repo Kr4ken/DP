@@ -1,5 +1,6 @@
 package com.kr4ken.dp;
 
+import org.apache.catalina.util.ResourceSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
@@ -34,9 +35,12 @@ public class InterestRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    Collection<Interest> readInterests(@PathVariable String userId) {
+    Resources<InterestResource> readInterests(@PathVariable String userId) {
         this.validateUser(userId);
-        return this.interestRepository.findByAccountUsername(userId);
+        List<InterestResource> interestResourceList =  interestRepository
+                                .findByAccountUsername(userId).stream().map(InterestResource::new)
+                                .collect(Collectors.toList());
+        return new Resources<>(interestResourceList);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -57,20 +61,22 @@ public class InterestRestController {
                             input.comment
                     ));
 
+                    Link forOneInterest = new InterestResource(result).getLink("self");
+
                     URI location = ServletUriComponentsBuilder
                             .fromCurrentRequest().path("/{id}")
                             .buildAndExpand(result.getId()).toUri();
 
-                    return ResponseEntity.created(location).build();
+                    return ResponseEntity.created(URI.create(forOneInterest.getHref())).build();
                 })
                 .orElse(ResponseEntity.noContent().build());
 
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{interestId}")
-    Interest readInterest(@PathVariable String userId, @PathVariable Long interestId) {
+    InterestResource readInterest(@PathVariable String userId, @PathVariable Long interestId) {
         this.validateUser(userId);
-        return this.interestRepository.findOne(interestId);
+        return new InterestResource(this.interestRepository.findOne(interestId));
     }
 
     private void validateUser(String userId) {
