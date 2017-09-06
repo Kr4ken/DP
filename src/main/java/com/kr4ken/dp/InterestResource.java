@@ -14,7 +14,7 @@ public class InterestResource extends ResourceSupport {
         this.interest = interest;
         this.add(linkTo(InterestRestController.class,username).withRel("interests"));
         this.add(linkTo(methodOn(InterestRestController.class,username)
-                        .readInterest(username, interest.getId())).withSelfRel());
+                        .readInterest(null, interest.getId())).withSelfRel());
     }
 
     public Interest getInterest(){

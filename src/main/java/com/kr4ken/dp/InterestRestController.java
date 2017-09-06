@@ -13,42 +13,44 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/{userId}/interests")
-public class InterestRestController {
+class InterestRestController {
+
     private final InterestRepository interestRepository;
-    private final InterestTypeRepository interestTypeRepository;
+
     private final AccountRepository accountRepository;
 
     @Autowired
     InterestRestController(InterestRepository interestRepository,
-                           InterestTypeRepository interestTypeRepository,
-                           AccountRepository accountRepository
-                           ) {
+                           AccountRepository accountRepository) {
         this.interestRepository = interestRepository;
-        this.interestTypeRepository = interestTypeRepository;
         this.accountRepository = accountRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    Resources<InterestResource> readInterests(@PathVariable String userId) {
-        this.validateUser(userId);
-        List<InterestResource> interestResourceList =  interestRepository
-                                .findByAccountUsername(userId).stream().map(InterestResource::new)
-                                .collect(Collectors.toList());
-        return new Resources<>(interestResourceList);
+    Resources<InterestResource> readBookmarks(Principal principal) {
+        this.validateUser(principal);
+
+        List<InterestResource> bookmarkResourceList = interestRepository
+                .findByAccountUsername(principal.getName()).stream()
+                .map(InterestResource::new)
+                .collect(Collectors.toList());
+
+        return new Resources<>(bookmarkResourceList);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@PathVariable String userId, @RequestBody Interest input) {
-        this.validateUser(userId);
+    ResponseEntity<?> add(Principal principal, @RequestBody Interest input) {
+        this.validateUser(principal);
 
-        return this.accountRepository
-                .findByUsername(userId)
+        return accountRepository
+                .findByUsername(principal.getName())
                 .map(account -> {
                     Interest result = interestRepository.save(new Interest(account,
                             input.name,
@@ -61,26 +63,27 @@ public class InterestRestController {
                             input.comment
                     ));
 
-                    Link forOneInterest = new InterestResource(result).getLink("self");
+                    Link forOneInterest = new InterestResource(result).getLink(Link.REL_SELF);
 
-                    URI location = ServletUriComponentsBuilder
-                            .fromCurrentRequest().path("/{id}")
-                            .buildAndExpand(result.getId()).toUri();
-
-                    return ResponseEntity.created(URI.create(forOneInterest.getHref())).build();
+                    return ResponseEntity.created(URI
+                            .create(forOneInterest.getHref()))
+                            .build();
                 })
                 .orElse(ResponseEntity.noContent().build());
-
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{interestId}")
-    InterestResource readInterest(@PathVariable String userId, @PathVariable Long interestId) {
-        this.validateUser(userId);
-        return new InterestResource(this.interestRepository.findOne(interestId));
+    InterestResource readInterest(Principal principal, @PathVariable Long interestId) {
+        this.validateUser(principal);
+        return new InterestResource(
+                this.interestRepository.findOne(interestId));
     }
 
-    private void validateUser(String userId) {
-        this.accountRepository.findByUsername(userId).orElseThrow(
-                () -> new UserNotFoundException(userId));
+    private void validateUser(Principal principal) {
+        String userId = principal.getName();
+        this.accountRepository
+                .findByUsername(userId)
+                .orElseThrow(
+                        () -> new UserNotFoundException(userId));
     }
 }
