@@ -1,4 +1,4 @@
-package com.kr4ken.dp;
+package com.kr4ken.dp.models;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

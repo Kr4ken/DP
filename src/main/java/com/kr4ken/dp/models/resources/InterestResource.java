@@ -1,6 +1,7 @@
-package com.kr4ken.dp;
+package com.kr4ken.dp.models.resources;
 
-import org.springframework.hateoas.Link;
+import com.kr4ken.dp.controllers.InterestRestController;
+import com.kr4ken.dp.models.Interest;
 import org.springframework.hateoas.ResourceSupport;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;

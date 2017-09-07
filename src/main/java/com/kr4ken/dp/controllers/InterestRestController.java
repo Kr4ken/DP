@@ -1,6 +1,10 @@
-package com.kr4ken.dp;
+package com.kr4ken.dp.controllers;
 
-import org.apache.catalina.util.ResourceSet;
+import com.kr4ken.dp.exceptions.UserNotFoundException;
+import com.kr4ken.dp.models.AccountRepository;
+import com.kr4ken.dp.models.Interest;
+import com.kr4ken.dp.models.InterestRepository;
+import com.kr4ken.dp.models.resources.InterestResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
@@ -10,17 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/{userId}/interests")
-class InterestRestController {
+public class InterestRestController {
 
     private final InterestRepository interestRepository;
 
@@ -73,7 +75,7 @@ class InterestRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{interestId}")
-    InterestResource readInterest(Principal principal, @PathVariable Long interestId) {
+    public InterestResource readInterest(Principal principal, @PathVariable Long interestId) {
         this.validateUser(principal);
         return new InterestResource(
                 this.interestRepository.findOne(interestId));

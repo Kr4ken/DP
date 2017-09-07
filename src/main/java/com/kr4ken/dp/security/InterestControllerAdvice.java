@@ -1,5 +1,6 @@
-package com.kr4ken.dp;
+package com.kr4ken.dp.security;
 
+import com.kr4ken.dp.exceptions.UserNotFoundException;
 import org.springframework.hateoas.VndErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

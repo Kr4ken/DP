@@ -85,5 +85,6 @@ fabric.properties
 .idea
 *.iml
 *.ipr
+**/*.properties
 
 

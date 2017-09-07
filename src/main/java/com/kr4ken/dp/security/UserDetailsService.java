@@ -1,4 +1,4 @@
-package com.kr4ken.dp;
+package com.kr4ken.dp.security;
 
 public interface UserDetailsService {
     org.springframework.security.core.userdetails.UserDetails loadUserByUsername(java.lang.String s)

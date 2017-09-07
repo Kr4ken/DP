@@ -1,4 +1,4 @@
-package com.kr4ken.dp;
+package com.kr4ken.dp.security;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @Configuration
 @EnableResourceServer
 @EnableAuthorizationServer
-class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
+public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
 
     String applicationName = "bookmarks";
 

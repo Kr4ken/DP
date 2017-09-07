@@ -1,6 +1,7 @@
 package com.kr4ken.dp;
 
 
+import com.kr4ken.dp.models.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -66,23 +67,23 @@ public class Application {
 
 
 
-    @Bean
-    CommandLineRunner init(AccountRepository accountRepository,
-                           InterestRepository interestRepository,
-                           InterestTypeRepository interestTypeRepository
-                           ) {
-        return (evt) -> Arrays.asList(
-                "jhoeller,dsyer,pwebb,ogierke,rwinch,mfisher,mpollack,jlong".split(","))
-                .forEach(
-                        a -> {
-                            Account account = accountRepository.save(new Account(a,
-                                    "password"));
-                            InterestType type1 = interestTypeRepository.save(new InterestType("Type1" + a,"Type 1"));
-                            interestRepository.save(new Interest(account,
-                                    a+" interest 1", type1));
-                            interestRepository.save(new Interest(account,
-                                    a+" interest 2", type1));
-                        });
-    }
+//    @Bean
+//    CommandLineRunner init(AccountRepository accountRepository,
+//                           InterestRepository interestRepository,
+//                           InterestTypeRepository interestTypeRepository
+//                           ) {
+//        return (evt) -> Arrays.asList(
+//                "jhoeller,dsyer,pwebb,ogierke,rwinch,mfisher,mpollack,jlong".split(","))
+//                .forEach(
+//                        a -> {
+//                            Account account = accountRepository.save(new Account(a,
+//                                    "password"));
+//                            InterestType type1 = interestTypeRepository.save(new InterestType("Type1" + a,"Type 1"));
+//                            interestRepository.save(new Interest(account,
+//                                    a+" interest 1", type1));
+//                            interestRepository.save(new Interest(account,
+//                                    a+" interest 2", type1));
+//                        });
+//    }
 
 }
