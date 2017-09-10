@@ -7,10 +7,6 @@ import javax.persistence.*;
 @Entity
 public class Interest {
 
-    @JsonIgnore
-    @ManyToOne
-    private Account account;
-
     @Id
     @GeneratedValue
     private Long id;
@@ -18,10 +14,8 @@ public class Interest {
     Interest() { // jpa only
     }
 
-    public Interest(Account account, String name, InterestType type){
-        this(
-                account,
-                name,
+    public Interest(String name, InterestType type){
+        this(   name,
                 "",
                 "",
                 0,
@@ -32,8 +26,7 @@ public class Interest {
         );
     }
 
-    public Interest(Account account,
-                    String name,
+    public Interest(String name,
                     String img,
                     String source,
                     Integer season,
@@ -41,7 +34,6 @@ public class Interest {
                     InterestType type,
                     Integer ord,
                     String comment) {
-        this.account = account;
         this.name = name;
         this.img = img;
         this.source = source;
@@ -69,10 +61,6 @@ public class Interest {
     public Integer ord;
     //Комментарий
     public String comment;
-
-    public Account getAccount() {
-        return account;
-    }
 
     public Long getId() {
         return id;

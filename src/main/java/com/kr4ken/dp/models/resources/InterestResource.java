@@ -11,11 +11,10 @@ public class InterestResource extends ResourceSupport {
     private final Interest interest;
 
     public InterestResource(Interest interest){
-        String username = interest.getAccount().getUsername();
         this.interest = interest;
-        this.add(linkTo(InterestRestController.class,username).withRel("interests"));
-        this.add(linkTo(methodOn(InterestRestController.class,username)
-                        .readInterest(null, interest.getId())).withSelfRel());
+        this.add(linkTo(InterestRestController.class).withRel("interests"));
+        this.add(linkTo(methodOn(InterestRestController.class)
+                        .readInterest( interest.getId())).withSelfRel());
     }
 
     public Interest getInterest(){

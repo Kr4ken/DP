@@ -7,9 +7,6 @@ import javax.persistence.*;
 
 @Entity
 public class InterestType {
-    @JsonIgnore
-    @OneToOne
-    private Interest interest;
 
     @Id
     @GeneratedValue
@@ -31,11 +28,19 @@ public class InterestType {
         return description;
     }
 
-    public Interest getInterest() {
-        return interest;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
