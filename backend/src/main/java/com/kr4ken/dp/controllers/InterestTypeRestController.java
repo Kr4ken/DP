@@ -4,6 +4,7 @@ import com.kr4ken.dp.exceptions.InterestTypeNotFoundException;
 import com.kr4ken.dp.models.InterestType;
 import com.kr4ken.dp.models.InterestTypeRepository;
 import com.kr4ken.dp.models.resources.InterestTypeResource;
+import com.kr4ken.dp.services.interfaces.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
@@ -24,10 +25,23 @@ import java.util.stream.Collectors;
 public class InterestTypeRestController {
 
     private final InterestTypeRepository interestTypeRepository;
+    private final TrelloService trelloService;
 
     @Autowired
-    InterestTypeRestController(InterestTypeRepository interestTypeRepository) {
+    InterestTypeRestController(InterestTypeRepository interestTypeRepository,
+                               TrelloService trelloService) {
         this.interestTypeRepository = interestTypeRepository;
+        this.trelloService = trelloService;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value ="/trellosync" )
+    ResponseEntity<?> trelloTaskTypeSync(){
+        List<String>response = trelloService.getTaskTypes().stream().map((e) -> {
+                    interestTypeRepository.save(new InterestType(e));
+                    return e.getName();
+                }
+        ).collect(Collectors.toList());
+        return ResponseEntity.ok(response.toString());
     }
 
     @RequestMapping(method = RequestMethod.GET)

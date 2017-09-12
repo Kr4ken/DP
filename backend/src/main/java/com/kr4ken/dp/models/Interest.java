@@ -1,6 +1,7 @@
 package com.kr4ken.dp.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.julienvey.trello.domain.Card;
 
 import javax.persistence.*;
 
@@ -24,6 +25,10 @@ public class Interest {
                 1,
                 ""
         );
+    }
+
+    public Interest(Card card){
+
     }
 
     public Interest(String name,

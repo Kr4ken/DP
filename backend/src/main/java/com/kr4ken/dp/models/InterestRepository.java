@@ -6,4 +6,5 @@ import java.util.Collection;
 
 public interface InterestRepository extends JpaRepository<Interest, Long> {
     Collection<Interest> findByName(String name);
+    Collection<Interest> findByType(InterestType type);
 }

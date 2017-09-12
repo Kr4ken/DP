@@ -2,6 +2,7 @@ package com.kr4ken.dp.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.julienvey.trello.domain.TList;
 
 import javax.persistence.*;
 
@@ -15,10 +16,14 @@ public class InterestType {
     InterestType() { // jpa only
     }
 
-    public InterestType(String name,String description)
-    {
+    public InterestType(String name,String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public InterestType(TList list) {
+        this.name = list.getName();
+        this.description = list.getName() + ":" + list.getId();
     }
 
     public String name;

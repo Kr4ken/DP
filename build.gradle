@@ -1,30 +1,6 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE")
-    }
-}
+// root build.gradle
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-
-repositories {
-    mavenCentral()
-}
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-dependencies {
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.hateoas:spring-hateoas')
-//    compile('org.springframework.security:spring-security-core')
-//    compile('org.springframework.security:spring-security-config')
-//    compile('org.springframework.security.oauth:spring-security-oauth2')
-    // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
-    compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.1.1'
+// gradle wrapper
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.4'
 }
