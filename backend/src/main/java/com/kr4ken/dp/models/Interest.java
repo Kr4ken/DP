@@ -17,18 +17,27 @@ public class Interest {
 
     public Interest(String name, InterestType type){
         this(   name,
-                "",
-                "",
-                0,
-                0,
+                null,
+                null,
+                null,
+                null,
                 type,
-                1,
-                ""
+                null,
+                null,
+                null
         );
     }
 
-    public Interest(Card card){
-
+    public Interest(Interest other){
+        this.name = other.name == null?this.name:other.name;
+        this.img = other.img == null?this.img:other.img;
+        this.source = other.source == null?this.source:other.source;
+        this.season = other.season == null?this.season:other.season;
+        this.stage = other.stage == null?this.stage:other.stage;
+        this.type = other.type == null?this.type:other.type;
+        this.ord = other.ord == null?this.ord:other.ord;
+        this.comment = other.comment == null?this.comment:other.comment;
+        this.trelloId = other.trelloId == null?this.name:other.trelloId;
     }
 
     public Interest(String name,
@@ -38,7 +47,8 @@ public class Interest {
                     Integer stage,
                     InterestType type,
                     Integer ord,
-                    String comment) {
+                    String comment,
+                    String trelloId) {
         this.name = name;
         this.img = img;
         this.source = source;
@@ -47,8 +57,10 @@ public class Interest {
         this.type = type;
         this.ord = ord;
         this.comment = comment;
+        this.trelloId = trelloId;
     }
-
+    //Id соответствующей карточки в трелло
+    public String trelloId;
     //Наименование интереса
     public String name;
     //URL изображения
@@ -101,5 +113,9 @@ public class Interest {
 
     public String getComment() {
         return comment;
+    }
+
+    public String getTrelloId() {
+        return trelloId;
     }
 }

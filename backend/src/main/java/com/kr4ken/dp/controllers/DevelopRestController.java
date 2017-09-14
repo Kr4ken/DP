@@ -1,6 +1,6 @@
 package com.kr4ken.dp.controllers;
 
-import com.kr4ken.dp.services.interfaces.TrelloService;
+import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,8 @@ public class DevelopRestController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/boards")
     List<String> readInterests() {
-        return trelloService.getBoardsName();
+        return null;
+//        return trelloService.getBoardsName();
     }
 
 }

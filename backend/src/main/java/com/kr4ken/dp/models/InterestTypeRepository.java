@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface InterestTypeRepository extends JpaRepository<InterestType, Long> {
     Optional<InterestType> findByName(String name);
+    Optional<InterestType> findByTrelloId(String trelloId);
 }

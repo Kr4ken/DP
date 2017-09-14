@@ -4,7 +4,8 @@ import com.kr4ken.dp.exceptions.InterestTypeNotFoundException;
 import com.kr4ken.dp.models.InterestType;
 import com.kr4ken.dp.models.InterestTypeRepository;
 import com.kr4ken.dp.models.resources.InterestTypeResource;
-import com.kr4ken.dp.services.interfaces.TrelloService;
+import com.kr4ken.dp.services.intf.TrelloService;
+import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,12 +38,19 @@ public class InterestTypeRestController {
 
     @RequestMapping(method = RequestMethod.GET, value ="/trellosync" )
     ResponseEntity<?> trelloTaskTypeSync(){
-        List<String>response = trelloService.getTaskTypes().stream().map((e) -> {
-                    interestTypeRepository.save(new InterestType(e));
-                    return e.getName();
-                }
-        ).collect(Collectors.toList());
-        return ResponseEntity.ok(response.toString());
+        trelloService.getInterestTypes()
+                .stream()
+                .forEach(e -> {
+                    Optional<InterestType> current = interestTypeRepository.findByTrelloId(e.getTrelloId());
+                    if(current.isPresent()) {
+                        current.get().copy(e);
+                        interestTypeRepository.save(current.get());
+                    }
+                    else{
+                        interestTypeRepository.save(e);
+                    }
+                });
+        return ResponseEntity.ok("OK");
     }
 
     @RequestMapping(method = RequestMethod.GET)

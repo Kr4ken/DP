@@ -16,16 +16,24 @@ public class InterestType {
     InterestType() { // jpa only
     }
 
+    public void copy(InterestType other){
+        this.name = other.name == null?this.name:other.name;
+        this.trelloId = other.trelloId == null?this.trelloId:other.trelloId;
+        this.description = other.description == null?this.description:other.description;
+    }
+
     public InterestType(String name,String description) {
+        this(name,description,null);
+    }
+
+    public InterestType(String name,String description,String trelloId) {
         this.name = name;
         this.description = description;
+        this.trelloId = trelloId;
     }
 
-    public InterestType(TList list) {
-        this.name = list.getName();
-        this.description = list.getName() + ":" + list.getId();
-    }
-
+    //Id соответствующего списка в трелло
+    public String trelloId;
     public String name;
     public String description;
 
@@ -43,6 +51,10 @@ public class InterestType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTrelloId() {
+        return trelloId;
     }
 
     public void setDescription(String description) {

@@ -1,12 +1,11 @@
 package com.kr4ken.dp.controllers;
 
-import com.kr4ken.dp.exceptions.InterestNotFoundException;
 import com.kr4ken.dp.models.Interest;
 import com.kr4ken.dp.models.InterestRepository;
 import com.kr4ken.dp.models.InterestType;
 import com.kr4ken.dp.models.InterestTypeRepository;
 import com.kr4ken.dp.models.resources.InterestResource;
-import com.kr4ken.dp.services.interfaces.TrelloService;
+import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
@@ -37,14 +36,9 @@ public class InterestRestController {
         this.interestTypeRepository = interestTypeRepository;
         this.trelloService = trelloService;
     }
-//    @RequestMapping(method = RequestMethod.GET, value = "/trellosync")
-//    Resources<InterestResource> trelloTaskSync(){
-//        trelloService.getTaskTypes()
-//                .stream()
-//                .map((e) ->new InterestType(e))
-//                .map((e) -> trelloService.getTypeCards(e))
-//                .
 
+//    @RequestMapping(method = RequestMethod.GET, value = "/trellosync")
+//    Resources<String> trelloTaskSync(){
 //    }
 
 
@@ -69,7 +63,8 @@ public class InterestRestController {
                             input.stage,
                             input.type,
                             input.ord,
-                            input.comment
+                            input.comment,
+                            input.trelloId
          ));
 
          Link forOneInterest = new InterestResource(result).getLink(Link.REL_SELF);
