@@ -86,6 +86,8 @@ public interface Trello {
 
     Card updateCard(Card card);
 
+    TList updateList(TList list);
+
     //FIXME Remove this method
     @Deprecated
     Member getBasicMemberInformation(String username);

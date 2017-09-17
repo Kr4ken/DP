@@ -332,6 +332,13 @@ public class TrelloImpl implements Trello {
         return put;
     }
 
+    @Override
+    public TList updateList(TList list) {
+        TList put = put(createUrl(UPDATE_LIST).asString(), list, TList.class, list.getId());
+        put.setInternalTrello(this);
+        return put;
+    }
+
     /* internal methods */
 
     private <T> T postForObject(String url, T object, Class<T> objectClass, String... params) {

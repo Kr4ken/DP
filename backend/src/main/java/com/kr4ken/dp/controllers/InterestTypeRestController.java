@@ -37,7 +37,7 @@ public class InterestTypeRestController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value ="/trelloimport" )
-    ResponseEntity<?> trelloTaskTypeImport(){
+    ResponseEntity<?> trelloTaskTypesImport(){
         trelloService.getInterestTypes()
                 .stream()
                 .forEach(e -> {
@@ -50,6 +50,12 @@ public class InterestTypeRestController {
                         interestTypeRepository.save(e);
                     }
                 });
+        return ResponseEntity.ok("OK");
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value ="/{interestTypeId}/trelloexport" )
+    ResponseEntity<?> trelloTaskTypeExport(@PathVariable Long interestTypeId){
+        trelloService.saveInterestType(interestTypeRepository.findOne(interestTypeId));
         return ResponseEntity.ok("OK");
     }
 
