@@ -1,6 +1,8 @@
 package com.kr4ken.dp.services.impl;
 
+import ch.qos.logback.classic.pattern.TargetLengthBasedClassNameAbbreviator;
 import com.julienvey.trello.Trello;
+import com.julienvey.trello.domain.Attachment;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TrelloServiceImplement implements TrelloService{
@@ -58,21 +61,44 @@ public class TrelloServiceImplement implements TrelloService{
 
     private InterestType getInterestTypeFromList(TList list){
         String desc = String.format("%s.\nИз трелло\n.Id листа:%s",list.getName(),list.getId());
-        return new InterestType(list.getName(),desc);
+        return new InterestType(list.getName(),desc,list.getId());
     }
 
+    public static int parseInteger( String string, int defaultValue ) {
+        try {
+            return Integer.parseInt(string);
+        }
+        catch (NumberFormatException e ) {
+            return defaultValue;
+        }
+    }
     private Interest getInterestFromCard(Card card){
         String name = card.getName();
         String desc = card.getDesc();
-        String ss = desc.substring(desc.indexOf('[')+1,desc.indexOf(']'));
-        Integer season = Integer.getInteger(ss.substring(0,ss.indexOf('/')),0);
-        Integer stage = Integer.getInteger(ss.substring(ss.indexOf('/'))+1);
-        String img = card.getIdAttachmentCover();
+        Integer season = 0;
+        Integer stage = 0;
+        String ss = "";
+        if(desc.indexOf('[') >= 0) {
+            ss = desc.substring(desc.indexOf('[') + 1, desc.indexOf(']'));
+            season = parseInteger(ss.substring(0, ss.indexOf('/')), 0);
+            stage = parseInteger(ss.substring(ss.indexOf('/') + 1),0);
+        }
+        // Загрузка обложки, если есть
+        String img = null;
+        if(card.getIdAttachmentCover() != null) {
+            img = trelloApi.getCardAttachment(card.getId(),card.getIdAttachmentCover()).getUrl();
+        }
         Optional<InterestType> ito = interestTypeRepository.findByTrelloId(card.getIdList());
         if(!ito.isPresent())return null;
         InterestType it =  ito.get();
         Integer ord = card.getPos();
-        String com = card.getDesc();
+        String com;
+        if(!ss.isEmpty()) {
+            com = card.getDesc().replaceAll(ss,"");
+        }
+        else {
+            com = card.getDesc();
+        }
 
         return new Interest(
                 name,
@@ -99,13 +125,23 @@ public class TrelloServiceImplement implements TrelloService{
 
     @Override
     public List<Interest> getInterests() {
-
         return trelloApi.getBoard(trelloInterestBoard)
-                .fetchLists()
+                .fetchCards()
                 .stream()
-                .flatMap(e -> e.getCards().stream())
                 .map(e -> getInterestFromCard(e))
+                .filter(e -> e != null)
                 .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public void saveInterestType(InterestType interestType){
+        TList list = trelloApi.getList(interestType.getTrelloId());
+        list.setName(interestType.getName());
+    }
+
+    @Override
+    public void saveInterest(Interest intrest){
 
     }
 }

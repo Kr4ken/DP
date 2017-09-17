@@ -28,7 +28,7 @@ public class Interest {
         );
     }
 
-    public Interest(Interest other){
+    public void copy(Interest other){
         this.name = other.name == null?this.name:other.name;
         this.img = other.img == null?this.img:other.img;
         this.source = other.source == null?this.source:other.source;

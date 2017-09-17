@@ -36,8 +36,8 @@ public class InterestTypeRestController {
         this.trelloService = trelloService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value ="/trellosync" )
-    ResponseEntity<?> trelloTaskTypeSync(){
+    @RequestMapping(method = RequestMethod.POST, value ="/trelloimport" )
+    ResponseEntity<?> trelloTaskTypeImport(){
         trelloService.getInterestTypes()
                 .stream()
                 .forEach(e -> {

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,9 +38,23 @@ public class InterestRestController {
         this.trelloService = trelloService;
     }
 
-//    @RequestMapping(method = RequestMethod.GET, value = "/trellosync")
-//    Resources<String> trelloTaskSync(){
-//    }
+    // Работает только если тип уже есть в БД
+    @RequestMapping(method = RequestMethod.POST, value = "/trelloimport")
+    ResponseEntity<?> trelloTaskImport(){
+        trelloService.getInterests()
+                .stream()
+                .forEach(e -> {
+                    Optional<Interest> current = interestRepository.findByTrelloId(e.getTrelloId());
+                    if(current.isPresent()) {
+                        current.get().copy(e);
+                        interestRepository.save(current.get());
+                    }
+                    else{
+                        interestRepository.save(e);
+                    }
+                });
+        return ResponseEntity.ok("OK");
+    }
 
 
 

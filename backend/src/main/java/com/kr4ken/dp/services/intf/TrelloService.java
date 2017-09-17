@@ -8,4 +8,6 @@ import java.util.List;
 public interface TrelloService {
     public List<InterestType> getInterestTypes();
     public List<Interest> getInterests();
+    public void saveInterestType(InterestType intrestType);
+    public void saveInterest(Interest intrest);
 }
