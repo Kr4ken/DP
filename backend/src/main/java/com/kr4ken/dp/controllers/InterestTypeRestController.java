@@ -55,7 +55,13 @@ public class InterestTypeRestController {
 
     @RequestMapping(method = RequestMethod.PUT, value ="/{interestTypeId}/trelloexport" )
     ResponseEntity<?> trelloTaskTypeExport(@PathVariable Long interestTypeId){
-        trelloService.saveInterestType(interestTypeRepository.findOne(interestTypeId));
+        InterestType one = interestTypeRepository.findOne(interestTypeId);
+        if(one != null) {
+            trelloService.saveInterestType(one);
+        }
+        else {
+
+        }
         return ResponseEntity.ok("OK");
     }
 
@@ -88,8 +94,7 @@ public class InterestTypeRestController {
                     HttpStatus.NOT_FOUND);
         }
 
-        interestType.setName(input.getName());
-        interestType.setDescription(input.getDescription());
+        interestType.copy(input);
 
         interestTypeRepository.save(interestType);
         Link forOneInterest = new InterestTypeResource(interestType).getLink(Link.REL_SELF);

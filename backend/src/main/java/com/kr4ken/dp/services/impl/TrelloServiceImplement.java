@@ -136,9 +136,15 @@ public class TrelloServiceImplement implements TrelloService{
 
     @Override
     public void saveInterestType(InterestType interestType){
-        TList list = trelloApi.getList(interestType.getTrelloId());
-        list.setName(interestType.getName());
-        trelloApi.updateList(list);
+        if(interestType.trelloId == null) {
+            // Если листа до этого не было
+            // То создать его
+        }
+        else {
+            TList list = trelloApi.getList(interestType.getTrelloId());
+            list.setName(interestType.getName());
+            trelloApi.updateList(list);
+        }
     }
 
     @Override
