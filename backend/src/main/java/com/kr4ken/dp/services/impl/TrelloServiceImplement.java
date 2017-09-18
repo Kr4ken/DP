@@ -1,6 +1,5 @@
 package com.kr4ken.dp.services.impl;
 
-import ch.qos.logback.classic.pattern.TargetLengthBasedClassNameAbbreviator;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Attachment;
 import com.julienvey.trello.domain.Card;
@@ -16,10 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
-public class TrelloServiceImplement implements TrelloService{
+public class TrelloServiceImplement implements TrelloService {
 
     private final Trello trelloApi;
     private final String userName;
@@ -30,28 +28,37 @@ public class TrelloServiceImplement implements TrelloService{
     private InterestTypeRepository interestTypeRepository;
 
 
-    TrelloServiceImplement ( InterestTypeRepository interestTypeRepository    ){
+    TrelloServiceImplement(InterestTypeRepository interestTypeRepository) {
         this.interestTypeRepository = interestTypeRepository;
-        trelloApi = new TrelloImpl("a31bb57aac7aba739505bc9975b897dd","0d98e7f23ebcefeda8a14f807def592846f9c7780872800f2d29f76e3394f684");
+        trelloApi = new TrelloImpl("a31bb57aac7aba739505bc9975b897dd", "0d98e7f23ebcefeda8a14f807def592846f9c7780872800f2d29f76e3394f684");
         userName = "user88592332";
         trelloInterestBoard = "57e04a0fda82f763f66385a1";
     }
-    public List<String> getBoardsId(){
+
+    public static int parseInteger(String string, int defaultValue) {
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public List<String> getBoardsId() {
         return trelloApi.getMemberInformation(userName).getIdBoards();
     }
 
-    public List<String> getBoardsName(){
+    public List<String> getBoardsName() {
         return trelloApi.getMemberInformation(userName).getIdBoards().stream().map((e) -> trelloApi.getBoard(e).getName()).collect(Collectors.toList());
     }
 
     public List<TList> getTaskTypes() {
-        if(taskTypesList == null)
-            taskTypesList=trelloApi.getBoard(trelloInterestBoard).fetchLists();
+        if (taskTypesList == null)
+            taskTypesList = trelloApi.getBoard(trelloInterestBoard).fetchLists();
         return taskTypesList;
     }
 
     public List<Card> getTypeCards(InterestType interestType) {
-        return  getTaskTypes()
+        return getTaskTypes()
                 .stream()
                 .filter((e) -> e.getName().equals(interestType.getName()))
                 .findFirst()
@@ -59,44 +66,35 @@ public class TrelloServiceImplement implements TrelloService{
                 .getCards();
     }
 
-    private InterestType getInterestTypeFromList(TList list){
-        String desc = String.format("%s.\nИз трелло\n.Id листа:%s",list.getName(),list.getId());
-        return new InterestType(list.getName(),desc,list.getId());
+    private InterestType getInterestTypeFromList(TList list) {
+        String desc = String.format("%s.\nИз трелло\n.Id листа:%s", list.getName(), list.getId());
+        return new InterestType(list.getName(), desc, list.getId());
     }
 
-    public static int parseInteger( String string, int defaultValue ) {
-        try {
-            return Integer.parseInt(string);
-        }
-        catch (NumberFormatException e ) {
-            return defaultValue;
-        }
-    }
-    private Interest getInterestFromCard(Card card){
+    private Interest getInterestFromCard(Card card) {
         String name = card.getName();
         String desc = card.getDesc();
         Integer season = 0;
         Integer stage = 0;
         String ss = "";
-        if(desc.indexOf('[') >= 0) {
+        if (desc.indexOf('[') >= 0) {
             ss = desc.substring(desc.indexOf('[') + 1, desc.indexOf(']'));
             season = parseInteger(ss.substring(0, ss.indexOf('/')), 0);
-            stage = parseInteger(ss.substring(ss.indexOf('/') + 1),0);
+            stage = parseInteger(ss.substring(ss.indexOf('/') + 1), 0);
         }
         // Загрузка обложки, если есть
         String img = null;
-        if(card.getIdAttachmentCover() != null) {
-            img = trelloApi.getCardAttachment(card.getId(),card.getIdAttachmentCover()).getUrl();
+        if (card.getIdAttachmentCover() != null) {
+            img = trelloApi.getCardAttachment(card.getId(), card.getIdAttachmentCover()).getUrl();
         }
         Optional<InterestType> ito = interestTypeRepository.findByTrelloId(card.getIdList());
-        if(!ito.isPresent())return null;
-        InterestType it =  ito.get();
+        if (!ito.isPresent()) return null;
+        InterestType it = ito.get();
         Integer ord = card.getPos();
         String com;
-        if(!ss.isEmpty()) {
-            com = card.getDesc().replaceAll(ss,"");
-        }
-        else {
+        if (!ss.isEmpty()) {
+            com = card.getDesc().replaceAll(ss, "");
+        } else {
             com = card.getDesc();
         }
 
@@ -135,20 +133,50 @@ public class TrelloServiceImplement implements TrelloService{
 
 
     @Override
-    public void saveInterestType(InterestType interestType){
-        if(interestType.trelloId == null) {
+    public void saveInterestType(InterestType interestType) {
+        if (interestType.trelloId == null) {
             // Если листа до этого не было
             // То создать его
-        }
-        else {
+        } else {
             TList list = trelloApi.getList(interestType.getTrelloId());
-            list.setName(interestType.getName());
+            if (interestType.getName() != null)
+                list.setName(interestType.getName());
             trelloApi.updateList(list);
         }
     }
 
     @Override
-    public void saveInterest(Interest intrest){
+    public void saveInterest(Interest interest) {
+        if (interest.trelloId == null) {
+            // Если листа до этого не было
+            // То создать его
+        } else {
+            Card card = trelloApi.getCard(interest.trelloId);
+            String description = "";
 
+            if (interest.getName() != null)
+                card.setName(interest.getName());
+            if (interest.getComment() != null)
+                description = interest.getComment();
+            if (interest.getImg() != null) {
+                //Уже есть аттачмент
+                if (card.getIdAttachmentCover() != null) {
+                    Attachment attachment = trelloApi.getCardAttachment(card.getId(), card.getIdAttachmentCover());
+                    attachment.setUrl(interest.getImg());
+                    //TODO:Работу с аттачментами
+                } else {
+                    //TODO:Создать новый аттачмент
+                }
+            }
+            // Если есть серийность
+            if(interest.getSeason() != 0) {
+               description+=" [" + interest.getStage().toString()    + "/"+ interest.getSeason()+"]";
+            }
+            if(interest.getType() != null && !interest.getType().trelloId.equals(card.getIdList())) {
+                //TODO:Переместить карточку в другой лист
+            }
+            //TODO: Разобраться с позицией
+            }
+
+        }
     }
-}
