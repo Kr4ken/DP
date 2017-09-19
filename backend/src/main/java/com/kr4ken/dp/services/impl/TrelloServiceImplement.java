@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -90,7 +91,7 @@ public class TrelloServiceImplement implements TrelloService {
         Optional<InterestType> ito = interestTypeRepository.findByTrelloId(card.getIdList());
         if (!ito.isPresent()) return null;
         InterestType it = ito.get();
-        Integer ord = card.getPos();
+        Double ord = card.getPos();
         String com;
         if (!ss.isEmpty()) {
             com = card.getDesc().replaceAll(ss, "");
@@ -117,7 +118,7 @@ public class TrelloServiceImplement implements TrelloService {
         return trelloApi.getBoard(trelloInterestBoard)
                 .fetchLists()
                 .stream()
-                .map(e -> getInterestTypeFromList(e))
+                .map(this::getInterestTypeFromList)
                 .collect(Collectors.toList());
     }
 
@@ -127,7 +128,7 @@ public class TrelloServiceImplement implements TrelloService {
                 .fetchCards()
                 .stream()
                 .map(this::getInterestFromCard)
-                .filter(e -> e != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -162,8 +163,8 @@ public class TrelloServiceImplement implements TrelloService {
                 //Уже есть аттачмент
                 if (card.getIdAttachmentCover() != null) {
                     Attachment attachment = trelloApi.getCardAttachment(card.getId(), card.getIdAttachmentCover());
-                    attachment.setUrl(interest.getImg());
-                    //TODO:Работу с аттачментами
+                    if(!attachment.getUrl().equals(interest.getImg())){
+                    }
                 } else {
                     //TODO:Создать новый аттачмент
                 }
@@ -173,10 +174,9 @@ public class TrelloServiceImplement implements TrelloService {
                description+=" [" + interest.getStage().toString()    + "/"+ interest.getSeason()+"]";
             }
             if(interest.getType() != null && !interest.getType().getTrelloId().equals(card.getIdList())) {
-                //TODO:Переместить карточку в другой лист
+                card.setIdList(interest.getType().getTrelloId());
             }
             //TODO: Разобраться с позицией
             }
-
         }
     }

@@ -28,7 +28,7 @@ public class Interest {
     @OneToOne
     public InterestType type;
     //Позиция интереса в списке
-    public Integer ord;
+    public Double ord;
     //Комментарий
     public String description;
 
@@ -69,7 +69,7 @@ public class Interest {
                     Integer season,
                     Integer stage,
                     InterestType type,
-                    Integer ord,
+                    Double ord,
                     String description,
                     String trelloId) {
         this.name = name;
@@ -111,7 +111,7 @@ public class Interest {
         return type;
     }
 
-    public Integer getOrd() {
+    public Double getOrd() {
         return ord;
     }
 

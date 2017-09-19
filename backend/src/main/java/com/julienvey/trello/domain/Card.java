@@ -26,7 +26,7 @@ public class Card extends TrelloEntity {
     private String idShort;
     private String idAttachmentCover;
     private boolean manualCoverAttachment;
-    private int pos;
+    private double pos;
     private String shortLink;
     private String shortUrl;
     private boolean subscribed;
@@ -181,11 +181,11 @@ public class Card extends TrelloEntity {
         this.manualCoverAttachment = manualCoverAttachment;
     }
 
-    public int getPos() {
+    public double getPos() {
         return pos;
     }
 
-    public void setPos(int pos) {
+    public void setPos(double pos) {
         this.pos = pos;
     }
 

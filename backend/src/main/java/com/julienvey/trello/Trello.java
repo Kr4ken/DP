@@ -64,9 +64,13 @@ public interface Trello {
 
     Board getCardBoard(String cardId, Argument... args);
 
+    Card updateCard(Card card);
+
     /* Lists */
 
     TList getList(String listId, Argument... args);
+
+    TList updateList(TList list);
 
     /* CheckLists */
 
@@ -84,9 +88,7 @@ public interface Trello {
 
     void addCommentToCard(String idCard, String comment);
 
-    Card updateCard(Card card);
 
-    TList updateList(TList list);
 
     //FIXME Remove this method
     @Deprecated
