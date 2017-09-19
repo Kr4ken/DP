@@ -1,7 +1,6 @@
 package com.kr4ken.dp.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.julienvey.trello.domain.Card;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 
@@ -11,10 +10,34 @@ public class Interest {
     @Id
     @GeneratedValue
     private Long id;
+    //Id соответствующей карточки в трелло
+    public String trelloId;
+    //Наименование интереса
+    public String name;
+    //URL изображения
+    // Ссылки очень длинные
+    @Length(max = 2000)
+    public String img;
+    //URL источника
+    public String source;
+    //Этипа интереса (Сезон\Том)
+    public Integer season;
+    //Этипа интереса (Серия\Глава)
+    public Integer stage;
+    //Тип интереса
+    @OneToOne
+    public InterestType type;
+    //Позиция интереса в списке
+    public Integer ord;
+    //Комментарий
+    public String description;
 
     Interest() { // jpa only
     }
 
+    public Interest(Interest other) { // jpa only
+        this.copy(other);
+    }
     public Interest(String name, InterestType type){
         this(   name,
                 null,
@@ -36,7 +59,7 @@ public class Interest {
         this.stage = other.stage == null?this.stage:other.stage;
         this.type = other.type == null?this.type:other.type;
         this.ord = other.ord == null?this.ord:other.ord;
-        this.comment = other.comment == null?this.comment:other.comment;
+        this.description = other.description == null?this.description :other.description;
         this.trelloId = other.trelloId == null?this.name:other.trelloId;
     }
 
@@ -47,7 +70,7 @@ public class Interest {
                     Integer stage,
                     InterestType type,
                     Integer ord,
-                    String comment,
+                    String description,
                     String trelloId) {
         this.name = name;
         this.img = img;
@@ -56,28 +79,9 @@ public class Interest {
         this.stage = stage;
         this.type = type;
         this.ord = ord;
-        this.comment = comment;
+        this.description = description;
         this.trelloId = trelloId;
     }
-    //Id соответствующей карточки в трелло
-    public String trelloId;
-    //Наименование интереса
-    public String name;
-    //URL изображения
-    public String img;
-    //URL источника
-    public String source;
-    //Этипа интереса (Сезон\Том)
-    public Integer season;
-    //Этипа интереса (Серия\Глава)
-    public Integer stage;
-    //Тип интереса
-    @OneToOne
-    public InterestType type;
-    //Позиция интереса в списке
-    public Integer ord;
-    //Комментарий
-    public String comment;
 
     public Long getId() {
         return id;
@@ -111,8 +115,8 @@ public class Interest {
         return ord;
     }
 
-    public String getComment() {
-        return comment;
+    public String getDescription() {
+        return description;
     }
 
     public String getTrelloId() {

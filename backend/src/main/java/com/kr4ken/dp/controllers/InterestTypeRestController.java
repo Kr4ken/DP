@@ -3,7 +3,6 @@ package com.kr4ken.dp.controllers;
 import com.kr4ken.dp.exceptions.InterestTypeNotFoundException;
 import com.kr4ken.dp.models.InterestType;
 import com.kr4ken.dp.models.InterestTypeRepository;
-import com.kr4ken.dp.models.resources.InterestTypeResource;
 import com.kr4ken.dp.services.intf.TrelloService;
 import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +15,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/interestTypes")
+@RequestMapping("/interestTypes")
 public class InterestTypeRestController {
 
     private final InterestTypeRepository interestTypeRepository;
@@ -39,7 +40,6 @@ public class InterestTypeRestController {
     @RequestMapping(method = RequestMethod.POST, value ="/trelloimport" )
     ResponseEntity<?> trelloTaskTypesImport(){
         trelloService.getInterestTypes()
-                .stream()
                 .forEach(e -> {
                     Optional<InterestType> current = interestTypeRepository.findByTrelloId(e.getTrelloId());
                     if(current.isPresent()) {
@@ -50,7 +50,7 @@ public class InterestTypeRestController {
                         interestTypeRepository.save(e);
                     }
                 });
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value ="/{interestTypeId}/trelloexport" )
@@ -62,28 +62,19 @@ public class InterestTypeRestController {
         else {
 
         }
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    Resources<InterestTypeResource> readInterestTypes() {
-        List<InterestTypeResource> interestTypeResourceList = interestTypeRepository
-                .findAll()
-                .stream()
-                .map(InterestTypeResource::new)
-                .collect(Collectors.toList());
-        return new Resources<>(interestTypeResourceList);
+    Collection<InterestType> readInterestTypes() {
+        return interestTypeRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> add(@RequestBody InterestType input) {
-        InterestType result = interestTypeRepository.save(new InterestType(
-                input.name,
-                input.description
-        ));
-        Link forOneInterest = new InterestTypeResource(result).getLink(Link.REL_SELF);
-        return ResponseEntity.created(URI.create(forOneInterest.getHref()))
-                .build();
+        InterestType result = interestTypeRepository.save(new InterestType(input));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @RequestMapping(method = RequestMethod.PUT,value = "/{interestTypeId}")
@@ -97,8 +88,8 @@ public class InterestTypeRestController {
         interestType.copy(input);
 
         interestTypeRepository.save(interestType);
-        Link forOneInterest = new InterestTypeResource(interestType).getLink(Link.REL_SELF);
-        return ResponseEntity.ok(URI.create(forOneInterest.getHref()));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(interestType.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @RequestMapping(method = RequestMethod.DELETE,value = "/{interestTypeId}")
@@ -116,8 +107,7 @@ public class InterestTypeRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{interestTypeId}")
-    public InterestTypeResource readInterestType(@PathVariable Long interestTypeId) {
-        return new InterestTypeResource(
-                this.interestTypeRepository.findOne(interestTypeId));
+    public InterestType readInterestType(@PathVariable Long interestTypeId) {
+        return this.interestTypeRepository.findOne(interestTypeId);
     }
 }

@@ -12,14 +12,24 @@ public class InterestType {
     @Id
     @GeneratedValue
     private Long id;
+    private String name;
+    private String description;
+    //Id соответствующего списка в трелло
+    private String trelloId;
+
 
     InterestType() { // jpa only
     }
 
+    public InterestType(InterestType other) {
+        this.copy(other);
+    }
+
+    // Обновление данных из непустых данных другого типа
     public void copy(InterestType other){
         this.name = other.name == null?this.name:other.name;
-        this.trelloId = other.trelloId == null?this.trelloId:other.trelloId;
         this.description = other.description == null?this.description:other.description;
+        this.trelloId = other.trelloId == null?this.trelloId:other.trelloId;
     }
 
     public InterestType(String name,String description) {
@@ -31,11 +41,6 @@ public class InterestType {
         this.description = description;
         this.trelloId = trelloId;
     }
-
-    //Id соответствующего списка в трелло
-    public String trelloId;
-    public String name;
-    public String description;
 
     public String getDescription() {
         return description;

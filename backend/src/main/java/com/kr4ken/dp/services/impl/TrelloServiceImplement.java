@@ -79,8 +79,8 @@ public class TrelloServiceImplement implements TrelloService {
         String ss = "";
         if (desc.indexOf('[') >= 0) {
             ss = desc.substring(desc.indexOf('[') + 1, desc.indexOf(']'));
-            season = parseInteger(ss.substring(0, ss.indexOf('/')), 0);
-            stage = parseInteger(ss.substring(ss.indexOf('/') + 1), 0);
+            stage = parseInteger(ss.substring(0, ss.indexOf('/')), 0);
+            season = parseInteger(ss.substring(ss.indexOf('/') + 1), 0);
         }
         // Загрузка обложки, если есть
         String img = null;
@@ -126,7 +126,7 @@ public class TrelloServiceImplement implements TrelloService {
         return trelloApi.getBoard(trelloInterestBoard)
                 .fetchCards()
                 .stream()
-                .map(e -> getInterestFromCard(e))
+                .map(this::getInterestFromCard)
                 .filter(e -> e != null)
                 .collect(Collectors.toList());
     }
@@ -134,7 +134,7 @@ public class TrelloServiceImplement implements TrelloService {
 
     @Override
     public void saveInterestType(InterestType interestType) {
-        if (interestType.trelloId == null) {
+        if (interestType.getTrelloId() == null) {
             // Если листа до этого не было
             // То создать его
         } else {
@@ -156,8 +156,8 @@ public class TrelloServiceImplement implements TrelloService {
 
             if (interest.getName() != null)
                 card.setName(interest.getName());
-            if (interest.getComment() != null)
-                description = interest.getComment();
+            if (interest.getDescription() != null)
+                description = interest.getDescription();
             if (interest.getImg() != null) {
                 //Уже есть аттачмент
                 if (card.getIdAttachmentCover() != null) {
@@ -172,7 +172,7 @@ public class TrelloServiceImplement implements TrelloService {
             if(interest.getSeason() != 0) {
                description+=" [" + interest.getStage().toString()    + "/"+ interest.getSeason()+"]";
             }
-            if(interest.getType() != null && !interest.getType().trelloId.equals(card.getIdList())) {
+            if(interest.getType() != null && !interest.getType().getTrelloId().equals(card.getIdList())) {
                 //TODO:Переместить карточку в другой лист
             }
             //TODO: Разобраться с позицией
