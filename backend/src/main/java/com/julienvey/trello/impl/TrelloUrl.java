@@ -48,6 +48,7 @@ public class TrelloUrl {
     public static final String UPDATE_CARD = "/cards/{cardId}?";
 
     public static final String UPDATE_LIST = "/lists/{listId}?";
+    public static final String CREATE_LIST = "/lists?";
 
 
 

@@ -122,4 +122,8 @@ public class Interest {
     public String getTrelloId() {
         return trelloId;
     }
+
+    public void setOrd(Double ord) {
+        this.ord = ord;
+    }
 }

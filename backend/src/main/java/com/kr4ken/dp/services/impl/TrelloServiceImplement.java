@@ -12,6 +12,8 @@ import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -124,12 +126,20 @@ public class TrelloServiceImplement implements TrelloService {
 
     @Override
     public List<Interest> getInterests() {
-        return trelloApi.getBoard(trelloInterestBoard)
+        List<Interest> interests = trelloApi.getBoard(trelloInterestBoard)
                 .fetchCards()
                 .stream()
                 .map(this::getInterestFromCard)
+                .sorted((o1, o2) -> o1.getOrd() - o2.getOrd() > 0?1:-1)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+        HashMap<InterestType,Integer> interestTypeCounter = new HashMap<>();
+        interestTypeRepository.findAll().forEach(interestType -> interestTypeCounter.put(interestType,0));
+        for (Interest interest:interests) {
+           interest.setOrd(interestTypeCounter.get(interest.getType()).doubleValue());
+           interestTypeCounter.put(interest.getType(),interestTypeCounter.get(interest.getType()));
+        }
+        return interests;
     }
 
 
