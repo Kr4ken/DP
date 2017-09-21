@@ -6,10 +6,7 @@ import com.julienvey.trello.exception.TrelloHttpException;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -35,6 +32,18 @@ public class ApacheHttpClient extends AbstractHttpClient {
     public <T> T get(String url, Class<T> objectClass, String... params) {
         HttpGet httpGet = new HttpGet(expandUrl(url, params));
         return getEntityAndReleaseConnection(objectClass, httpGet);
+    }
+
+    @Override
+    public void delete(String url,String... params){
+        HttpDelete httpDelete = new HttpDelete(expandUrl(url, params));
+        try {
+            HttpResponse httpResponse = this.httpClient.execute(httpDelete);
+        } catch (IOException e) {
+            throw new TrelloHttpException(e);
+        } finally {
+            httpDelete.releaseConnection();
+        }
     }
 
     @Override

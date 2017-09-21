@@ -12,4 +12,6 @@ public interface TrelloHttpClient {
     public URI postForLocation(String url, Object object, String... params);
 
     public <T> T putForObject(String url, T object, Class<T> objectClass, String... params);
+
+    public void delete(String url,  String... params);
 }

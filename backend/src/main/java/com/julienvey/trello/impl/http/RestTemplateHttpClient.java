@@ -46,6 +46,15 @@ public class RestTemplateHttpClient implements TrelloHttpClient {
     }
 
     @Override
+    public void delete(String url,  String... params) {
+        try {
+            restTemplate.delete(url, params);
+        } catch (RestClientException e) {
+            throw new TrelloHttpException(e);
+        }
+    }
+
+    @Override
     public <T> T putForObject(String url, T object, Class<T> objectClass, String... params) {
         try {
             return restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(object), objectClass, params).getBody();

@@ -253,6 +253,20 @@ public class TrelloImpl implements Trello {
         return board;
     }
 
+    /* Cards attachments */
+
+    @Override
+    public void deleteAttachment(String cardId, String attachmentId){
+       delete(createUrl(DELETE_ATTACHMENT).asString(),cardId,attachmentId);
+    }
+
+    @Override
+    public Attachment addAttachmentToCard(String cardId,Attachment input,Argument... args){
+        Attachment attachment = postForObject(createUrl(ADD_ATTACHMENT).params(args).asString(),input,Attachment.class,cardId);
+        attachment.setInternalTrello(this);
+        return attachment;
+    }
+
     /* Lists */
 
     @Override
@@ -344,6 +358,16 @@ public class TrelloImpl implements Trello {
         return put;
     }
 
+    @Override
+    public TList createList(TList list) {
+        TList post = postForObject(createUrl(CREATE_LIST).asString(), list, TList.class);
+        post.setInternalTrello(this);
+        return post;
+    }
+
+
+
+
     /* internal methods */
 
     private <T> T postForObject(String url, T object, Class<T> objectClass, String... params) {
@@ -359,6 +383,11 @@ public class TrelloImpl implements Trello {
     private <T> T get(String url, Class<T> objectClass, String... params) {
         logger.debug("Get request on Trello API at url {} for class {} with params {}", url, objectClass.getCanonicalName(), params);
         return httpClient.get(url, objectClass, enrichParams(params));
+    }
+
+    private void delete(String url, String... params) {
+        logger.debug("Delete request on Trello API at url {} for class {} with params {}", url, params);
+        httpClient.delete(url, enrichParams(params));
     }
 
     private <T> T put(String url, T object, Class<T> objectClass, String... params) {

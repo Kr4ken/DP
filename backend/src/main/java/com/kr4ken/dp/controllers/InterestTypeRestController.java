@@ -60,7 +60,8 @@ public class InterestTypeRestController {
             trelloService.saveInterestType(one);
         }
         else {
-
+            return new ResponseEntity(new InterestTypeNotFoundException(interestTypeId.toString()),
+                    HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
@@ -92,6 +93,20 @@ public class InterestTypeRestController {
         return ResponseEntity.created(location).build();
     }
 
+    @RequestMapping(method = RequestMethod.PUT,value = "/{interestTypeId}/trelloimport")
+    ResponseEntity<?> updateTrello(@PathVariable Long interestTypeId,@RequestBody InterestType input) {
+        InterestType interestType = interestTypeRepository.findOne(interestTypeId);
+        if (interestType == null) {
+            return new ResponseEntity(new InterestTypeNotFoundException(interestTypeId.toString()),
+                    HttpStatus.NOT_FOUND);
+        }
+        interestType.copy(input);
+        interestTypeRepository.save(interestType);
+        trelloService.saveInterestType(interestType);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(interestType.getId()).toUri();
+        return ResponseEntity.created(location).build();
+    }
+
     @RequestMapping(method = RequestMethod.DELETE,value = "/{interestTypeId}")
     ResponseEntity<?> delete(@PathVariable Long interestTypeId) {
 
@@ -100,7 +115,7 @@ public class InterestTypeRestController {
             return new ResponseEntity(new InterestTypeNotFoundException(interestTypeId.toString()),
                     HttpStatus.NOT_FOUND);
         }
-
+        trelloService.deleteInterestType(interestType);
         interestTypeRepository.delete(interestTypeId);
 
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);

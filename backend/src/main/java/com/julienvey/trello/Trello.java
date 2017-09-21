@@ -66,11 +66,17 @@ public interface Trello {
 
     Card updateCard(Card card);
 
+    void deleteAttachment(String cardId, String attachmentId);
+
+    Attachment addAttachmentToCard(String cardId,Attachment input,Argument... args);
+
     /* Lists */
 
     TList getList(String listId, Argument... args);
 
     TList updateList(TList list);
+
+    TList createList(TList list);
 
     /* CheckLists */
 

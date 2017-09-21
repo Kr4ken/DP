@@ -50,6 +50,16 @@ public class AsyncTrelloHttpClient extends AbstractHttpClient {
     }
 
     @Override
+    public void delete(String url,String... params) {
+        try {
+            asyncHttpClient.prepareDelete(expandUrl(url, params)).execute();
+        } catch ( Exception  e) {
+            throw new TrelloHttpException(e);
+        }
+    }
+
+
+    @Override
     public <T> T postForObject(String url, T object, final Class<T> objectClass, String... params) {
         Future<T> f;
         try {

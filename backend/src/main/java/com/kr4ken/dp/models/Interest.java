@@ -11,26 +11,26 @@ public class Interest {
     @GeneratedValue
     private Long id;
     //Id соответствующей карточки в трелло
-    public String trelloId;
+    private String trelloId;
     //Наименование интереса
-    public String name;
+    private String name;
     //URL изображения
     // Ссылки очень длинные
     @Length(max = 2000)
-    public String img;
+    private String img;
     //URL источника
-    public String source;
+    private String source;
     //Этипа интереса (Сезон\Том)
-    public Integer season;
+    private Integer season;
     //Этипа интереса (Серия\Глава)
-    public Integer stage;
+    private Integer stage;
     //Тип интереса
     @OneToOne
-    public InterestType type;
+    private InterestType type;
     //Позиция интереса в списке
-    public Double ord;
+    private Double ord;
     //Комментарий
-    public String description;
+    private String description;
 
     Interest() { // jpa only
     }
@@ -125,5 +125,37 @@ public class Interest {
 
     public void setOrd(Double ord) {
         this.ord = ord;
+    }
+
+    public void setTrelloId(String trelloId) {
+        this.trelloId = trelloId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public void setSeason(Integer season) {
+        this.season = season;
+    }
+
+    public void setStage(Integer stage) {
+        this.stage = stage;
+    }
+
+    public void setType(InterestType type) {
+        this.type = type;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

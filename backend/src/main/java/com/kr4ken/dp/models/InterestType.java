@@ -65,4 +65,8 @@ public class InterestType {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public void setTrelloId(String trelloId) {
+        this.trelloId = trelloId;
+    }
 }

@@ -50,6 +50,10 @@ public class TrelloUrl {
     public static final String UPDATE_LIST = "/lists/{listId}?";
     public static final String CREATE_LIST = "/lists?";
 
+    public static final String DELETE_ATTACHMENT = "/cards/{id}/attachments/{idAttachment}?";
+    public static final String ADD_ATTACHMENT = "/cards/{id}/attachments/?";
+
+
 
 
     private String baseUrl;
