@@ -60,7 +60,7 @@ public class Interest {
         this.type = other.type == null?this.type:other.type;
         this.ord = other.ord == null?this.ord:other.ord;
         this.description = other.description == null?this.description :other.description;
-        this.trelloId = other.trelloId == null?this.name:other.trelloId;
+        this.trelloId = other.trelloId == null?this.trelloId:other.trelloId;
     }
 
     public Interest(String name,

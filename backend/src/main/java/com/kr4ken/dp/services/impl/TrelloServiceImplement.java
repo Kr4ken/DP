@@ -65,7 +65,7 @@ public class TrelloServiceImplement implements TrelloService {
         }
         // Загрузка обложки, если есть
         String img = null;
-        if (card.getIdAttachmentCover() != null) {
+        if (card.getIdAttachmentCover() != null && !card.getIdAttachmentCover().isEmpty()) {
             img = trelloApi.getCardAttachment(card.getId(), card.getIdAttachmentCover()).getUrl();
         }
         Optional<InterestType> ito = interestTypeRepository.findByTrelloId(card.getIdList());
@@ -104,20 +104,12 @@ public class TrelloServiceImplement implements TrelloService {
 
     @Override
     public List<Interest> getInterests() {
-        List<Interest> interests = trelloApi.getBoard(trelloInterestBoard)
+        return trelloApi.getBoard(trelloInterestBoard)
                 .fetchCards()
                 .stream()
                 .map(this::getInterestFromCard)
-                .sorted(Comparator.comparing(Interest::getOrd))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        HashMap<InterestType, Integer> interestTypeCounter = new HashMap<>();
-        interestTypeRepository.findAll().forEach(interestType -> interestTypeCounter.put(interestType, 0));
-        for (Interest interest : interests) {
-            interest.setOrd(interestTypeCounter.get(interest.getType()).doubleValue());
-            interestTypeCounter.put(interest.getType(), 1 + interestTypeCounter.get(interest.getType()));
-        }
-        return interests;
     }
 
 
@@ -149,6 +141,14 @@ public class TrelloServiceImplement implements TrelloService {
         return interestType;
     }
 
+    private Attachment createCoverAttachment(String cardId,String imgUrl){
+        Attachment new_attach = new Attachment();
+        new_attach.setUrl(imgUrl);
+        new_attach.setName("Обложка");
+        new_attach = trelloApi.addAttachmentToCard(cardId,new_attach);
+        return new_attach;
+    }
+
     @Override
     public Interest saveInterest(Interest interest) {
         Card card = interest.getTrelloId() == null ? new Card() : trelloApi.getCard(interest.getTrelloId());
@@ -166,19 +166,13 @@ public class TrelloServiceImplement implements TrelloService {
                 if (!attachment.getUrl().equals(interest.getImg())) {
                     trelloApi.deleteAttachment(card.getId(),attachment.getId());
                     // И создаем новый
-                    Attachment new_attach = new Attachment();
-                    new_attach.setUrl(interest.getImg());
-                    new_attach.setName("Обложка");
-                    new_attach = trelloApi.addAttachmentToCard(card.getId(),new_attach);
+                    Attachment new_attach = createCoverAttachment(card.getId(),interest.getImg());
                     card.setIdAttachmentCover(new_attach.getId());
                     interest.setImg(new_attach.getUrl());
                 }
             } else {
                 // Если нет аттачмента просто создаем новый
-                Attachment new_attach = new Attachment();
-                new_attach.setUrl(interest.getImg());
-                new_attach.setName("Обложка");
-                new_attach = trelloApi.addAttachmentToCard(card.getId(),new_attach);
+                Attachment new_attach = createCoverAttachment(card.getId(),interest.getImg());
                 card.setIdAttachmentCover(new_attach.getId());
                 interest.setImg(new_attach.getUrl());
             }
@@ -192,14 +186,11 @@ public class TrelloServiceImplement implements TrelloService {
         }
 
         if(interest.getOrd() != null){
-            Optional<Interest> top = interestRepository.findByTypeAndOrd(interest.getType(),interest.getOrd()-1);
-            Optional<Interest> bottom = interestRepository.findByTypeAndOrd(interest.getType(),interest.getOrd()+1);
-            Double top_pos = top.isPresent()?trelloApi.getCard(top.get().getTrelloId()).getPos():0;
-            Double bottom_pos = bottom.isPresent()?trelloApi.getCard(bottom.get().getTrelloId()).getPos():trelloApi.getCard(bottom.get().getTrelloId()).getPos()+1;
+            card.setPos(interest.getOrd());
         }
 
-
-        card.setDesc(description);
+        if(!description.isEmpty())
+            card.setDesc(description);
 
         if(interest.getTrelloId() == null){
             card = trelloApi.createCard(interest.getType().getTrelloId(),card);
@@ -208,6 +199,7 @@ public class TrelloServiceImplement implements TrelloService {
         else {
             trelloApi.updateCard(card);
         }
+
         return interest;
     }
 
