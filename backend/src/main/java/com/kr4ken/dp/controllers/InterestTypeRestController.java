@@ -37,35 +37,6 @@ public class InterestTypeRestController {
         this.trelloService = trelloService;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value ="/trelloimport" )
-    ResponseEntity<?> trelloTaskTypesImport(){
-        trelloService.getInterestTypes()
-                .forEach(e -> {
-                    Optional<InterestType> current = interestTypeRepository.findByTrelloId(e.getTrelloId());
-                    if(current.isPresent()) {
-                        current.get().copy(e);
-                        interestTypeRepository.save(current.get());
-                    }
-                    else{
-                        interestTypeRepository.save(e);
-                    }
-                });
-        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-    }
-
-    @RequestMapping(method = RequestMethod.PUT, value ="/{interestTypeId}/trelloexport" )
-    ResponseEntity<?> trelloTaskTypeExport(@PathVariable Long interestTypeId){
-        InterestType one = interestTypeRepository.findOne(interestTypeId);
-        if(one != null) {
-            trelloService.saveInterestType(one);
-        }
-        else {
-            return new ResponseEntity(new InterestTypeNotFoundException(interestTypeId.toString()),
-                    HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-    }
-
     @RequestMapping(method = RequestMethod.GET)
     Collection<InterestType> readInterestTypes() {
         return interestTypeRepository.findAll();
@@ -89,20 +60,6 @@ public class InterestTypeRestController {
         interestType.copy(input);
 
         interestTypeRepository.save(interestType);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(interestType.getId()).toUri();
-        return ResponseEntity.created(location).build();
-    }
-
-    @RequestMapping(method = RequestMethod.PUT,value = "/{interestTypeId}/trelloimport")
-    ResponseEntity<?> updateTrello(@PathVariable Long interestTypeId,@RequestBody InterestType input) {
-        InterestType interestType = interestTypeRepository.findOne(interestTypeId);
-        if (interestType == null) {
-            return new ResponseEntity(new InterestTypeNotFoundException(interestTypeId.toString()),
-                    HttpStatus.NOT_FOUND);
-        }
-        interestType.copy(input);
-        interestTypeRepository.save(interestType);
-        trelloService.saveInterestType(interestType);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(interestType.getId()).toUri();
         return ResponseEntity.created(location).build();
     }

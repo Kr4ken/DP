@@ -213,4 +213,18 @@ public class TrelloServiceImplement implements TrelloService {
         Card card = trelloApi.getCard(interest.getTrelloId());
        trelloApi.deleteAttachment(interest.getTrelloId(),card.getIdAttachmentCover());
     }
+
+    @Override
+    public Interest getInterest(Interest interest){
+        Card card = trelloApi.getCard(interest.getTrelloId());
+        return getInterestFromCard(card);
+    };
+
+    @Override
+    public InterestType getInterestType(InterestType interestType){
+        TList tList = trelloApi.getList(interestType.getTrelloId());
+        return getInterestTypeFromList(tList);
+    };
+
+
 }
