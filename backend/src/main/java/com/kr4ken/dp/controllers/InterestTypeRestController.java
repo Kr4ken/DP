@@ -1,6 +1,7 @@
 package com.kr4ken.dp.controllers;
 
 import com.kr4ken.dp.exceptions.InterestTypeNotFoundException;
+import com.kr4ken.dp.models.Interest;
 import com.kr4ken.dp.models.InterestType;
 import com.kr4ken.dp.models.InterestTypeRepository;
 import com.kr4ken.dp.services.intf.TrelloService;
@@ -10,11 +11,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -37,20 +34,27 @@ public class InterestTypeRestController {
         this.trelloService = trelloService;
     }
 
+    private void trelloSync(InterestType interestType){
+        interestTypeRepository.save(trelloService.saveInterestType(interestType));
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     Collection<InterestType> readInterestTypes() {
         return interestTypeRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestBody InterestType input) {
+    ResponseEntity<?> add(@RequestBody InterestType input, @RequestParam(required = false) Optional<Boolean> trello) {
         InterestType result = interestTypeRepository.save(new InterestType(input));
+        if(trello.isPresent() && trello.get()){
+            trelloSync(result);
+        }
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @RequestMapping(method = RequestMethod.PUT,value = "/{interestTypeId}")
-    ResponseEntity<?> update(@PathVariable Long interestTypeId,@RequestBody InterestType input) {
+    ResponseEntity<?> update(@PathVariable Long interestTypeId,@RequestBody InterestType input, @RequestParam(required = false) Optional<Boolean> trello) {
         InterestType interestType = interestTypeRepository.findOne(interestTypeId);
         if (interestType == null) {
             return new ResponseEntity(new InterestTypeNotFoundException(interestTypeId.toString()),
@@ -60,19 +64,25 @@ public class InterestTypeRestController {
         interestType.copy(input);
 
         interestTypeRepository.save(interestType);
+        if(trello.isPresent() && trello.get()){
+            trelloSync(interestType);
+        }
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(interestType.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @RequestMapping(method = RequestMethod.DELETE,value = "/{interestTypeId}")
-    ResponseEntity<?> delete(@PathVariable Long interestTypeId) {
+    ResponseEntity<?> delete(@PathVariable Long interestTypeId, @RequestParam(required = false) Optional<Boolean> trello) {
 
         InterestType interestType = interestTypeRepository.findOne(interestTypeId);
         if (interestType == null) {
             return new ResponseEntity(new InterestTypeNotFoundException(interestTypeId.toString()),
                     HttpStatus.NOT_FOUND);
         }
-        trelloService.deleteInterestType(interestType);
+
+        if(trello.isPresent() && trello.get()) {
+            trelloService.deleteInterestType(interestType);
+        }
         interestTypeRepository.delete(interestTypeId);
 
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);

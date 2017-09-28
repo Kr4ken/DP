@@ -12,11 +12,7 @@ import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -40,33 +36,75 @@ public class InterestRestController {
         this.trelloService = trelloService;
     }
 
+    private void trelloSync(Interest interest){
+        interestRepository.save(trelloService.saveInterest(interest));
+    }
+
     @RequestMapping(method = RequestMethod.GET)
-    Collection<Interest> readInterests() {
-        return interestRepository.findAll();
+    Collection<Interest> readInterests(@RequestParam Optional<Long> type,@RequestParam Optional<Boolean> sorted) {
+        if(sorted.isPresent() && sorted.get())
+            if (type.isPresent())
+                return interestRepository.findByTypeOrderByOrd(interestTypeRepository.findOne(type.get()));
+
+            else
+                return interestRepository.findAllByOrderByOrd();
+
+
+        else
+            if (type.isPresent())
+                return interestRepository.findByType(interestTypeRepository.findOne(type.get()));
+
+            else
+                return interestRepository.findAll();
+
+
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestBody Interest input) {
+    ResponseEntity<?> add(@RequestBody Interest input, @RequestParam(required = false) Optional<Boolean> trello ) {
         Interest result = interestRepository.save(new Interest(input));
+        if(trello.isPresent() && trello.get()){
+            trelloSync(result);
+        }
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @RequestMapping(method = RequestMethod.PUT,value = "/{interestId}")
-    ResponseEntity<?> add(@RequestBody Interest input,@PathVariable Long interestId) {
+    ResponseEntity<?> add(@RequestBody Interest input,@PathVariable Long interestId, @RequestParam(required = false) Optional<Boolean> trello) {
         Interest one = interestRepository.findOne(interestId);
         if(one == null){
             return new ResponseEntity(new InterestNotFoundException(interestId.toString()),
                     HttpStatus.NOT_FOUND);
         }
-        //TODO: Сделать перенос типа
-//        if(one.getType() != input.getType())
-//            changeType(input,input.getType());
         one.copy(input);
         interestRepository.save(one);
+        if(trello.isPresent() && trello.get()) {
+           trelloSync(one);
+        }
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(one.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
+
+
+    @RequestMapping(method = RequestMethod.DELETE,value = "/{interestId}")
+    ResponseEntity<?> delete(@PathVariable Long interestId, @RequestParam(required = false) Optional<Boolean> trello) {
+
+        Interest interest = interestRepository.findOne(interestId);
+        if (interest == null) {
+            return new ResponseEntity(new InterestNotFoundException(interestId.toString()),
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if(trello.isPresent() && trello.get()) {
+            trelloService.deleteInterest(interest);
+        }
+        interestTypeRepository.delete(interestId);
+
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/{interestId}")
     public Interest readInterest(@PathVariable Long interestId) {

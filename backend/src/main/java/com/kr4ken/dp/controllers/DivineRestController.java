@@ -7,13 +7,11 @@ import com.kr4ken.dp.models.InterestTypeRepository;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /*
@@ -57,14 +55,17 @@ public class DivineRestController {
         int max = interestArray.length -1,min = 0;
         Integer randomInterest = random.nextInt(max - min + 1) + min;
         changeType(interestArray[randomInterest],interestType);
-        interestRepository.save(interestArray[0]);
-        return interestArray[0];
+        interestRepository.save(interestArray[randomInterest]);
+        return interestArray[randomInterest];
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/mix/{interestTypeId}")
-    ResponseEntity<?> trelloMix(@PathVariable Long interestTypeId){
-        mixInterestType(interestTypeId);
-        return ResponseEntity.ok(HttpEntity.EMPTY);
+    ResponseEntity<?> trelloMix(@PathVariable Long interestTypeId, @RequestParam Optional<Boolean> trello){
+        Interest result = mixInterestType(interestTypeId);
+        if(trello.isPresent() && trello.get()){
+           interestRepository.save(trelloService.saveInterest(result));
+        }
+        return ResponseEntity.ok(result);
     }
 
     Interest completeInterestType(Long interestTypeId){
@@ -79,10 +80,14 @@ public class DivineRestController {
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/complete/{interestTypeId}")
-    ResponseEntity<?> completeInterestTypeQuery(@PathVariable Long interestTypeId){
-        completeInterestType(interestTypeId);
-        mixInterestType(interestTypeId);
-        return ResponseEntity.ok(HttpEntity.EMPTY);
+    ResponseEntity<?> completeInterestTypeQuery(@PathVariable Long interestTypeId,@RequestParam Optional<Boolean> trello){
+        Interest complete =  completeInterestType(interestTypeId);
+        Interest result = mixInterestType(interestTypeId);
+        if(trello.isPresent() && trello.get()){
+            interestRepository.save(trelloService.saveInterest(complete));
+            interestRepository.save(trelloService.saveInterest(result));
+        }
+        return ResponseEntity.ok(result);
     }
 
     Interest referInterestType(Long interestTypeId){
@@ -96,24 +101,33 @@ public class DivineRestController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/refer/{interestTypeId}")
-    ResponseEntity<?> referInterestTypeQuery(@PathVariable Long interestTypeId){
-        referInterestType(interestTypeId);
-        mixInterestType(interestTypeId);
-        return ResponseEntity.ok(HttpEntity.EMPTY);
+    ResponseEntity<?> referInterestTypeQuery(@PathVariable Long interestTypeId,@RequestParam Optional<Boolean> trello){
+        Interest refer =  referInterestType(interestTypeId);
+        Interest result = mixInterestType(interestTypeId);
+        if(trello.isPresent() && trello.get()){
+            interestRepository.save(trelloService.saveInterest(refer));
+            interestRepository.save(trelloService.saveInterest(result));
+        }
+        return ResponseEntity.ok(result);
     }
 
-    void dropInterestType(Long interestTypeId){
+    Interest dropInterestType(Long interestTypeId){
         InterestType it = interestTypeRepository.findOne(interestTypeId);
         Collection<Interest> interests =  interestRepository.findByTypeOrderByOrd(it);
         Interest[] interestArray = interests.toArray(new Interest[]{});
         interestRepository.delete(interestArray[0]);
+        return interestArray[0];
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/drop/{interestTypeId}")
-    ResponseEntity<?> dropInterestTypeQuery(@PathVariable Long interestTypeId){
-        referInterestType(interestTypeId);
-        mixInterestType(interestTypeId);
-        return ResponseEntity.ok(HttpEntity.EMPTY);
+    ResponseEntity<?> dropInterestTypeQuery(@PathVariable Long interestTypeId,@RequestParam Optional<Boolean> trello){
+        Interest drop = dropInterestType(interestTypeId);
+        Interest result = mixInterestType(interestTypeId);
+        if(trello.isPresent() && trello.get()){
+            trelloService.saveInterest(drop);
+            interestRepository.save(trelloService.saveInterest(result));
+        }
+        return ResponseEntity.ok(result);
     }
 
 }

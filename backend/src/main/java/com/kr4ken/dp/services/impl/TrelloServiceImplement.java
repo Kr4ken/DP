@@ -141,6 +141,15 @@ public class TrelloServiceImplement implements TrelloService {
         return interestType;
     }
 
+    @Override
+    public Interest deleteInterest(Interest interest){
+        Card card = trelloApi.getCard(interest.getTrelloId());
+        if(card != null){
+            trelloApi.deleteCard(interest.getTrelloId());
+        }
+        return interest;
+    }
+
     private Attachment createCoverAttachment(String cardId,String imgUrl){
         Attachment new_attach = new Attachment();
         new_attach.setUrl(imgUrl);

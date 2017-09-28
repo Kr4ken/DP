@@ -70,6 +70,8 @@ public interface Trello {
 
     Attachment addAttachmentToCard(String cardId,Attachment input,Argument... args);
 
+    void deleteCard(String cardId);
+
     /* Lists */
 
     TList getList(String listId, Argument... args);

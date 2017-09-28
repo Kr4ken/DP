@@ -253,6 +253,11 @@ public class TrelloImpl implements Trello {
         return board;
     }
 
+    @Override
+    public void deleteCard(String cardId){
+        delete(createUrl(DELETE_ATTACHMENT).asString(),cardId);
+    }
+
     /* Cards attachments */
 
     @Override
@@ -363,7 +368,10 @@ public class TrelloImpl implements Trello {
         TList post = postForObject(createUrl(CREATE_LIST).asString(), list, TList.class);
         post.setInternalTrello(this);
         return post;
+
     }
+
+
 
 
 
