@@ -20,4 +20,18 @@ public class Task {
     // Ссылки очень длинные
     @Length(max = 2000)
     public String img;
+
+    //URL источника
+    private String source;
+    //Этипа интереса (Сезон\Том)
+    private Integer season;
+    //Этипа интереса (Серия\Глава)
+    private Integer stage;
+    //Тип интереса
+    @OneToOne
+    private InterestType type;
+    //Позиция интереса в списке
+    private Double ord;
+    //Комментарий
+    private String description;
 }

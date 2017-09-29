@@ -45,19 +45,25 @@ public class InterestRestController {
         if(sorted.isPresent() && sorted.get())
             if (type.isPresent())
                 return interestRepository.findByTypeOrderByOrd(interestTypeRepository.findOne(type.get()));
-
             else
                 return interestRepository.findAllByOrderByOrd();
-
-
         else
             if (type.isPresent())
                 return interestRepository.findByType(interestTypeRepository.findOne(type.get()));
-
             else
                 return interestRepository.findAll();
 
 
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/current")
+    List<Interest> readCurrentInterests() {
+        return interestTypeRepository.findAll()
+                .stream()
+                .map(interestRepository::findFirstByTypeOrderByOrd)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.POST)

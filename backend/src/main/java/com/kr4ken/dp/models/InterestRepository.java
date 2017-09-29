@@ -11,5 +11,6 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
     Optional<Interest> findByTrelloId(String trelloId);
     Collection<Interest> findByTypeOrderByOrd(InterestType interestType);
     Collection<Interest> findAllByOrderByOrd();
+    Optional<Interest> findFirstByTypeOrderByOrd(InterestType interestType);
 }
 
