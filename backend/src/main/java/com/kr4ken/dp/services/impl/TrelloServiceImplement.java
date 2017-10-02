@@ -5,10 +5,7 @@ import com.julienvey.trello.domain.Attachment;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
-import com.kr4ken.dp.models.Interest;
-import com.kr4ken.dp.models.InterestRepository;
-import com.kr4ken.dp.models.InterestType;
-import com.kr4ken.dp.models.InterestTypeRepository;
+import com.kr4ken.dp.models.*;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +19,8 @@ public class TrelloServiceImplement implements TrelloService {
     private final Trello trelloApi;
     private final String userName;
     private final String trelloInterestBoard;
+    private final String trelloProgressBoard;
 
-    private List<TList> taskTypesList;
     @Autowired
     private InterestTypeRepository interestTypeRepository;
     @Autowired
@@ -37,6 +34,7 @@ public class TrelloServiceImplement implements TrelloService {
         trelloApi = new TrelloImpl("a31bb57aac7aba739505bc9975b897dd", "0d98e7f23ebcefeda8a14f807def592846f9c7780872800f2d29f76e3394f684");
         userName = "user88592332";
         trelloInterestBoard = "57e04a0fda82f763f66385a1";
+        trelloProgressBoard = "57cff93fe2fa0b3bd900b765";
     }
 
     private static int parseInteger(String string, int defaultValue) {
@@ -235,5 +233,64 @@ public class TrelloServiceImplement implements TrelloService {
         return getInterestTypeFromList(tList);
     };
 
+    // Дальше начинаются таски
 
+    private TaskType getTaskTypeFromList(TList list) {
+        String desc = String.format("%s.Id листа:%s", list.getName(), list.getId());
+        return new TaskType(list.getName(), desc, list.getId());
+    }
+
+    @Override
+    public TaskType getTaskType(TaskType taskType) {
+        TList tList = trelloApi.getList(taskType.getTrelloId());
+        return getTaskTypeFromList(tList);
+    }
+
+    @Override
+    public List<TaskType> getTaskTypes() {
+        return trelloApi.getBoard(trelloProgressBoard)
+                .fetchLists()
+                .stream()
+                .map(this::getTaskTypeFromList)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TaskType saveTaskType(TaskType taskType) {
+        if (taskType.getTrelloId() == null) {
+            // Если листа до этого не было
+            // То создать его
+            TList list = new TList();
+            list.setName(taskType.getName());
+            list.setIdBoard(trelloProgressBoard);
+            taskType.setTrelloId(trelloApi.createList(list).getId());
+        } else {
+            TList list = trelloApi.getList(taskType.getTrelloId());
+            if (taskType.getName() != null)
+                list.setName(taskType.getName());
+            trelloApi.updateList(list);
+        }
+        return taskType;
+    }
+
+    @Override
+    public TaskType deleteTaskType(TaskType taskType) {
+        TList list = trelloApi.getList(taskType.getTrelloId());
+        if (list != null) {
+            list.setClosed(true);
+            trelloApi.updateList(list);
+        }
+        return taskType;
+    }
+
+    @Override
+    public List<Task> getTasks() {
+        return null;
+    }
+
+
+    @Override
+    public Task getTask(Task taks) {
+        return null;
+    }
 }

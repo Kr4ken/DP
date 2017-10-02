@@ -1,9 +1,6 @@
 package com.kr4ken.dp.controllers;
 
-import com.kr4ken.dp.models.Interest;
-import com.kr4ken.dp.models.InterestRepository;
-import com.kr4ken.dp.models.InterestType;
-import com.kr4ken.dp.models.InterestTypeRepository;
+import com.kr4ken.dp.models.*;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -26,13 +23,17 @@ public class TrelloRestController {
     private final InterestRepository interestRepository;
     private final TrelloService trelloService;
 
+    private final TaskTypeRepository taskTypeRepository;
+
     @Autowired
     TrelloRestController(InterestTypeRepository interestTypeRepository,
                          InterestRepository interestRepository,
-                         TrelloService trelloService) {
+                         TrelloService trelloService,
+                         TaskTypeRepository taskTypeRepository) {
         this.interestTypeRepository = interestTypeRepository;
         this.interestRepository = interestRepository;
         this.trelloService = trelloService;
+        this.taskTypeRepository = taskTypeRepository;
     }
 
     //Импорт
@@ -92,6 +93,32 @@ public class TrelloRestController {
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
+        // Таски
+    @RequestMapping(method = RequestMethod.POST, value ="/import/taskTypes" )
+    ResponseEntity<?> trelloImportTaskTypes(){
+        trelloService.getTaskTypes()
+                .forEach(e -> {
+                    Optional<TaskType> current = taskTypeRepository.findByTrelloId(e.getTrelloId());
+                    if(current.isPresent()) {
+                        current.get().copy(e);
+                        taskTypeRepository.save(current.get());
+                    }
+                    else{
+                        taskTypeRepository.save(e);
+                    }
+                });
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value ="/import/taskTypes/{taskTypeId}" )
+    ResponseEntity<?> trelloImportTaskType(@PathVariable Long taskTypeId){
+        TaskType taskType = taskTypeRepository.findOne(taskTypeId);
+        taskType.copy(trelloService.getTaskType(taskType));
+        taskTypeRepository.save(taskType);
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+
 
     // Экспорт
 
@@ -139,8 +166,4 @@ public class TrelloRestController {
         interestRepository.save(interest);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
-
-
-
-
 }
