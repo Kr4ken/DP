@@ -1,15 +1,18 @@
 package com.kr4ken.dp.services.impl;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.julienvey.trello.Trello;
-import com.julienvey.trello.domain.Attachment;
-import com.julienvey.trello.domain.Card;
-import com.julienvey.trello.domain.TList;
+import com.julienvey.trello.domain.*;
 import com.julienvey.trello.impl.TrelloImpl;
+import com.kr4ken.dp.config.TrelloConfig;
 import com.kr4ken.dp.models.*;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,26 +23,66 @@ public class TrelloServiceImplement implements TrelloService {
     private final String userName;
     private final String trelloInterestBoard;
     private final String trelloProgressBoard;
+    private final TrelloConfig trelloConfig;
 
-    @Autowired
+    private final HashMap<String,String> trelloLists;
+
+    private final String trelloUrgentLabel;
+    private final String trelloNUrgentLabel;
+
+    private final String trelloImportantLabel;
+    private final String trelloNImportantLabel;
+
     private InterestTypeRepository interestTypeRepository;
-    @Autowired
     private InterestRepository interestRepository;
+    private TaskTypeRepository taskTypeRepository;
+    private TaskRepository taskRepository;
+    private TaskSpecialRepository taskSpecialRepository;
+    private TaskCheckListRepository taskCheckListRepository;
+    private TaskCheckListItemRepository taskCheckListItemRepository;
 
 
+    @Autowired
     TrelloServiceImplement(InterestTypeRepository interestTypeRepository,
-                           InterestRepository interestRepository) {
+                           InterestRepository interestRepository,
+                           TaskTypeRepository taskTypeRepository,
+                           TaskRepository taskRepository,
+                           TaskSpecialRepository taskSpecialRepository,
+                           TaskCheckListRepository taskCheckListRepository,
+                           TaskCheckListItemRepository taskCheckListItemRepository,
+                           TrelloConfig trelloConfig) {
         this.interestTypeRepository = interestTypeRepository;
         this.interestRepository = interestRepository;
-        trelloApi = new TrelloImpl("a31bb57aac7aba739505bc9975b897dd", "0d98e7f23ebcefeda8a14f807def592846f9c7780872800f2d29f76e3394f684");
-        userName = "user88592332";
-        trelloInterestBoard = "57e04a0fda82f763f66385a1";
-        trelloProgressBoard = "57cff93fe2fa0b3bd900b765";
+        this.taskRepository = taskRepository;
+        this.taskTypeRepository = taskTypeRepository;
+        this.taskSpecialRepository = taskSpecialRepository;
+        this.taskCheckListRepository = taskCheckListRepository;
+        this.taskCheckListItemRepository = taskCheckListItemRepository;
+        this.trelloConfig = trelloConfig;
+        // Подгрузка конфигурации
+        trelloApi = new TrelloImpl(trelloConfig.getApplicationKey(),trelloConfig.getAccessToken());
+        userName = trelloConfig.getUser();
+        trelloInterestBoard = trelloConfig.getInterestBoard();
+        trelloProgressBoard = trelloConfig.getProgressBoard();
+        trelloLists = trelloConfig.getIdNameMap();
+
+        trelloUrgentLabel = trelloConfig.getUrgentTaskLabel();
+        trelloNUrgentLabel = trelloConfig.getNurgentTaskLabel();
+        trelloImportantLabel = trelloConfig.getImportantTaskLabel();
+        trelloNImportantLabel = trelloConfig.getNimportantTaskLabel();
     }
 
     private static int parseInteger(String string, int defaultValue) {
         try {
             return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    private static Double parseDouble(String string, Double defaultValue) {
+        try {
+            return Double.parseDouble(string);
         } catch (NumberFormatException e) {
             return defaultValue;
         }
@@ -283,14 +326,121 @@ public class TrelloServiceImplement implements TrelloService {
         return taskType;
     }
 
+    private List<TaskCheckList> getChecklistsFromCard(Card card){
+        List<TaskCheckList> result = null;
+        for(String checklistId:card.getIdChecklists()){
+            if(result ==null) result = new ArrayList<>();
+           CheckList checkList = trelloApi.getCheckList(checklistId);
+           TaskCheckList taskCheckList = new TaskCheckList(checkList.getName());
+           taskCheckList.setTrelloId(checklistId);
+           ArrayList<TaskCheckListItem> items = null;
+           for(CheckItem checkitem:checkList.getCheckItems()){
+               if(items == null) items = new ArrayList<>();
+               String itemName = checkitem.getName();
+               Double duration = itemName.contains("[")? parseDouble(itemName.substring(itemName.indexOf("[")+1,itemName.indexOf("]")),0.):0.;
+               itemName = itemName.contains("[")?itemName.substring(0,itemName.indexOf("[")):itemName;
+               TaskCheckListItem taskCheckListItem = new TaskCheckListItem(checkitem.getPos(),duration,checkitem.getId(),itemName,checkitem.getState().equals("complete"));
+               items.add(taskCheckListItem);
+           }
+           taskCheckList.setChecklistItems(items);
+           result.add(taskCheckList);
+        }
+        return result;
+    }
+
+    private TaskSpecial getSpecialFromCard(Card card){
+        String desc = card.getDesc();
+        String special = desc.contains("[special](")?desc.substring(desc.indexOf("[special]("),desc.indexOf(")",desc.indexOf("[special]("))):"";
+        JsonFactory jsonFactory = new JsonFactory();
+        ObjectMapper objectMapper = new ObjectMapper();
+        TaskSpecial taskSpecial = null;
+        try {
+            taskSpecial = objectMapper.readValue(special,TaskSpecial.class);
+        }catch (IOException e){
+            // TODO: ошибку
+        }
+        return taskSpecial;
+    }
+
+
+    private Task getTaskFromCard(Card card) {
+        // Наименование задачи
+        String name = card.getName();
+        // Длительность задачи
+        Double duration =name.contains("[")?parseDouble(name.substring(name.indexOf("[")+1,name.indexOf("]")),0.):0.;
+        name = name.contains("[")?name.substring(0,name.indexOf("[")):name;
+        // Описание задачи
+        String desc =card.getDesc().contains("[special]")?card.getDesc().substring(0,card.getDesc().indexOf("[special]")):card.getDesc();
+        // Загрузка обложки, если есть
+        String img = null;
+        if (card.getIdAttachmentCover() != null && !card.getIdAttachmentCover().isEmpty()) {
+            img = trelloApi.getCardAttachment(card.getId(), card.getIdAttachmentCover()).getUrl();
+        }
+        // Срочность
+        Boolean urgent = card.getLabels().stream().anyMatch(e -> e.getId().equals(trelloUrgentLabel));
+        // Важность
+        Boolean important = card.getLabels().stream().anyMatch(e -> e.getId().equals(trelloImportantLabel));
+
+        // Особенности
+        TaskSpecial special = getSpecialFromCard(card);
+
+        // Тип задачи
+        Optional<TaskType> taskTypeOptional = taskTypeRepository.findByTrelloId(card.getIdList());
+        TaskType taskType = null;
+        if(taskTypeOptional.isPresent())
+            taskType = taskTypeOptional.get();
+        else
+            return null;
+
+        // Дата выполнения задачи
+        Date due = card.getDue();
+
+        // Чеклисты
+        List<TaskCheckList> checkLists = getChecklistsFromCard(card);
+
+        // Атрибут
+        TaskAttribute attribute = TaskAttribute.Int;
+
+        return new Task(
+                card.getId(),
+                name,
+                desc,
+                img,
+                urgent,
+                important,
+                special,
+                taskType,
+                due,
+                checkLists,
+                attribute,
+                duration
+        );
+    }
+
     @Override
     public List<Task> getTasks() {
-        return null;
+        return trelloApi.getBoard(trelloProgressBoard)
+                .fetchCards()
+                .stream()
+                .map(this::getTaskFromCard)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
 
     @Override
     public Task getTask(Task taks) {
+        return null;
+    }
+
+
+    @Override
+    public Task saveTask(Task task) {
+        return null;
+    }
+
+    @Override
+    public Task deleteTask(Task task) {
         return null;
     }
 }

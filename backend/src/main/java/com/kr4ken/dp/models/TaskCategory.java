@@ -4,6 +4,7 @@ public enum TaskCategory {
     habit,
     daily,
     todo,
-    reward
+    reward,
+    none
 }
 

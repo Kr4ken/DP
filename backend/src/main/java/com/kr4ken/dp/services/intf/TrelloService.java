@@ -7,6 +7,11 @@ import com.kr4ken.dp.models.TaskType;
 
 import java.util.List;
 
+/**
+ * Сервис который осуществляет синхронизацию внутренних сущностей системы с трелло
+ * Не изменяет состояния системы лишь подтягивает и отправляет данные в трелло
+ * */
+
 public interface TrelloService {
     // Получение
     List<InterestType> getInterestTypes();
@@ -24,11 +29,13 @@ public interface TrelloService {
     Interest saveInterest(Interest intrest);
 
     TaskType saveTaskType(TaskType taskType);
+    Task saveTask(Task task);
     // Удаление
     InterestType deleteInterestType(InterestType intrestType);
     Interest deleteInterest(Interest interest);
 
     TaskType deleteTaskType(TaskType taskType);
+    Task deleteTask(Task task);
 
     Interest chooseNewInterest(InterestType interestType);
 

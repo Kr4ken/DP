@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Task {
@@ -15,48 +16,47 @@ public class Task {
     // Наименование Задачи
     private String name;
     // Описание Задачи
+    @Length(max = 10000)
     private String description;
     //URL изображения
     // Ссылки очень длинные
     @Length(max = 2000)
     private String img;
-    // Категория задачи
-    @Enumerated(EnumType.STRING)
-    private TaskCategory category;
     // Срочность задачи
     private Boolean urgent;
     // Важность задачи
     private Boolean important;
     // Особенности поведения задачи
-//    private TaskSpecial special;
+    @OneToOne
+    private TaskSpecial special;
     // Тип задачи
     @OneToOne
     private TaskType type;
     // Дата выполнения задачи
     private Date dueDate;
-    // Чеклист с небольшими подзадачами для данной задачи
-//    private TaskCheckList checkList;
+//     Чеклист с небольшими подзадачами для данной задачи
+    @OneToMany
+    private List<TaskCheckList> checklists;
     // Атрибут текущей задачи
-//    private TaskAttribute attribute;
+    private TaskAttribute attribute;
     // Время выполнения задачи
     private Double duration;
 
     Task() { // jpa only
     }
 
-    public Task(String trelloId, String name, String description, String img, TaskCategory category, Boolean urgent, Boolean important, TaskSpecial special, TaskType type, Date dueDate, TaskCheckList checkList, TaskAttribute attribute, Double duration) {
+    public Task(String trelloId, String name, String description, String img, Boolean urgent, Boolean important, TaskSpecial special, TaskType type, Date dueDate, List<TaskCheckList> checklists, TaskAttribute attribute, Double duration) {
         this.trelloId = trelloId;
         this.name = name;
         this.description = description;
         this.img = img;
-        this.category = category;
         this.urgent = urgent;
         this.important = important;
-//        this.special = special;
+        this.special = special;
         this.type = type;
         this.dueDate = dueDate;
-//        this.checkList = checkList;
-//        this.attribute = attribute;
+        this.checklists = checklists;
+        this.attribute = attribute;
         this.duration = duration;
     }
 
@@ -64,12 +64,16 @@ public class Task {
 //        this.copy(other);
     }
 
-    public Task(String name, TaskCategory taskCategory, Boolean urgent, Boolean important, TaskType type) {
+    public void copy(Task other){
+
+    }
+
+
+    public Task(String name, Boolean urgent, Boolean important, TaskType type) {
         this(null,
                 name,
                 null,
                 null,
-                taskCategory,
                 urgent,
                 important,
                 null,
@@ -116,14 +120,6 @@ public class Task {
         this.img = img;
     }
 
-    public TaskCategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(TaskCategory category) {
-        this.category = category;
-    }
-
     public Boolean getUrgent() {
         return urgent;
     }
@@ -140,13 +136,13 @@ public class Task {
         this.important = important;
     }
 
-//    public TaskSpecial getSpecial() {
-//        return special;
-//    }
+    public TaskSpecial getSpecial() {
+        return special;
+    }
 
-//    public void setSpecial(TaskSpecial special) {
-//        this.special = special;
-//    }
+    public void setSpecial(TaskSpecial special) {
+        this.special = special;
+    }
 
     public TaskType getType() {
         return type;
@@ -164,21 +160,21 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-//    public TaskCheckList getCheckList() {
-//        return checkList;
-//    }
-//
-//    public void setCheckList(TaskCheckList checkList) {
-//        this.checkList = checkList;
-//    }
+    public List<TaskCheckList> getChecklists() {
+        return checklists;
+    }
 
-//    public TaskAttribute getAttribute() {
-//        return attribute;
-//    }
+    public void setChecklists(List<TaskCheckList> checklists) {
+        this.checklists = checklists;
+    }
 
-//    public void setAttribute(TaskAttribute attribute) {
-//        this.attribute = attribute;
-//    }
+    public TaskAttribute getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(TaskAttribute attribute) {
+        this.attribute = attribute;
+    }
 
     public Double getDuration() {
         return duration;

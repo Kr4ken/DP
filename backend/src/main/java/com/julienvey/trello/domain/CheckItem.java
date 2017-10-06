@@ -8,7 +8,7 @@ public class CheckItem {
     private String state;
     private String id;
     private String name;
-    private int pos;
+    private double pos;
 
     public String getId() {
         return id;
@@ -26,11 +26,11 @@ public class CheckItem {
         this.name = name;
     }
 
-    public int getPos() {
+    public double getPos() {
         return pos;
     }
 
-    public void setPos(int pos) {
+    public void setPos(double pos) {
         this.pos = pos;
     }
 
