@@ -130,7 +130,7 @@ public class TrelloRestController {
         for (TaskCheckListItem taskCheckListItem : taskCheckListItems) {
             Optional<TaskCheckListItem> current = taskCheckListItemRepository.findByTrelloId(taskCheckListItem.getTrelloId());
             if (current.isPresent()) {
-                current.get().copy(current.get());
+                current.get().copy(taskCheckListItem);
                 taskCheckListItemRepository.save(current.get());
             } else {
                 taskCheckListItemRepository.save(taskCheckListItem);

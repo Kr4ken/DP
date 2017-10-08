@@ -61,11 +61,22 @@ public class Task {
     }
 
     public Task(Task other) { // jpa only
-//        this.copy(other);
+        this.copy(other);
     }
 
     public void copy(Task other){
-
+        this.trelloId = other.trelloId!=null?other.trelloId:trelloId;
+        this.name =other.name!=null?other.name:name ;
+        this.description = other.description!=null?other.description:description;
+        this.img = other.img!=null?other.img:img;
+        this.urgent = other.urgent!=null?other.urgent:urgent;
+        this.important = other.important!=null?other.important:important;
+        this.special = other.special!=null?other.special:special;
+        this.type = other.type!=null?other.type:type;
+        this.dueDate = other.dueDate!=null?other.dueDate:dueDate;
+        this.checklists = other.checklists!=null?other.checklists:checklists;
+        this.attribute = other.attribute!=null?other.attribute:attribute;
+        this.duration = other.duration!=null?other.duration:duration;
     }
 
 
