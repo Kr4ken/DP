@@ -1,4 +1,4 @@
-package com.kr4ken.dp.models;
+package com.kr4ken.dp.models.entity;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -35,7 +35,7 @@ public class Task {
     // Дата выполнения задачи
     private Date dueDate;
 //     Чеклист с небольшими подзадачами для данной задачи
-    @OneToMany
+    @OneToMany(orphanRemoval=true)
     private List<TaskCheckList> checklists;
     // Атрибут текущей задачи
     private TaskAttribute attribute;

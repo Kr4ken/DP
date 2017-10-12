@@ -1,8 +1,8 @@
 package com.kr4ken.dp.controllers;
 
 import com.kr4ken.dp.exceptions.InterestTypeNotFoundException;
-import com.kr4ken.dp.models.InterestType;
-import com.kr4ken.dp.models.InterestTypeRepository;
+import com.kr4ken.dp.models.entity.InterestType;
+import com.kr4ken.dp.models.repository.InterestTypeRepository;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

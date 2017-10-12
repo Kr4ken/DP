@@ -1,6 +1,7 @@
 package com.kr4ken.dp.controllers;
 
-import com.kr4ken.dp.models.*;
+import com.kr4ken.dp.models.entity.*;
+import com.kr4ken.dp.models.repository.*;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

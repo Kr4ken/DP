@@ -10,6 +10,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+//apply plugin: 'jar'
 
 repositories {
     mavenCentral()
@@ -23,14 +24,27 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.hateoas:spring-hateoas')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-//    compile('org.springframework.security:spring-security-core')
-//    compile('org.springframework.security:spring-security-config')
-//    compile('org.springframework.security.oauth:spring-security-oauth2')
-    // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
     compile ('org.mariadb.jdbc:mariadb-java-client:2.1.1')
-    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
     compile ('org.apache.httpcomponents:httpclient:4.5.3')
-// https://mvnrepository.com/artifact/com.ning/async-http-client
     compile ('com.ning:async-http-client:1.9.40')
-//    compile group: 'com.julienvey.trello', name: 'trello-java-wrapper', version :'0.3.2'
+}
+
+jar {
+    baseName = 'divine_providence'
+    version =  '0.0.0.1'
+    manifest {
+        attributes 'Main-Class': 'com.kr4ken.dp.Application'
+    }
+//    excludes = ['**/application.yml']
+}
+
+task('execJar', type:Jar, dependsOn: 'jar') {
+    baseName = 'divine_providence'
+    version =  '0.0.0.1'
+    classifier = 'exec'
+    from sourceSets.main.output
+}
+
+bootRepackage  {
+    withJarTask = tasks['execJar']
 }

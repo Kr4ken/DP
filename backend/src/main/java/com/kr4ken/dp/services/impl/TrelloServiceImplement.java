@@ -1,13 +1,13 @@
 package com.kr4ken.dp.services.impl;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.*;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.kr4ken.dp.config.TrelloConfig;
-import com.kr4ken.dp.models.*;
+import com.kr4ken.dp.models.entity.*;
+import com.kr4ken.dp.models.repository.*;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

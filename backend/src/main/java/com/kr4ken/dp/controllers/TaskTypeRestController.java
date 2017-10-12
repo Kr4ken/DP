@@ -1,9 +1,8 @@
 package com.kr4ken.dp.controllers;
 
 import com.kr4ken.dp.exceptions.TaskTypeNotFoundException;
-import com.kr4ken.dp.models.Task;
-import com.kr4ken.dp.models.TaskType;
-import com.kr4ken.dp.models.TaskTypeRepository;
+import com.kr4ken.dp.models.entity.TaskType;
+import com.kr4ken.dp.models.repository.TaskTypeRepository;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

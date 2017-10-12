@@ -1,16 +1,14 @@
 package com.kr4ken.dp.controllers;
 
-import com.kr4ken.dp.models.Interest;
-import com.kr4ken.dp.models.InterestRepository;
-import com.kr4ken.dp.models.InterestType;
-import com.kr4ken.dp.models.InterestTypeRepository;
+import com.kr4ken.dp.models.entity.Interest;
+import com.kr4ken.dp.models.repository.InterestRepository;
+import com.kr4ken.dp.models.entity.InterestType;
+import com.kr4ken.dp.models.repository.InterestTypeRepository;
 import com.kr4ken.dp.services.intf.TrelloService;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 

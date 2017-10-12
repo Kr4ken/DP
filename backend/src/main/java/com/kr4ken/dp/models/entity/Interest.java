@@ -1,4 +1,4 @@
-package com.kr4ken.dp.models;
+package com.kr4ken.dp.models.entity;
 
 import org.hibernate.validator.constraints.Length;
 

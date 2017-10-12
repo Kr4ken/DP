@@ -1,5 +1,6 @@
-package com.kr4ken.dp.models;
+package com.kr4ken.dp.models.repository;
 
+import com.kr4ken.dp.models.entity.InterestType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

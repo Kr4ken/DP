@@ -1,4 +1,4 @@
-package com.kr4ken.dp.models;
+package com.kr4ken.dp.models.entity;
 
 
 import javax.persistence.Entity;
@@ -14,7 +14,7 @@ public class TaskCheckList {
     private Long id;
     private String name;
     private String trelloId;
-    @OneToMany
+    @OneToMany(orphanRemoval=true)
     private List<TaskCheckListItem> checklistItems;
 
     TaskCheckList() {
