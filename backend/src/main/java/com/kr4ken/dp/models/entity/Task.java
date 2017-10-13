@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Task {
@@ -34,8 +35,8 @@ public class Task {
     private TaskType type;
     // Дата выполнения задачи
     private Date dueDate;
-//     Чеклист с небольшими подзадачами для данной задачи
-    @OneToMany(orphanRemoval=true)
+    // Чеклист с небольшими подзадачами для данной задачи
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private List<TaskCheckList> checklists;
     // Атрибут текущей задачи
     private TaskAttribute attribute;
@@ -64,19 +65,23 @@ public class Task {
         this.copy(other);
     }
 
-    public void copy(Task other){
-        this.trelloId = other.trelloId!=null?other.trelloId:trelloId;
-        this.name =other.name!=null?other.name:name ;
-        this.description = other.description!=null?other.description:description;
-        this.img = other.img!=null?other.img:img;
-        this.urgent = other.urgent!=null?other.urgent:urgent;
-        this.important = other.important!=null?other.important:important;
-        this.special = other.special!=null?other.special:special;
-        this.type = other.type!=null?other.type:type;
-        this.dueDate = other.dueDate!=null?other.dueDate:dueDate;
-        this.checklists = other.checklists!=null?other.checklists:checklists;
-        this.attribute = other.attribute!=null?other.attribute:attribute;
-        this.duration = other.duration!=null?other.duration:duration;
+    public void copy(Task other) {
+        this.trelloId = other.trelloId != null ? other.trelloId : trelloId;
+        this.name = other.name != null ? other.name : name;
+        this.description = other.description != null ? other.description : description;
+        this.img = other.img != null ? other.img : img;
+        this.urgent = other.urgent != null ? other.urgent : urgent;
+        this.important = other.important != null ? other.important : important;
+        this.special = other.special != null ? other.special : special;
+        this.type = other.type != null ? other.type : type;
+        this.dueDate = other.dueDate != null ? other.dueDate : dueDate;
+        this.checklists = other.checklists != null ? other.checklists.stream()
+                .map(TaskCheckList::new)
+                .map(taskCheckList -> {taskCheckList.setTask(this);return taskCheckList;})
+                .collect(Collectors.toList())
+                : checklists;
+        this.attribute = other.attribute != null ? other.attribute : attribute;
+        this.duration = other.duration != null ? other.duration : duration;
     }
 
 

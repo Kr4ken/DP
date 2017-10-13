@@ -15,6 +15,10 @@ public class TaskCheckListItem {
     private String name;
     private Boolean checked;
 
+    @ManyToOne
+    @JoinColumn(name = "checklist_id")
+    private TaskCheckList checklist;
+
     TaskCheckListItem() {
     }
 
@@ -23,23 +27,29 @@ public class TaskCheckListItem {
     }
 
     public void copy(TaskCheckListItem other){
-        pos = other.pos;
-        duration = other.duration;
-        trelloId = other.trelloId;
-        name = other.name;
-        checked = other.checked;
+        pos = other.pos != null? other.pos:pos;
+        duration = other.duration != null? other.duration:duration;
+        trelloId = other.trelloId != null? other.trelloId: trelloId;
+        name = other.name!= null? other.name:name;
+        checked = other.checked != null? other.checked:checked;
+        checklist = other.checklist!=null?other.checklist:checklist;
     }
 
     public TaskCheckListItem(Double pos, String name) {
-        this(pos,null,null,name,null);
+        this(pos,null,null,name,null,null);
     }
 
-    public TaskCheckListItem(Double pos, Double duration, String trelloId, String name, Boolean checked) {
+    public TaskCheckListItem(Double pos, String name,TaskCheckList checklist ) {
+        this(pos,null,null,name,null,checklist);
+    }
+
+    public TaskCheckListItem(Double pos, Double duration, String trelloId, String name, Boolean checked,TaskCheckList checklist) {
         this.pos = pos;
         this.duration = duration;
         this.trelloId = trelloId;
         this.name = name;
         this.checked = checked;
+        this.checklist = checklist;
     }
 
     public Long getId() {
@@ -84,6 +94,14 @@ public class TaskCheckListItem {
 
     public void setTrelloId(String trelloId) {
         this.trelloId = trelloId;
+    }
+
+    public TaskCheckList getChecklist() {
+        return checklist;
+    }
+
+    public void setChecklist(TaskCheckList checklist) {
+        this.checklist = checklist;
     }
 }
 

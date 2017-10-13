@@ -16,28 +16,30 @@ public interface TrelloService {
     // Получение
     List<InterestType> getInterestTypes();
     List<Interest> getInterests();
-    Interest getInterest(Interest interest);
-    InterestType getInterestType(InterestType interestType);
 
     List<TaskType> getTaskTypes();
     List<Task> getTasks();
+
+    // Обновление
+    Interest getInterest(Interest interest);
+    InterestType getInterestType(InterestType interestType);
+
     TaskType getTaskType(TaskType taskType);
     Task getTask(Task taks);
 
     // Сохранение
+    // Возвращает объекты с изменениями которые произошли при сохранении
+    // Меняется URL картинки на внутренний трелло, и цепдяется ТреллоИд
     InterestType saveInterestType(InterestType intrestType);
     Interest saveInterest(Interest intrest);
 
     TaskType saveTaskType(TaskType taskType);
     Task saveTask(Task task);
+
     // Удаление
     InterestType deleteInterestType(InterestType intrestType);
     Interest deleteInterest(Interest interest);
 
     TaskType deleteTaskType(TaskType taskType);
     Task deleteTask(Task task);
-
-    Interest chooseNewInterest(InterestType interestType);
-
-    void testDeleteAttachment(Interest interest);
 }

@@ -16,6 +16,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 
 @RestController
 @RequestMapping("/tasks")
@@ -24,7 +25,6 @@ public class TaskRestController {
     private final TaskTypeRepository taskTypeRepository;
     private final TaskRepository taskRepository;
     private final TrelloService trelloService;
-
     private final TaskCheckListRepository taskCheckListRepository;
     private final TaskCheckListItemRepository taskCheckListItemRepository;
     private final TaskSpecialRepository taskSpecialRepository;
@@ -39,99 +39,100 @@ public class TaskRestController {
         this.taskSpecialRepository = taskSpecialRepository;
     }
 
+    // TODO: допилить
     private void trelloSync(Task task) {
         taskRepository.save(trelloService.saveTask(task));
     }
 
 
     @RequestMapping(method = RequestMethod.GET)
-    Collection<Task> readTasks(@RequestParam Optional<Long> type) {
-        if (type.isPresent())
-            return taskRepository.findByType(taskTypeRepository.findOne(type.get()));
+    Collection<Task> readTasks(@RequestParam(required = false) Long type) {
+        if (type != null)
+            return taskRepository.findByType(taskTypeRepository.findOne(type));
         else
             return taskRepository.findAll();
     }
 
-    private void mergeChecklistItems(List<TaskCheckListItem> taskCheckListItems) {
-        for (TaskCheckListItem taskCheckListItem : taskCheckListItems) {
-            Optional<TaskCheckListItem> current = taskCheckListItemRepository.findByTrelloId(taskCheckListItem.getTrelloId());
-            if (current.isPresent()) {
-                current.get().copy(taskCheckListItem);
-                taskCheckListItemRepository.save(current.get());
-            } else {
-                taskCheckListItemRepository.save(taskCheckListItem);
-            }
-        }
-    }
-
-    private void mergeChecklists(List<TaskCheckList> taskCheckLists) {
-        for (TaskCheckList taskCheckList : taskCheckLists) {
-            Optional<TaskCheckList> current = taskCheckListRepository.findByTrelloId(taskCheckList.getTrelloId());
-            if (current.isPresent()) {
-                if (taskCheckList.getChecklistItems() != null) {
-                    mergeChecklistItems(current.get().getChecklistItems());
-                }
-                current.get().copy(taskCheckList);
-                taskCheckListRepository.save(current.get());
-            } else {
-                if (taskCheckList.getChecklistItems() != null) {
-                    mergeChecklistItems(taskCheckList.getChecklistItems());
-                }
-                taskCheckListRepository.save(taskCheckList);
-            }
-        }
-    }
-
-    private void mergeTask(Task task) {
-        Optional<Task> current = taskRepository.findByTrelloId(task.getTrelloId());
-        // Проверяем есть ли уже текущий элемент в моей базе
-        // Если есть то просто обновляем текущее значение
-        if (current.isPresent()) {
-            current.get().copy(current.get());
-            if (task.getSpecial() != null) {
-                current.get().getSpecial().copy(task.getSpecial());
-                taskSpecialRepository.save(current.get().getSpecial());
-            }
-            if (task.getChecklists() != null) {
-                mergeChecklists(current.get().getChecklists());
-            }
-            taskRepository.save(current.get());
-        }
-        // Если нет то просто сохраняем
-        else {
-            if (task.getSpecial() != null) {
-                taskSpecialRepository.save(task.getSpecial());
-            }
-            if (task.getChecklists() != null) {
-                mergeChecklists(task.getChecklists());
-            }
-            taskRepository.save(task);
-        }
-
-    }
+//    private void mergeChecklistItems(List<TaskCheckListItem> taskCheckListItems) {
+//        for (TaskCheckListItem taskCheckListItem : taskCheckListItems) {
+//            Optional<TaskCheckListItem> current = taskCheckListItemRepository.findByTrelloId(taskCheckListItem.getTrelloId());
+//            if (current.isPresent()) {
+//                current.get().copy(taskCheckListItem);
+//                taskCheckListItemRepository.save(current.get());
+//            } else {
+//                taskCheckListItemRepository.save(taskCheckListItem);
+//            }
+//        }
+//    }
+//
+//    private void mergeChecklists(List<TaskCheckList> taskCheckLists) {
+//        for (TaskCheckList taskCheckList : taskCheckLists) {
+//            Optional<TaskCheckList> current = taskCheckListRepository.findByTrelloId(taskCheckList.getTrelloId());
+//            if (current.isPresent()) {
+//                if (taskCheckList.getChecklistItems() != null) {
+//                    mergeChecklistItems(current.get().getChecklistItems());
+//                }
+//                current.get().copy(taskCheckList);
+//                taskCheckListRepository.save(current.get());
+//            } else {
+//                if (taskCheckList.getChecklistItems() != null) {
+//                    mergeChecklistItems(taskCheckList.getChecklistItems());
+//                }
+//                taskCheckListRepository.save(taskCheckList);
+//            }
+//        }
+//    }
+//
+//    private void mergeTask(Task task) {
+//        Optional<Task> current = taskRepository.findByTrelloId(task.getTrelloId());
+//        // Проверяем есть ли уже текущий элемент в моей базе
+//        // Если есть то просто обновляем текущее значение
+//        if (current.isPresent()) {
+//            current.get().copy(current.get());
+//            if (task.getSpecial() != null) {
+//                current.get().getSpecial().copy(task.getSpecial());
+//                taskSpecialRepository.save(current.get().getSpecial());
+//            }
+//            if (task.getChecklists() != null) {
+//                mergeChecklists(current.get().getChecklists());
+//            }
+//            taskRepository.save(current.get());
+//        }
+//        // Если нет то просто сохраняем
+//        else {
+//            if (task.getSpecial() != null) {
+//                taskSpecialRepository.save(task.getSpecial());
+//            }
+//            if (task.getChecklists() != null) {
+//                mergeChecklists(task.getChecklists());
+//            }
+//            taskRepository.save(task);
+//        }
+//
+//    }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestBody Task input, @RequestParam(required = false) Optional<Boolean> trello) {
+    ResponseEntity<?> add(@RequestBody Task input, @RequestParam(required = false) Object  trello) {
         // Добавляем новую особенность которая соответсвует новой задаче
         if (input.getSpecial() != null) {
             taskSpecialRepository.save(input.getSpecial());
         }
+        // Добавляем чеклисты
         if (input.getChecklists() != null) {
             for (TaskCheckList taskCheckList : input.getChecklists()) {
                 if (taskCheckList.getChecklistItems() != null) {
-                    for (TaskCheckListItem taskCheckListItem : taskCheckList.getChecklistItems()) {
-                        taskCheckListItemRepository.save(taskCheckListItem);
-                    }
+                    taskCheckListItemRepository.save(taskCheckList.getChecklistItems());
                 }
                 taskCheckListRepository.save(taskCheckList);
             }
         }
+
         taskRepository.save(input);
-        Task result = input;
-        if (trello.isPresent() && trello.get()) {
-            trelloSync(result);
+        if (trello != null) {
+            trelloSync(input);
         }
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(input.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
@@ -143,9 +144,9 @@ public class TaskRestController {
                     HttpStatus.NOT_FOUND);
         }
 //        Удаляем старые чеклисты если есть новые
-        if(newTask.getChecklists() != null){
+        if (newTask.getChecklists() != null) {
             oldTask.getChecklists().clear();
-            for(TaskCheckList taskCheckList:oldTask.getChecklists()){
+            for (TaskCheckList taskCheckList : oldTask.getChecklists()) {
                 taskCheckListRepository.delete(taskCheckList);
 //                if(taskCheckList.getChecklistItems()!= null) {
 //                    for (TaskCheckListItem taskCheckListItem : taskCheckList.getChecklistItems()){
@@ -164,7 +165,7 @@ public class TaskRestController {
             }
         }
 
-        if(newTask.getSpecial() != null){
+        if (newTask.getSpecial() != null) {
             taskSpecialRepository.delete(newTask.getSpecial());
             taskSpecialRepository.save(newTask.getSpecial());
         }
@@ -187,6 +188,7 @@ public class TaskRestController {
             return new ResponseEntity(new TaskNotFoundException(taskId.toString()),
                     HttpStatus.NOT_FOUND);
         }
+        task.getChecklists().clear();
 
         if (trello.isPresent() && trello.get()) {
             trelloService.deleteTask(task);

@@ -143,16 +143,16 @@ public class TrelloRestController {
         for (TaskCheckList taskCheckList : taskCheckLists) {
             Optional<TaskCheckList> current = taskCheckListRepository.findByTrelloId(taskCheckList.getTrelloId());
             if (current.isPresent()) {
+                current.get().copy(taskCheckList);
+                taskCheckListRepository.save(current.get());
                 if (taskCheckList.getChecklistItems() != null) {
                     mergeChecklistItems(current.get().getChecklistItems());
                 }
-                current.get().copy(taskCheckList);
-                taskCheckListRepository.save(current.get());
             } else {
+                taskCheckListRepository.save(taskCheckList);
                 if (taskCheckList.getChecklistItems() != null) {
                     mergeChecklistItems(taskCheckList.getChecklistItems());
                 }
-                taskCheckListRepository.save(taskCheckList);
             }
         }
     }
@@ -162,7 +162,8 @@ public class TrelloRestController {
         // Проверяем есть ли уже текущий элемент в моей базе
         // Если есть то просто обновляем текущее значение
         if (current.isPresent()) {
-            current.get().copy(current.get());
+            current.get().copy(task);
+            taskRepository.save(current.get());
             if (task.getSpecial() != null) {
                 current.get().getSpecial().copy(task.getSpecial());
                 taskSpecialRepository.save(current.get().getSpecial());
@@ -170,7 +171,6 @@ public class TrelloRestController {
             if (task.getChecklists() != null) {
                 mergeChecklists(current.get().getChecklists());
             }
-            taskRepository.save(current.get());
         }
         // Если нет то просто сохраняем
         else {

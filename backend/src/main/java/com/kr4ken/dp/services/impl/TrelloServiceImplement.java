@@ -339,7 +339,7 @@ public class TrelloServiceImplement implements TrelloService {
                String itemName = checkitem.getName();
                Double duration = itemName.contains("[")? parseDouble(itemName.substring(itemName.indexOf("[")+1,itemName.indexOf("]")),0.):0.;
                itemName = itemName.contains("[")?itemName.substring(0,itemName.indexOf("[")):itemName;
-               TaskCheckListItem taskCheckListItem = new TaskCheckListItem(checkitem.getPos(),duration,checkitem.getId(),itemName,checkitem.getState().equals("complete"));
+               TaskCheckListItem taskCheckListItem = new TaskCheckListItem(checkitem.getPos(),duration,checkitem.getId(),itemName,checkitem.getState().equals("complete"),taskCheckList);
                items.add(taskCheckListItem);
            }
            taskCheckList.setChecklistItems(items);
@@ -386,35 +386,49 @@ public class TrelloServiceImplement implements TrelloService {
 
         // Тип задачи
         Optional<TaskType> taskTypeOptional = taskTypeRepository.findByTrelloId(card.getIdList());
-        TaskType taskType = null;
+        TaskType taskType;
         if(taskTypeOptional.isPresent())
             taskType = taskTypeOptional.get();
         else
             return null;
 
+        Task result = new Task(name,urgent,important,taskType);
+        result.setDuration(duration);
+        result.setDescription(desc);
+        result.setImg(img);
+        result.setSpecial(special);
+
         // Дата выполнения задачи
         Date due = card.getDue();
 
+        result.setDueDate(due);
+
         // Чеклисты
         List<TaskCheckList> checkLists = getChecklistsFromCard(card);
+        // TODO: проставить для каждого чеклиста задачу
+        if(checkLists != null)
+            checkLists.forEach(taskCheckList -> taskCheckList.setTask(result));
+        result.setChecklists(checkLists);
 
         // Атрибут
         TaskAttribute attribute = TaskAttribute.Int;
+        result.setAttribute(attribute);
 
-        return new Task(
-                card.getId(),
-                name,
-                desc,
-                img,
-                urgent,
-                important,
-                special,
-                taskType,
-                due,
-                checkLists,
-                attribute,
-                duration
-        );
+        return result;
+//        return new Task(
+//                card.getId(),
+//                name,
+//                desc,
+//                img,
+//                urgent,
+//                important,
+//                special,
+//                taskType,
+//                due,
+//                checkLists,
+//                attribute,
+//                duration
+//        );
     }
 
     @Override
