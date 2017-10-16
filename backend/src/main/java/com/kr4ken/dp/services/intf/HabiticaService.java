@@ -12,4 +12,6 @@ import java.util.List;
 public interface HabiticaService {
     // Получение
     List<Task> getTasks();
+
+    List<Task> getTrelloTasks();
 }

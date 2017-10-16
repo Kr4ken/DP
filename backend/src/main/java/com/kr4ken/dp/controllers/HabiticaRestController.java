@@ -25,4 +25,10 @@ public class HabiticaRestController {
         return habiticaService.getTasks();
     }
 
+    @RequestMapping(value = "/trello/tasks",method = RequestMethod.GET)
+    Collection<Task> readTrelloInterests() {
+        return habiticaService.getTrelloTasks();
+    }
+
+
 }

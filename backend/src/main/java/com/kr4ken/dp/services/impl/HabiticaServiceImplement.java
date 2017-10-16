@@ -26,14 +26,17 @@ public class HabiticaServiceImplement implements HabiticaService {
     private final HabiticaConfig habiticaConfig;
     private final Habitica habiticaApi;
     private final TaskTypeRepository taskTypeRepository;
+    private final TaskRepository taskRepository;
 
     @Autowired
     HabiticaServiceImplement(
             HabiticaConfig habiticaConfig,
-            TaskTypeRepository taskTypeRepository
+            TaskTypeRepository taskTypeRepository,
+            TaskRepository taskRepository
     ) {
         this.habiticaConfig = habiticaConfig;
         this.taskTypeRepository = taskTypeRepository;
+        this.taskRepository = taskRepository;
         // Подгрузка конфигурации
         habiticaApi = new HabiticaImpl(habiticaConfig.getApiUser(),habiticaConfig.getApiKey());
     }
@@ -56,6 +59,16 @@ public class HabiticaServiceImplement implements HabiticaService {
             ));
         }
         return result;
+    }
+
+    @Override
+    public List<Task> getTrelloTasks() {
+    return habiticaApi.getUserTasks()
+            .stream()
+            .map(e -> {
+                Optional<Task> task =  taskRepository.findByTrelloId(e.getAlias());
+                return task.isPresent()?task.get():null;})
+            .collect(Collectors.toList());
     }
 }
 
