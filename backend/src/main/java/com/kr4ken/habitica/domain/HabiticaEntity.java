@@ -10,7 +10,7 @@ public class HabiticaEntity {
     @JsonIgnore
     protected Habitica habiticaService;
 
-    public void setHabiticaService(Habitica habiticaService) {
+    public void setInternalHabitica(Habitica habiticaService) {
         this.habiticaService = habiticaService;
     }
 }

@@ -3,8 +3,12 @@ package com.kr4ken.habitica;
 import java.net.URI;
 
 public interface HabiticaHttpClient {
-    // TODO add IO exception
+    // Custom headers for Habitica authentification
+    public void addHeader(String name, String value);
 
+    public void clearHeaders();
+
+    // TODO add IO exception
     public <T> T get(String url, Class<T> objectClass, String... params);
 
     public <T> T postForObject(String url, T object, Class<T> objectClass, String... params);
