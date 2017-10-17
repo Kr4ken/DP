@@ -1,6 +1,9 @@
 package com.kr4ken.dp.models.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,16 +20,17 @@ public class TaskCheckListItem {
 
     @ManyToOne
     @JoinColumn(name = "checklist_id")
+    @JsonIgnore
     private TaskCheckList checklist;
 
     TaskCheckListItem() {
     }
 
     public TaskCheckListItem(TaskCheckListItem other){
-      this.copy(other);
+      this.update(other);
     }
 
-    public void copy(TaskCheckListItem other){
+    public void update(TaskCheckListItem other){
         pos = other.pos != null? other.pos:pos;
         duration = other.duration != null? other.duration:duration;
         trelloId = other.trelloId != null? other.trelloId: trelloId;

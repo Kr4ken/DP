@@ -55,7 +55,7 @@ public class TaskTypeRestController {
                     HttpStatus.NOT_FOUND);
         }
 
-        taskType.copy(input);
+        taskType.update(input);
 
         taskTypeRepository.save(taskType);
         if (trello.isPresent() && trello.get()) {

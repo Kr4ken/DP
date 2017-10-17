@@ -14,9 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.OptionalLong;
 
 @RestController
 @RequestMapping("/tasks")
@@ -57,7 +55,7 @@ public class TaskRestController {
 //        for (TaskCheckListItem taskCheckListItem : taskCheckListItems) {
 //            Optional<TaskCheckListItem> current = taskCheckListItemRepository.findByTrelloId(taskCheckListItem.getTrelloId());
 //            if (current.isPresent()) {
-//                current.get().copy(taskCheckListItem);
+//                current.get().update(taskCheckListItem);
 //                taskCheckListItemRepository.save(current.get());
 //            } else {
 //                taskCheckListItemRepository.save(taskCheckListItem);
@@ -72,7 +70,7 @@ public class TaskRestController {
 //                if (taskCheckList.getChecklistItems() != null) {
 //                    mergeChecklistItems(current.get().getChecklistItems());
 //                }
-//                current.get().copy(taskCheckList);
+//                current.get().update(taskCheckList);
 //                taskCheckListRepository.save(current.get());
 //            } else {
 //                if (taskCheckList.getChecklistItems() != null) {
@@ -88,9 +86,9 @@ public class TaskRestController {
 //        // Проверяем есть ли уже текущий элемент в моей базе
 //        // Если есть то просто обновляем текущее значение
 //        if (current.isPresent()) {
-//            current.get().copy(current.get());
+//            current.get().update(current.get());
 //            if (task.getSpecial() != null) {
-//                current.get().getSpecial().copy(task.getSpecial());
+//                current.get().getSpecial().update(task.getSpecial());
 //                taskSpecialRepository.save(current.get().getSpecial());
 //            }
 //            if (task.getChecklists() != null) {
@@ -170,7 +168,7 @@ public class TaskRestController {
             taskSpecialRepository.save(newTask.getSpecial());
         }
         // Обновление
-        oldTask.copy(newTask);
+        oldTask.update(newTask);
 //        mergeTask(task);
         taskRepository.save(oldTask);
         if (trello.isPresent() && trello.get()) {

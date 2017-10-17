@@ -79,7 +79,7 @@ public class InterestRestController {
             return new ResponseEntity(new InterestNotFoundException(interestId.toString()),
                     HttpStatus.NOT_FOUND);
         }
-        one.copy(input);
+        one.update(input);
         interestRepository.save(one);
         if(trello.isPresent() && trello.get()) {
            trelloSync(one);

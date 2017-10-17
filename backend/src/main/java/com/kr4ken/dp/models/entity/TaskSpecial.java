@@ -16,14 +16,14 @@ public class TaskSpecial {
     }
 
     public TaskSpecial(TaskSpecial other){
-        this.copy(other);
+        this.update(other);
     }
 
     public TaskSpecial(TaskSpecialComplete complete) {
         this.complete = complete;
     }
 
-    public void copy(TaskSpecial taskSpecial){
+    public void update(TaskSpecial taskSpecial){
         this.complete = complete;
     }
     public Long getId() {

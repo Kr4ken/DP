@@ -36,10 +36,11 @@ public class RestTemplateHttpClient implements HabiticaHttpClient {
     }
 
     @Override
-    public <T> T postForObject(String url, T object, Class<T> objectClass, String... params) {
+//    public <T> T postForObject(String url, T object, Class<T> objectClass, String... params) {
+    public <Req,Res> Res postForObject(String url, Req requestObject, Class<Res> responseClass, String... params){
         try {
 //            return restTemplate.postForObject(url, object, objectClass, params);
-            return restTemplate.exchange(url,HttpMethod.POST,new HttpEntity<T>(object,headers), objectClass,params).getBody();
+            return restTemplate.exchange(url,HttpMethod.POST,new HttpEntity<Req>(requestObject,headers), responseClass,params).getBody();
         } catch (RestClientException e) {
             throw new HabiticaHttpException(e);
         }
@@ -57,10 +58,11 @@ public class RestTemplateHttpClient implements HabiticaHttpClient {
     }
 
     @Override
-    public <T> T get(String url, Class<T> objectClass, String... params) {
+//    public <T> T get(String url, Class<T> objectClass, String... params) {
+    public <Res> Res get(String url, Class<Res> responseClass, String... params){
         try {
 //            return restTemplate.getForObject(url, objectClass, params);
-            return restTemplate.exchange(url,HttpMethod.GET,new HttpEntity<>(headers), objectClass,params).getBody();
+            return restTemplate.exchange(url,HttpMethod.GET,new HttpEntity<>(headers), responseClass,params).getBody();
         } catch (RestClientException e) {
             throw new HabiticaHttpException(e);
         }
@@ -78,10 +80,11 @@ public class RestTemplateHttpClient implements HabiticaHttpClient {
     }
 
     @Override
-    public <T> T putForObject(String url, T object, Class<T> objectClass, String... params) {
+//    public <T> T putForObject(String url, T object, Class<T> objectClass, String... params) {
+    public <Req,Res> Res putForObject(String url, Req requestObject, Class<Res> responseClass, String... params){
         try {
 //            return restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(object), objectClass, params).getBody();
-            return restTemplate.exchange(url,HttpMethod.PUT,new HttpEntity<T>(object,headers), objectClass,params).getBody();
+            return restTemplate.exchange(url,HttpMethod.PUT,new HttpEntity<Req>(requestObject,headers), responseClass,params).getBody();
         } catch (RestClientException e) {
             throw new HabiticaHttpException(e);
         }

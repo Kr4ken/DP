@@ -9,13 +9,17 @@ public interface HabiticaHttpClient {
     public void clearHeaders();
 
     // TODO add IO exception
-    public <T> T get(String url, Class<T> objectClass, String... params);
+//    public <T> T get(String url, Class<T> objectClass, String... params);
+    public <Res> Res get(String url, Class<Res> responseClass, String... params);
 
-    public <T> T postForObject(String url, T object, Class<T> objectClass, String... params);
+//    public <T> T postForObject(String url, T requestObject, Class<T> responseClass, String... params);
+    public <Req,Res> Res postForObject(String url, Req requestObject, Class<Res> responseClass, String... params);
 
-    public URI postForLocation(String url, Object object, String... params);
+    public URI postForLocation(String url, Object requestObject, String... params);
+//    public URI postForLocation(String url, Object requestObject, String... params);
 
-    public <T> T putForObject(String url, T object, Class<T> objectClass, String... params);
+    public <Req,Res> Res putForObject(String url, Req requestObject, Class<Res> responseClass, String... params);
+//    public <Req,Res> Res postForObject(String url, Req requestObject, Class<Res> responseClass, String... params);
 
     public void delete(String url, String... params);
 }

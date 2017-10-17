@@ -25,7 +25,7 @@ public class TrelloServiceImplement implements TrelloService {
     private final String trelloProgressBoard;
     private final TrelloConfig trelloConfig;
 
-    private final HashMap<String,String> trelloLists;
+    private final HashMap<String, String> trelloLists;
 
     private final String trelloUrgentLabel;
     private final String trelloNUrgentLabel;
@@ -60,7 +60,7 @@ public class TrelloServiceImplement implements TrelloService {
         this.taskCheckListItemRepository = taskCheckListItemRepository;
         this.trelloConfig = trelloConfig;
         // Подгрузка конфигурации
-        trelloApi = new TrelloImpl(trelloConfig.getApplicationKey(),trelloConfig.getAccessToken());
+        trelloApi = new TrelloImpl(trelloConfig.getApplicationKey(), trelloConfig.getAccessToken());
         userName = trelloConfig.getUser();
         trelloInterestBoard = trelloConfig.getInterestBoard();
         trelloProgressBoard = trelloConfig.getProgressBoard();
@@ -183,19 +183,19 @@ public class TrelloServiceImplement implements TrelloService {
     }
 
     @Override
-    public Interest deleteInterest(Interest interest){
+    public Interest deleteInterest(Interest interest) {
         Card card = trelloApi.getCard(interest.getTrelloId());
-        if(card != null){
+        if (card != null) {
             trelloApi.deleteCard(interest.getTrelloId());
         }
         return interest;
     }
 
-    private Attachment createCoverAttachment(String cardId,String imgUrl){
+    private Attachment createCoverAttachment(String cardId, String imgUrl) {
         Attachment new_attach = new Attachment();
         new_attach.setUrl(imgUrl);
         new_attach.setName("Обложка");
-        new_attach = trelloApi.addAttachmentToCard(cardId,new_attach);
+        new_attach = trelloApi.addAttachmentToCard(cardId, new_attach);
         return new_attach;
     }
 
@@ -214,15 +214,15 @@ public class TrelloServiceImplement implements TrelloService {
                 Attachment attachment = trelloApi.getCardAttachment(card.getId(), card.getIdAttachmentCover());
                 // Если не совпадает с изображением - Удаляем
                 if (!attachment.getUrl().equals(interest.getImg())) {
-                    trelloApi.deleteAttachment(card.getId(),attachment.getId());
+                    trelloApi.deleteAttachment(card.getId(), attachment.getId());
                     // И создаем новый
-                    Attachment new_attach = createCoverAttachment(card.getId(),interest.getImg());
+                    Attachment new_attach = createCoverAttachment(card.getId(), interest.getImg());
                     card.setIdAttachmentCover(new_attach.getId());
                     interest.setImg(new_attach.getUrl());
                 }
             } else {
                 // Если нет аттачмента просто создаем новый
-                Attachment new_attach = createCoverAttachment(card.getId(),interest.getImg());
+                Attachment new_attach = createCoverAttachment(card.getId(), interest.getImg());
                 card.setIdAttachmentCover(new_attach.getId());
                 interest.setImg(new_attach.getUrl());
             }
@@ -235,40 +235,38 @@ public class TrelloServiceImplement implements TrelloService {
             card.setIdList(interest.getType().getTrelloId());
         }
 
-        if(interest.getOrd() != null){
+        if (interest.getOrd() != null) {
             card.setPos(interest.getOrd());
         }
 
-        if(!description.isEmpty())
+        if (!description.isEmpty())
             card.setDesc(description);
 
-        if(interest.getTrelloId() == null){
-            card = trelloApi.createCard(interest.getType().getTrelloId(),card);
+        if (interest.getTrelloId() == null) {
+            card = trelloApi.createCard(interest.getType().getTrelloId(), card);
             interest.setTrelloId(card.getId());
-        }
-        else {
+        } else {
             trelloApi.updateCard(card);
         }
 
         return interest;
     }
 
-
-    public Interest chooseNewInterest(InterestType interestType) {
-        return new Interest(null);
-    }
-
     @Override
-    public Interest getInterest(Interest interest){
+    public Interest getInterest(Interest interest) {
         Card card = trelloApi.getCard(interest.getTrelloId());
         return getInterestFromCard(card);
-    };
+    }
+
+    ;
 
     @Override
-    public InterestType getInterestType(InterestType interestType){
+    public InterestType getInterestType(InterestType interestType) {
         TList tList = trelloApi.getList(interestType.getTrelloId());
         return getInterestTypeFromList(tList);
-    };
+    }
+
+    ;
 
     // Дальше начинаются таски
 
@@ -320,37 +318,37 @@ public class TrelloServiceImplement implements TrelloService {
         return taskType;
     }
 
-    private List<TaskCheckList> getChecklistsFromCard(Card card){
+    private List<TaskCheckList> getChecklistsFromCard(Card card) {
         List<TaskCheckList> result = null;
-        for(String checklistId:card.getIdChecklists()){
-            if(result ==null) result = new ArrayList<>();
-           CheckList checkList = trelloApi.getCheckList(checklistId);
-           TaskCheckList taskCheckList = new TaskCheckList(checkList.getName());
-           taskCheckList.setTrelloId(checklistId);
-           ArrayList<TaskCheckListItem> items = null;
-           for(CheckItem checkitem:checkList.getCheckItems()){
-               if(items == null) items = new ArrayList<>();
-               String itemName = checkitem.getName();
-               Double duration = itemName.contains("[")? parseDouble(itemName.substring(itemName.indexOf("[")+1,itemName.indexOf("]")),0.):0.;
-               itemName = itemName.contains("[")?itemName.substring(0,itemName.indexOf("[")):itemName;
-               TaskCheckListItem taskCheckListItem = new TaskCheckListItem(checkitem.getPos(),duration,checkitem.getId(),itemName,checkitem.getState().equals("complete"),taskCheckList);
-               items.add(taskCheckListItem);
-           }
-           taskCheckList.setChecklistItems(items);
-           result.add(taskCheckList);
+        for (String checklistId : card.getIdChecklists()) {
+            if (result == null) result = new ArrayList<>();
+            CheckList checkList = trelloApi.getCheckList(checklistId);
+            TaskCheckList taskCheckList = new TaskCheckList(checkList.getName());
+            taskCheckList.setTrelloId(checklistId);
+            ArrayList<TaskCheckListItem> items = null;
+            for (CheckItem checkitem : checkList.getCheckItems()) {
+                if (items == null) items = new ArrayList<>();
+                String itemName = checkitem.getName();
+                Double duration = itemName.contains("[") ? parseDouble(itemName.substring(itemName.indexOf("[") + 1, itemName.indexOf("]")), 0.) : 0.;
+                itemName = itemName.contains("[") ? itemName.substring(0, itemName.indexOf("[")) : itemName;
+                TaskCheckListItem taskCheckListItem = new TaskCheckListItem(checkitem.getPos(), duration, checkitem.getId(), itemName, checkitem.getState().equals("complete"), taskCheckList);
+                items.add(taskCheckListItem);
+            }
+            taskCheckList.setChecklistItems(items);
+            result.add(taskCheckList);
         }
         return result;
     }
 
-    private TaskSpecial getSpecialFromCard(Card card){
+    private TaskSpecial getSpecialFromCard(Card card) {
         String desc = card.getDesc();
-        String special = desc.contains("[special](")?desc.substring(desc.indexOf("[special]("),desc.indexOf(")",desc.indexOf("[special]("))):"";
+        String special = desc.contains("[special](") ? desc.substring(desc.indexOf("[special]("), desc.indexOf(")", desc.indexOf("[special]("))) : "";
         JsonFactory jsonFactory = new JsonFactory();
         ObjectMapper objectMapper = new ObjectMapper();
         TaskSpecial taskSpecial = null;
         try {
-            taskSpecial = objectMapper.readValue(special,TaskSpecial.class);
-        }catch (IOException e){
+            taskSpecial = objectMapper.readValue(special, TaskSpecial.class);
+        } catch (IOException e) {
             // TODO: ошибку
         }
         return taskSpecial;
@@ -361,10 +359,10 @@ public class TrelloServiceImplement implements TrelloService {
         // Наименование задачи
         String name = card.getName();
         // Длительность задачи
-        Double duration =name.contains("[")?parseDouble(name.substring(name.indexOf("[")+1,name.indexOf("]")),0.):0.;
-        name = name.contains("[")?name.substring(0,name.indexOf("[")):name;
+        Double duration = name.contains("[") ? parseDouble(name.substring(name.indexOf("[") + 1, name.indexOf("]")), 0.) : 0.;
+        name = name.contains("[") ? name.substring(0, name.indexOf("[")) : name;
         // Описание задачи
-        String desc =card.getDesc().contains("[special]")?card.getDesc().substring(0,card.getDesc().indexOf("[special]")):card.getDesc();
+        String desc = card.getDesc().contains("[special]") ? card.getDesc().substring(0, card.getDesc().indexOf("[special]")) : card.getDesc();
         // Загрузка обложки, если есть
         String img = null;
         if (card.getIdAttachmentCover() != null && !card.getIdAttachmentCover().isEmpty()) {
@@ -381,12 +379,12 @@ public class TrelloServiceImplement implements TrelloService {
         // Тип задачи
         Optional<TaskType> taskTypeOptional = taskTypeRepository.findByTrelloId(card.getIdList());
         TaskType taskType;
-        if(taskTypeOptional.isPresent())
+        if (taskTypeOptional.isPresent())
             taskType = taskTypeOptional.get();
         else
             return null;
 
-        Task result = new Task(name,urgent,important,taskType);
+        Task result = new Task(name, urgent, important, taskType);
         result.setDuration(duration);
         result.setDescription(desc);
         result.setImg(img);
@@ -400,13 +398,14 @@ public class TrelloServiceImplement implements TrelloService {
         // Чеклисты
         List<TaskCheckList> checkLists = getChecklistsFromCard(card);
         // TODO: проставить для каждого чеклиста задачу
-        if(checkLists != null)
+        if (checkLists != null)
             checkLists.forEach(taskCheckList -> taskCheckList.setTask(result));
         result.setChecklists(checkLists);
 
         // Атрибут
         TaskAttribute attribute = TaskAttribute.Int;
         result.setAttribute(attribute);
+        result.setTrelloId(card.getId());
 
         return result;
 //        return new Task(
@@ -438,7 +437,7 @@ public class TrelloServiceImplement implements TrelloService {
 
     @Override
     public Task getTask(Task taks) {
-        return null;
+        return getTaskFromCard(trelloApi.getCard(taks.getTrelloId()));
     }
 
 

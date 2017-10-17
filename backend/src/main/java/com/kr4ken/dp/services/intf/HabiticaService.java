@@ -14,4 +14,7 @@ public interface HabiticaService {
     List<Task> getTasks();
 
     List<Task> getTrelloTasks();
+
+    // Сохранение
+    Task saveTask(Task task);
 }

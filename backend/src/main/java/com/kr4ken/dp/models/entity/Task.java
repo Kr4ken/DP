@@ -5,7 +5,6 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 public class Task {
@@ -28,7 +27,7 @@ public class Task {
     // Важность задачи
     private Boolean important;
     // Особенности поведения задачи
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private TaskSpecial special;
     // Тип задачи
     @OneToOne
@@ -62,10 +61,10 @@ public class Task {
     }
 
     public Task(Task other) { // jpa only
-        this.copy(other);
+        this.update(other);
     }
 
-    public void copy(Task other) {
+    public void update(Task other) {
         this.trelloId = other.trelloId != null ? other.trelloId : trelloId;
         this.name = other.name != null ? other.name : name;
         this.description = other.description != null ? other.description : description;
@@ -75,11 +74,24 @@ public class Task {
         this.special = other.special != null ? other.special : special;
         this.type = other.type != null ? other.type : type;
         this.dueDate = other.dueDate != null ? other.dueDate : dueDate;
-        this.checklists = other.checklists != null ? other.checklists.stream()
-                .map(TaskCheckList::new)
-                .map(taskCheckList -> {taskCheckList.setTask(this);return taskCheckList;})
-                .collect(Collectors.toList())
-                : checklists;
+//        this.checklists = other.checklists != null ? other.checklists : checklists;
+        if(other.checklists != null) {
+            other.checklists.forEach(taskCheckList -> taskCheckList.setTask(this));
+            this.checklists = other.checklists;
+        }
+//            if(checklists!=null){
+//                checklists.clear();
+//                checklists.addAll(other.checklists);
+//            }
+//            else {
+//                checklists = other.checklists;
+//            }
+//        }
+//        this.checklists = other.checklists != null ? other.checklists.stream()
+//                .map(TaskCheckList::new)
+//                .map(taskCheckList -> {taskCheckList.setTask(this);return taskCheckList;})
+//                .collect(Collectors.toList())
+//                : checklists;
         this.attribute = other.attribute != null ? other.attribute : attribute;
         this.duration = other.duration != null ? other.duration : duration;
     }

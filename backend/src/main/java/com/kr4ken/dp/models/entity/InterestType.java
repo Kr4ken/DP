@@ -21,7 +21,7 @@ public class InterestType {
     }
 
     public InterestType(InterestType other) {
-        this.copy(other);
+        this.update(other);
     }
 
     public InterestType(String name, String description) {
@@ -35,7 +35,7 @@ public class InterestType {
     }
 
     // Обновление данных из непустых данных другого типа
-    public void copy(InterestType other) {
+    public void update(InterestType other) {
         this.name = other.name == null ? this.name : other.name;
         this.description = other.description == null ? this.description : other.description;
         this.trelloId = other.trelloId == null ? this.trelloId : other.trelloId;

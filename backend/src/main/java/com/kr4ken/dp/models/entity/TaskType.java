@@ -18,11 +18,11 @@ public class TaskType {
     TaskType(){}; // jpa only
 
     public TaskType(TaskType other) {
-        this.copy(other);
+        this.update(other);
     }
 
     // Обновление данных из непустых данных другого типа
-    public void copy(TaskType other){
+    public void update(TaskType other){
         this.name = other.name == null?this.name:other.name;
         this.description = other.description == null?this.description:other.description;
         this.trelloId = other.trelloId == null?this.trelloId:other.trelloId;

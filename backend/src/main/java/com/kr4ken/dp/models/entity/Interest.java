@@ -39,7 +39,7 @@ public class Interest {
     }
 
     public Interest(Interest other) { // jpa only
-        this.copy(other);
+        this.update(other);
     }
 
     public Interest(String name, InterestType type) {
@@ -75,7 +75,7 @@ public class Interest {
         this.trelloId = trelloId;
     }
 
-    public void copy(Interest other) {
+    public void update(Interest other) {
         this.name = other.name == null ? this.name : other.name;
         this.img = other.img == null ? this.img : other.img;
         this.source = other.source == null ? this.source : other.source;

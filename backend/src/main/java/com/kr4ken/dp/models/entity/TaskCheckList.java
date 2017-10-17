@@ -1,9 +1,10 @@
 package com.kr4ken.dp.models.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 public class TaskCheckList {
@@ -16,13 +17,14 @@ public class TaskCheckList {
     private List<TaskCheckListItem> checklistItems;
     @ManyToOne
     @JoinColumn(name = "task_id")
+    @JsonIgnore
     private Task task;
 
     TaskCheckList() {
     }
 
     public TaskCheckList(TaskCheckList other) {
-        this.copy(other);
+        this.update(other);
     }
 
     public TaskCheckList(String name) {
@@ -44,14 +46,19 @@ public class TaskCheckList {
         this.task = task;
     }
 
-    public void copy(TaskCheckList other) {
+    public void update(TaskCheckList other) {
         this.name = other.name != null ? other.name : this.name;
         this.trelloId = other.trelloId != null ? other.trelloId : this.trelloId;
-        this.checklistItems = other.checklistItems != null ? other.checklistItems.stream()
-                .map(TaskCheckListItem::new)
-                .map(taskCheckListItem -> {taskCheckListItem.setChecklist(this);return taskCheckListItem;})
-                .collect(Collectors.toList())
-                :this.checklistItems;
+//        if(other.checklistItems != null){
+//           this.checklistItems.clear();
+//           this.checklistItems.addAll(other.checklistItems);
+//        }
+        this.checklistItems = other.checklistItems != null ? other.checklistItems :this.checklistItems;
+//        this.checklistItems = other.checklistItems != null ? other.checklistItems.stream()
+//                .map(TaskCheckListItem::new)
+//                .map(taskCheckListItem -> {taskCheckListItem.setChecklist(this);return taskCheckListItem;})
+//                .collect(Collectors.toList())
+//                :this.checklistItems;
         this.task = other.task != null ? other.task : this.task;
     }
 

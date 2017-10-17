@@ -55,7 +55,7 @@ public class InterestTypeRestController {
                     HttpStatus.NOT_FOUND);
         }
 
-        interestType.copy(input);
+        interestType.update(input);
 
         interestTypeRepository.save(interestType);
         if (trello.isPresent() && trello.get()) {

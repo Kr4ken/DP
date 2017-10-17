@@ -8,6 +8,10 @@ public class HabiticaUrl {
 
     // Tasks
     public static final String GET_USER_TASKS = "/tasks/user?";
+    public static final String GET_TASK = "/tasks/{taskId}?";
+    public static final String CREATE_USER_TASK = "/tasks/user?";
+    public static final String UPDATE_TASK = "/tasks/{taskId}?";
+
 
 
     private String baseUrl;

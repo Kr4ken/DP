@@ -42,15 +42,16 @@ public class AsyncHabiticaHttpClient extends AbstractHttpClient {
     }
 
     @Override
-    public <T> T get(String url, final Class<T> objectClass, String... params) {
-        Future<T> f;
+//    public <T> T get(String url, final Class<T> objectClass, String... params) {
+      public <Res> Res get(String url, Class<Res> responseClass, String... params){
+        Future<Res> f;
         try {
             f = asyncHttpClient.prepareGet(expandUrl(url, params)).setHeaders(headers).execute(
-                    new AsyncCompletionHandler<T>() {
+                    new AsyncCompletionHandler<Res>() {
 
                         @Override
-                        public T onCompleted(Response response) throws Exception {
-                            return mapper.readValue(response.getResponseBody(), objectClass);
+                        public Res onCompleted(Response response) throws Exception {
+                            return mapper.readValue(response.getResponseBody(), responseClass);
                         }
 
                         @Override
@@ -76,16 +77,17 @@ public class AsyncHabiticaHttpClient extends AbstractHttpClient {
 
 
     @Override
-    public <T> T postForObject(String url, T object, final Class<T> objectClass, String... params) {
-        Future<T> f;
+//    public <T> T postForObject(String url, T object, final Class<T> objectClass, String... params) {
+    public <Req,Res> Res postForObject(String url, Req requestObject, Class<Res> responseClass, String... params){
+        Future<Res> f;
         try {
-            byte[] body = this.mapper.writeValueAsBytes(object);
+            byte[] body = this.mapper.writeValueAsBytes(requestObject);
             f = asyncHttpClient.preparePost(expandUrl(url, params)).setBody(body).setHeaders(headers).execute(
-                    new AsyncCompletionHandler<T>() {
+                    new AsyncCompletionHandler<Res>() {
 
                         @Override
-                        public T onCompleted(Response response) throws Exception {
-                            return mapper.readValue(response.getResponseBody(), objectClass);
+                        public Res onCompleted(Response response) throws Exception {
+                            return mapper.readValue(response.getResponseBody(), responseClass);
                         }
 
                         @Override
@@ -129,16 +131,17 @@ public class AsyncHabiticaHttpClient extends AbstractHttpClient {
     }
 
     @Override
-    public <T> T putForObject(String url, T object, final Class<T> objectClass, String... params) {
-        Future<T> f;
+//    public <T> T putForObject(String url, T object, final Class<T> objectClass, String... params) {
+    public <Req,Res> Res putForObject(String url, Req requestObject, Class<Res> responseClass, String... params){
+        Future<Res> f;
         try {
-            byte[] body = this.mapper.writeValueAsBytes(object);
+            byte[] body = this.mapper.writeValueAsBytes(requestObject);
             f = asyncHttpClient.preparePut(expandUrl(url, params)).setBody(body).setHeaders(headers).execute(
-                    new AsyncCompletionHandler<T>() {
+                    new AsyncCompletionHandler<Res>() {
 
                         @Override
-                        public T onCompleted(Response response) throws Exception {
-                            return mapper.readValue(response.getResponseBody(), objectClass);
+                        public Res onCompleted(Response response) throws Exception {
+                            return mapper.readValue(response.getResponseBody(), responseClass);
                         }
 
                         @Override
