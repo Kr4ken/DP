@@ -13,7 +13,7 @@ public class TaskCheckList {
     private Long id;
     private String name;
     private String trelloId;
-    @OneToMany(mappedBy = "checklist", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "checklist", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<TaskCheckListItem> checklistItems;
     @ManyToOne
     @JoinColumn(name = "task_id")

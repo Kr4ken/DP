@@ -27,7 +27,7 @@ public class Task {
     // Важность задачи
     private Boolean important;
     // Особенности поведения задачи
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     private TaskSpecial special;
     // Тип задачи
     @OneToOne
@@ -35,7 +35,7 @@ public class Task {
     // Дата выполнения задачи
     private Date dueDate;
     // Чеклист с небольшими подзадачами для данной задачи
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<TaskCheckList> checklists;
     // Атрибут текущей задачи
     private TaskAttribute attribute;
@@ -76,8 +76,11 @@ public class Task {
         this.dueDate = other.dueDate != null ? other.dueDate : dueDate;
 //        this.checklists = other.checklists != null ? other.checklists : checklists;
         if(other.checklists != null) {
+            checklists.clear();
             other.checklists.forEach(taskCheckList -> taskCheckList.setTask(this));
-            this.checklists = other.checklists;
+            checklists.addAll(other.checklists);
+
+//            this.checklists = other.checklists;
         }
 //            if(checklists!=null){
 //                checklists.clear();
