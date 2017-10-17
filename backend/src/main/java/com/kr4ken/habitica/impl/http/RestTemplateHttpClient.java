@@ -36,10 +36,8 @@ public class RestTemplateHttpClient implements HabiticaHttpClient {
     }
 
     @Override
-//    public <T> T postForObject(String url, T object, Class<T> objectClass, String... params) {
     public <Req,Res> Res postForObject(String url, Req requestObject, Class<Res> responseClass, String... params){
         try {
-//            return restTemplate.postForObject(url, object, objectClass, params);
             return restTemplate.exchange(url,HttpMethod.POST,new HttpEntity<Req>(requestObject,headers), responseClass,params).getBody();
         } catch (RestClientException e) {
             throw new HabiticaHttpException(e);
@@ -50,7 +48,6 @@ public class RestTemplateHttpClient implements HabiticaHttpClient {
     @Override
     public URI postForLocation(String url, Object object, String... params) {
         try {
-//            return restTemplate.postForLocation(url, object, params);
             return restTemplate.exchange(url,HttpMethod.POST,new HttpEntity<>(headers),URI.class, params).getBody();
         } catch (RestClientException e) {
             throw new HabiticaHttpException(e);

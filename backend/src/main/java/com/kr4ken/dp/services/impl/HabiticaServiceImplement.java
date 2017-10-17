@@ -12,6 +12,7 @@ import com.kr4ken.dp.models.repository.*;
 import com.kr4ken.dp.services.intf.HabiticaService;
 import com.kr4ken.dp.services.intf.TrelloService;
 import com.kr4ken.habitica.Habitica;
+import com.kr4ken.habitica.exception.HabiticaHttpException;
 import com.kr4ken.habitica.impl.HabiticaImpl;
 import org.hibernate.loader.plan.build.internal.returns.CollectionFetchableIndexAnyGraph;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,13 +79,23 @@ public class HabiticaServiceImplement implements HabiticaService {
 
     @Override
     public Task saveTask(Task task) {
-        Boolean update = task.getTrelloId() != null && habiticaApi.getTask(task.getTrelloId()) != null;
-        com.kr4ken.habitica.domain.Task result = update ? habiticaApi.getTask(task.getTrelloId()) : new com.kr4ken.habitica.domain.Task();
+        Boolean update;
+        com.kr4ken.habitica.domain.Task result;
+        try {
+            result =  habiticaApi.getTask(task.getTrelloId());
+            update = true;
+        }
+        catch (HabiticaHttpException e){
+            result =  new com.kr4ken.habitica.domain.Task();
+            update=false;
+        }
         result.setAlias(task.getTrelloId());
         result.setAttribute(task.getAttribute().toString().toLowerCase());
         result.setText(task.getName());
         result.setIsDue(task.getDueDate() != null);
         result.setNotes(task.getDescription());
+        result.setPriority(1.);
+        result.setValue(1.);
         if (task.getType().getTrelloId().equals(trelloConfig.getHabitTaskList())) {
             result.setType("habit");
         } else {

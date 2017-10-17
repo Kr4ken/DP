@@ -2,10 +2,7 @@ package com.kr4ken.habitica.impl;
 
 import com.kr4ken.habitica.Habitica;
 import com.kr4ken.habitica.HabiticaHttpClient;
-import com.kr4ken.habitica.domain.Argument;
-import com.kr4ken.habitica.domain.HabiticaEntity;
-import com.kr4ken.habitica.domain.HabiticaResponse;
-import com.kr4ken.habitica.domain.Task;
+import com.kr4ken.habitica.domain.*;
 import com.kr4ken.habitica.impl.http.ApacheHttpClient;
 import com.kr4ken.habitica.impl.http.RestTemplateHttpClient;
 import org.slf4j.Logger;
@@ -52,32 +49,26 @@ public class HabiticaImpl implements Habitica {
 
     @Override
     public Task getTask(String taskId, Argument... args) {
-        HabiticaResponse response = get(createUrl(GET_TASK).params(args).asString(), HabiticaResponse.class, taskId);
+        HabiticaResponseTask response = get(createUrl(GET_TASK).params(args).asString(), HabiticaResponseTask.class, taskId);
         if (!response.getSuccess()) return null;
-        for (Task task : response.getData()) {
-            task.setInternalHabitica(this);
-        }
-        return response.getData().get(0);
+        response.getData().setInternalHabitica(this);
+        return response.getData();
     }
 
     @Override
     public Task createTask(Task task) {
-        HabiticaResponse response = postForObject(createUrl(CREATE_USER_TASK).asString(), task, HabiticaResponse.class);
+        HabiticaResponseTask response = postForObject(createUrl(CREATE_USER_TASK).asString(), task, HabiticaResponseTask.class);
         if (!response.getSuccess()) return null;
-        for (Task tt : response.getData()) {
-            tt.setInternalHabitica(this);
-        }
-        return response.getData().get(0);
+        response.getData().setInternalHabitica(this);
+        return response.getData();
     }
 
     @Override
     public Task updateTask(Task task) {
-        HabiticaResponse response = put(createUrl(UPDATE_TASK).asString(), task, HabiticaResponse.class,task.getAlias());
+        HabiticaResponseTask response = put(createUrl(UPDATE_TASK).asString(), task, HabiticaResponseTask.class,task.getAlias());
         if (!response.getSuccess()) return null;
-        for (Task tt : response.getData()) {
-            tt.setInternalHabitica(this);
-        }
-        return response.getData().get(0);
+        response.getData().setInternalHabitica(this);
+        return response.getData();
     }
 
     /**

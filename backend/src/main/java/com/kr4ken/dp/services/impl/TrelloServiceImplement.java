@@ -443,7 +443,61 @@ public class TrelloServiceImplement implements TrelloService {
 
     @Override
     public Task saveTask(Task task) {
-        return null;
+        Card card = task.getTrelloId() != null? trelloApi.getCard(task.getTrelloId()):new Card();
+        String description = "";
+
+        if (task.getName() != null)
+            card.setName(task.getName() + " [" + task.getDuration() + "]");
+        if (task.getDescription() != null)
+            description = task.getDescription();
+        if (task.getImg() != null) {
+            //Уже есть аттачмент
+            if (card.getIdAttachmentCover() != null) {
+                Attachment attachment = trelloApi.getCardAttachment(card.getId(), card.getIdAttachmentCover());
+                // Если не совпадает с изображением - Удаляем
+                if (!attachment.getUrl().equals(task.getImg())) {
+                    trelloApi.deleteAttachment(card.getId(), attachment.getId());
+                    // И создаем новый
+                    Attachment new_attach = createCoverAttachment(card.getId(), task.getImg());
+                    card.setIdAttachmentCover(new_attach.getId());
+                    task.setImg(new_attach.getUrl());
+                }
+            } else {
+                // Если нет аттачмента просто создаем новый
+                Attachment new_attach = createCoverAttachment(card.getId(), task.getImg());
+                card.setIdAttachmentCover(new_attach.getId());
+                task.setImg(new_attach.getUrl());
+            }
+        }
+        //TODO: Сделать срочность и важность
+        if(task.getImportant()) {
+//            card.setLabels();
+        }
+        if(task.getUrgent()) {
+//            card.setLabels();
+        }
+
+        // TODO: Сделать special
+        if(task.getSpecial() != null)
+            description += "[special]({special})";
+
+        if (task.getType() != null && !task.getType().getTrelloId().equals(card.getIdList())) {
+            card.setIdList(task.getType().getTrelloId());
+        }
+
+        //TODO: Доделать чеклисты
+
+        if (!description.isEmpty())
+            card.setDesc(description);
+
+        if (task.getTrelloId() == null) {
+            card = trelloApi.createCard(task.getType().getTrelloId(), card);
+            task.setTrelloId(card.getId());
+        } else {
+            trelloApi.updateCard(card);
+        }
+
+        return task;
     }
 
     @Override
