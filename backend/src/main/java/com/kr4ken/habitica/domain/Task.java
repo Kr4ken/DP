@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Date;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -12,9 +13,6 @@ public class Task  extends HabiticaEntity{
     private String userId;
     private String alias;
     private String text;
-    private Boolean isDue;
-    private Date createdAt;
-    private Date updatedAt;
     private String attribute;
     private Double value;
     private Double priority;
@@ -22,7 +20,10 @@ public class Task  extends HabiticaEntity{
     // Может поменять
     private String type;
     private Boolean completed;
-    private Boolean yesterDaily;
+    private DailyRepeat repeat;
+    private List<String> tags;
+    private String frequency;
+    private Date date;
 
     public Task() {
     }
@@ -57,30 +58,6 @@ public class Task  extends HabiticaEntity{
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public Boolean getIsDue() {
-        return isDue;
-    }
-
-    public void setIsDue(Boolean due) {
-        isDue = due;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public String getAttribute() {
@@ -131,11 +108,35 @@ public class Task  extends HabiticaEntity{
         this.completed = completed;
     }
 
-    public Boolean getYesterDaily() {
-        return yesterDaily;
+    public DailyRepeat getRepeat() {
+        return repeat;
     }
 
-    public void setYesterDaily(Boolean yesterDaily) {
-        this.yesterDaily = yesterDaily;
+    public void setRepeat(DailyRepeat repeat) {
+        this.repeat = repeat;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

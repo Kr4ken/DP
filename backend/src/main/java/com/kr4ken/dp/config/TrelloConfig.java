@@ -42,15 +42,40 @@ public class TrelloConfig {
     @Value("${app.task.label.nurgent}")
     private String nurgentTaskLabel;
 
+    // Labels
     @Value("${app.task.label.important}")
     private String importantTaskLabel;
     @Value("${app.task.label.nimportant}")
     private String nimportantTaskLabel;
+    @Value("${app.task.label.Str}")
+    private String strTaskLabel;
+    @Value("${app.task.label.Con}")
+    private String conTaskLabel;
+    @Value("${app.task.label.Per}")
+    private String perTaskLabel;
+    @Value("${app.task.label.Int}")
+    private String intTaskLabel;
 
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    public String getStrTaskLabel() {
+        return strTaskLabel;
+    }
+
+    public String getConTaskLabel() {
+        return conTaskLabel;
+    }
+
+    public String getPerTaskLabel() {
+        return perTaskLabel;
+    }
+
+    public String getIntTaskLabel() {
+        return intTaskLabel;
     }
 
     public String getApplicationKey() {

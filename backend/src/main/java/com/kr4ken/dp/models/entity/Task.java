@@ -42,7 +42,7 @@ public class Task {
     // Время выполнения задачи
     private Double duration;
 
-    Task() { // jpa only
+    public Task() { // jpa only
     }
 
     public Task(String trelloId, String name, String description, String img, Boolean urgent, Boolean important, TaskSpecial special, TaskType type, Date dueDate, List<TaskCheckList> checklists, TaskAttribute attribute, Double duration) {
@@ -74,27 +74,16 @@ public class Task {
         this.special = other.special != null ? other.special : special;
         this.type = other.type != null ? other.type : type;
         this.dueDate = other.dueDate != null ? other.dueDate : dueDate;
-//        this.checklists = other.checklists != null ? other.checklists : checklists;
         if(other.checklists != null) {
-            checklists.clear();
-            other.checklists.forEach(taskCheckList -> taskCheckList.setTask(this));
-            checklists.addAll(other.checklists);
+            if(checklists!= null) {
+                checklists.clear();
+                other.checklists.forEach(taskCheckList -> taskCheckList.setTask(this));
+                checklists.addAll(other.checklists);
+            }else {
+                this.checklists = other.checklists;
+            }
 
-//            this.checklists = other.checklists;
         }
-//            if(checklists!=null){
-//                checklists.clear();
-//                checklists.addAll(other.checklists);
-//            }
-//            else {
-//                checklists = other.checklists;
-//            }
-//        }
-//        this.checklists = other.checklists != null ? other.checklists.stream()
-//                .map(TaskCheckList::new)
-//                .map(taskCheckList -> {taskCheckList.setTask(this);return taskCheckList;})
-//                .collect(Collectors.toList())
-//                : checklists;
         this.attribute = other.attribute != null ? other.attribute : attribute;
         this.duration = other.duration != null ? other.duration : duration;
     }

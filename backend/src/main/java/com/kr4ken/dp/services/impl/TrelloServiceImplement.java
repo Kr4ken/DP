@@ -9,6 +9,7 @@ import com.kr4ken.dp.config.TrelloConfig;
 import com.kr4ken.dp.models.entity.*;
 import com.kr4ken.dp.models.repository.*;
 import com.kr4ken.dp.services.intf.TrelloService;
+import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -318,6 +319,15 @@ public class TrelloServiceImplement implements TrelloService {
         return taskType;
     }
 
+    private Double getDuration(String str) {
+        return str.contains("[") ? parseDouble(str.substring(str.indexOf("[") + 1, str.indexOf("]")), 0.) : 0.;
+    }
+
+    private String getNameWithoutDuration(String str) {
+        return str.contains("[") ? str.substring(0, str.indexOf("[")) : str;
+    }
+
+
     private List<TaskCheckList> getChecklistsFromCard(Card card) {
         List<TaskCheckList> result = null;
         for (String checklistId : card.getIdChecklists()) {
@@ -329,8 +339,8 @@ public class TrelloServiceImplement implements TrelloService {
             for (CheckItem checkitem : checkList.getCheckItems()) {
                 if (items == null) items = new ArrayList<>();
                 String itemName = checkitem.getName();
-                Double duration = itemName.contains("[") ? parseDouble(itemName.substring(itemName.indexOf("[") + 1, itemName.indexOf("]")), 0.) : 0.;
-                itemName = itemName.contains("[") ? itemName.substring(0, itemName.indexOf("[")) : itemName;
+                Double duration = getDuration(itemName);
+                itemName = getNameWithoutDuration(itemName);
                 TaskCheckListItem taskCheckListItem = new TaskCheckListItem(checkitem.getPos(), duration, checkitem.getId(), itemName, checkitem.getState().equals("complete"), taskCheckList);
                 items.add(taskCheckListItem);
             }
@@ -342,8 +352,8 @@ public class TrelloServiceImplement implements TrelloService {
 
     private TaskSpecial getSpecialFromCard(Card card) {
         String desc = card.getDesc();
-        String special = desc.contains("[special](") ? desc.substring(desc.indexOf("[special]("), desc.indexOf(")", desc.indexOf("[special]("))) : "";
-        JsonFactory jsonFactory = new JsonFactory();
+        String specialPrefix = "[special](";
+        String special = desc.contains(specialPrefix) ? desc.substring(desc.indexOf(specialPrefix) + specialPrefix.length(), desc.indexOf(")", desc.indexOf(specialPrefix))) : "";
         ObjectMapper objectMapper = new ObjectMapper();
         TaskSpecial taskSpecial = null;
         try {
@@ -354,74 +364,83 @@ public class TrelloServiceImplement implements TrelloService {
         return taskSpecial;
     }
 
+    private TaskAttribute getCardAtribute(Card card) {
+        List<Label> labels = card.getLabels();
+        if (labels.stream().anyMatch(label -> label.getId().equals(trelloConfig.getStrTaskLabel()))) {
+            return TaskAttribute.Str;
+        }
+        if (labels.stream().anyMatch(label -> label.getId().equals(trelloConfig.getIntTaskLabel()))) {
+            return TaskAttribute.Int;
+        }
+        if (labels.stream().anyMatch(label -> label.getId().equals(trelloConfig.getConTaskLabel()))) {
+            return TaskAttribute.Con;
+        }
+        if (labels.stream().anyMatch(label -> label.getId().equals(trelloConfig.getPerTaskLabel()))) {
+            return TaskAttribute.Per;
+        }
+        return TaskAttribute.Str;
+    }
+
 
     private Task getTaskFromCard(Card card) {
-        // Наименование задачи
-        String name = card.getName();
-        // Длительность задачи
-        Double duration = name.contains("[") ? parseDouble(name.substring(name.indexOf("[") + 1, name.indexOf("]")), 0.) : 0.;
-        name = name.contains("[") ? name.substring(0, name.indexOf("[")) : name;
+        Task result = new Task();
+        //trelloID
+        result.setTrelloId(card.getId());
+
         // Описание задачи
         String desc = card.getDesc().contains("[special]") ? card.getDesc().substring(0, card.getDesc().indexOf("[special]")) : card.getDesc();
+        result.setDescription(desc);
+
         // Загрузка обложки, если есть
         String img = null;
         if (card.getIdAttachmentCover() != null && !card.getIdAttachmentCover().isEmpty()) {
             img = trelloApi.getCardAttachment(card.getId(), card.getIdAttachmentCover()).getUrl();
         }
+        result.setImg(img);
+
         // Срочность
         Boolean urgent = card.getLabels().stream().anyMatch(e -> e.getId().equals(trelloUrgentLabel));
+        result.setUrgent(urgent);
+
         // Важность
         Boolean important = card.getLabels().stream().anyMatch(e -> e.getId().equals(trelloImportantLabel));
+        result.setImportant(important);
 
         // Особенности
-        TaskSpecial special = getSpecialFromCard(card);
+        result.setSpecial(getSpecialFromCard(card));
 
         // Тип задачи
+        // Если имеет неизвестный тип, то возвращаем null
         Optional<TaskType> taskTypeOptional = taskTypeRepository.findByTrelloId(card.getIdList());
         TaskType taskType;
         if (taskTypeOptional.isPresent())
             taskType = taskTypeOptional.get();
         else
             return null;
-
-        Task result = new Task(name, urgent, important, taskType);
-        result.setDuration(duration);
-        result.setDescription(desc);
-        result.setImg(img);
-        result.setSpecial(special);
-
-        // Дата выполнения задачи
+        result.setType(taskType);
+        // Выполнить до
         Date due = card.getDue();
-
         result.setDueDate(due);
-
         // Чеклисты
         List<TaskCheckList> checkLists = getChecklistsFromCard(card);
-        // TODO: проставить для каждого чеклиста задачу
         if (checkLists != null)
             checkLists.forEach(taskCheckList -> taskCheckList.setTask(result));
         result.setChecklists(checkLists);
 
-        // Атрибут
-        TaskAttribute attribute = TaskAttribute.Int;
+        // Аттрибут
+        TaskAttribute attribute = getCardAtribute(card);
         result.setAttribute(attribute);
-        result.setTrelloId(card.getId());
+
+
+        String name = card.getName();
+        // Длительность задачи
+        Double duration = name.contains("[") ? parseDouble(name.substring(name.indexOf("[") + 1, name.indexOf("]")), 0.) : 0.;
+        result.setDuration(duration);
+        // Наименование задачи
+        name = name.contains("[") ? name.substring(0, name.indexOf("[")) : name;
+        result.setName(name);
 
         return result;
-//        return new Task(
-//                card.getId(),
-//                name,
-//                desc,
-//                img,
-//                urgent,
-//                important,
-//                special,
-//                taskType,
-//                due,
-//                checkLists,
-//                attribute,
-//                duration
-//        );
     }
 
     @Override
@@ -440,16 +459,116 @@ public class TrelloServiceImplement implements TrelloService {
         return getTaskFromCard(trelloApi.getCard(taks.getTrelloId()));
     }
 
+    private void mergeCheckListItems(CheckList checkList,TaskCheckList taskCheckList) {
+        List<CheckItem> trelloItems = checkList.getCheckItems();
+        List<TaskCheckListItem> divineItems = taskCheckList.getChecklistItems();
+        Set<CheckItem> notUsedCheckItems = new HashSet<>(trelloItems);
+        // Проходим по новым элементам
+        for (TaskCheckListItem divineItem :divineItems ) {
+            Boolean exitst = false;
+            // Проходим по старым элементам
+            for (CheckItem trelloItem :trelloItems) {
+                // Если элемент уже есть в старом чеклисте, то обновляем его
+                if(trelloItem.getId().equals(divineItem.getTrelloId())){
+                    exitst = true;
+                    notUsedCheckItems.remove(trelloItem);
+                    trelloItem.setName(divineItem.getName() + "["+ divineItem.getDuration() + "]");
+                    trelloItem.setState(divineItem.getChecked()?"complete":"incomplete");
+                    trelloItem.setPos(divineItem.getPos());
+
+                    trelloApi.updateCheckItem(checkList.getIdCard() ,trelloItem);
+                }
+            }
+            // Если элемента нет среди старых элементов, то добавляем его
+            if(!exitst){
+                CheckItem newItem = new CheckItem();
+                newItem.setName(divineItem.getName() + "["+ divineItem.getDuration() + "]");
+                newItem.setState(divineItem.getChecked()?"complete":"incomplete");
+                newItem.setPos(divineItem.getPos());
+
+                newItem = trelloApi.createCheckItem(checkList.getId() ,newItem);
+                divineItem.setTrelloId(newItem.getId());
+            }
+        }
+        // Удаляем все старые элементы, которых нет в новом
+        for(CheckItem rem:notUsedCheckItems){
+            trelloApi.deleteCheckItem(checkList.getId(),rem.getId());
+        }
+    }
+
+    private void mergeCheckLists(Card trelloCard,Task divineTask) {
+        List<CheckList> trelloList = trelloCard.getIdChecklists().stream().map(e -> trelloApi.getCheckList(e)).collect(Collectors.toList());
+        List<TaskCheckList> divineList = divineTask.getChecklists();
+        Set<CheckList> notUsedCheckList = new HashSet<>(trelloList);
+        // Проходим по новым элементам
+        for (TaskCheckList divine :divineList ) {
+            Boolean exitst = false;
+            // Проходим по старым элементам
+            for (CheckList trello :trelloList) {
+                // Если элемент уже есть в старом чеклисте, то обновляем его
+                if(trello.getId().equals(divine.getTrelloId())){
+                    exitst = true;
+                    notUsedCheckList.remove(trello);
+                    trello.setName(divine.getName());
+                    mergeCheckListItems(trello,divine);
+                }
+            }
+            // Если элемента нет среди старых элементов, то добавляем его
+            if(!exitst){
+                CheckList newCheckList = new CheckList();
+                newCheckList.setName(divine.getName());
+                newCheckList.setIdCard(trelloCard.getId());
+                trelloApi.createCheckList(newCheckList.getIdCard(),newCheckList);
+                divine.setTrelloId(newCheckList.getId());
+                for (TaskCheckListItem divineItem :divine.getChecklistItems() ) {
+                    CheckItem newItem = new CheckItem();
+                    newItem.setName(divineItem.getName() + "["+ divineItem.getDuration() + "]");
+                    newItem.setState(divineItem.getChecked()?"complete":"incomplete");
+                    newItem.setPos(divineItem.getPos());
+
+                    newItem = trelloApi.createCheckItem(newCheckList.getId() ,newItem);
+                    divineItem.setTrelloId(newItem.getId());
+                }
+            }
+        }
+        for(CheckList rem:notUsedCheckList){
+            trelloApi.deleteCheckList(rem.getId());
+        }
+    }
 
     @Override
     public Task saveTask(Task task) {
-        Card card = task.getTrelloId() != null? trelloApi.getCard(task.getTrelloId()):new Card();
-        String description = "";
+        Card card = task.getTrelloId() != null ? trelloApi.getCard(task.getTrelloId()) : new Card();
+        // Срок задачи
+        if (task.getDueDate() != null)
+            card.setDue(task.getDueDate());
 
-        if (task.getName() != null)
-            card.setName(task.getName() + " [" + task.getDuration() + "]");
+        // Описание задачи
+        String description = "";
         if (task.getDescription() != null)
             description = task.getDescription();
+        // Особенности задачи
+        if (task.getSpecial() != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            String special;
+            try {
+                special = mapper.writeValueAsString(task.getSpecial());
+            } catch (Exception e) {
+                special = "";
+            }
+            description += " [special](" + special + ")";
+        }
+        card.setDesc(description);
+
+        // Чек-листы
+        if (task.getChecklists() != null) {
+            //Проверить работоспособность
+            mergeCheckLists(card,task);
+        }
+        // Лист Карточки
+        card.setIdList(task.getType().getTrelloId());
+
+        // Обложка карточки
         if (task.getImg() != null) {
             //Уже есть аттачмент
             if (card.getIdAttachmentCover() != null) {
@@ -469,39 +588,55 @@ public class TrelloServiceImplement implements TrelloService {
                 task.setImg(new_attach.getUrl());
             }
         }
-        //TODO: Сделать срочность и важность
-        if(task.getImportant()) {
-//            card.setLabels();
+        List<String> newLabelsId = new ArrayList<>();
+        // Важность
+        if (task.getImportant())
+            newLabelsId.add(trelloConfig.getImportantTaskLabel());
+        else
+            newLabelsId.add(trelloConfig.getNimportantTaskLabel());
+        // Срочность
+        if (task.getUrgent())
+            newLabelsId.add(trelloConfig.getUrgentTaskLabel());
+        else
+            newLabelsId.add(trelloConfig.getNurgentTaskLabel());
+        // Атрибут
+        switch (task.getAttribute()){
+            case Str:
+                newLabelsId.add(trelloConfig.getStrTaskLabel());
+                break;
+            case Con:
+                newLabelsId.add(trelloConfig.getConTaskLabel());
+                break;
+            case Per:
+                newLabelsId.add(trelloConfig.getPerTaskLabel());
+                break;
+            case Int:
+                newLabelsId.add(trelloConfig.getIntTaskLabel());
+                break;
+            default:
+                newLabelsId.add(trelloConfig.getStrTaskLabel());
         }
-        if(task.getUrgent()) {
-//            card.setLabels();
-        }
+        card.setIdLabels(newLabelsId);
+        // Наименование карточки
+        if (task.getName() != null)
+            card.setName(task.getName() + " [" + task.getDuration() + "]");
 
-        // TODO: Сделать special
-        if(task.getSpecial() != null)
-            description += "[special]({special})";
-
-        if (task.getType() != null && !task.getType().getTrelloId().equals(card.getIdList())) {
-            card.setIdList(task.getType().getTrelloId());
-        }
-
-        //TODO: Доделать чеклисты
-
-        if (!description.isEmpty())
-            card.setDesc(description);
-
+        // Сохраняем карточку и обновляем исходный таск
         if (task.getTrelloId() == null) {
             card = trelloApi.createCard(task.getType().getTrelloId(), card);
             task.setTrelloId(card.getId());
         } else {
             trelloApi.updateCard(card);
         }
-
         return task;
     }
 
     @Override
     public Task deleteTask(Task task) {
-        return null;
+        Card card = trelloApi.getCard(task.getTrelloId());
+        if (card != null) {
+            trelloApi.deleteCard(task.getTrelloId());
+        }
+        return task;
     }
 }

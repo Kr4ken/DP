@@ -11,6 +11,15 @@ public class HabiticaUrl {
     public static final String GET_TASK = "/tasks/{taskId}?";
     public static final String CREATE_USER_TASK = "/tasks/user?";
     public static final String UPDATE_TASK = "/tasks/{taskId}?";
+    public static final String DELETE_TASK = "/tasks/{taskId}?";
+
+    // Tags
+    public static final String GET_USER_TAGS = "/tags?";
+    public static final String GET_TAG = "/tags/{tagId}?";
+    public static final String CREATE_TAG = "/tags?";
+    public static final String UPDATE_TAG = "/tags/{tagId}?";
+    public static final String DELETE_TAG = "/tags/{tagId}?";
+
 
 
 

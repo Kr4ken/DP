@@ -46,19 +46,11 @@ public class TaskCheckList {
         this.task = task;
     }
 
+    // TODO: пока не используется, но в будующем доработать до версии Task
     public void update(TaskCheckList other) {
         this.name = other.name != null ? other.name : this.name;
         this.trelloId = other.trelloId != null ? other.trelloId : this.trelloId;
-//        if(other.checklistItems != null){
-//           this.checklistItems.clear();
-//           this.checklistItems.addAll(other.checklistItems);
-//        }
         this.checklistItems = other.checklistItems != null ? other.checklistItems :this.checklistItems;
-//        this.checklistItems = other.checklistItems != null ? other.checklistItems.stream()
-//                .map(TaskCheckListItem::new)
-//                .map(taskCheckListItem -> {taskCheckListItem.setChecklist(this);return taskCheckListItem;})
-//                .collect(Collectors.toList())
-//                :this.checklistItems;
         this.task = other.task != null ? other.task : this.task;
     }
 

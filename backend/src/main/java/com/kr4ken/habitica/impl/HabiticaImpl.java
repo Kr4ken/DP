@@ -71,6 +71,54 @@ public class HabiticaImpl implements Habitica {
         return response.getData();
     }
 
+    @Override
+    public void deleteTask(String taskId) {
+        delete(createUrl(DELETE_TASK).asString(),taskId);
+    }
+
+    /**
+     * Tags
+     *
+     */
+
+    @Override
+    public List<Tag> getUserTags() {
+        HabiticaResponseTags response = get(createUrl(GET_USER_TAGS).asString(), HabiticaResponseTags.class);
+        for (Tag tag : response.getData()) {
+            tag.setInternalHabitica(this);
+        }
+        return response.getData();
+    }
+
+    @Override
+    public Tag getTag(String tagId) {
+        HabiticaResponseTag response = get(createUrl(GET_TAG).asString(), HabiticaResponseTag.class, tagId);
+        if (!response.getSuccess()) return null;
+        response.getData().setInternalHabitica(this);
+        return response.getData();
+    }
+
+    @Override
+    public Tag createTag(Tag tag) {
+        HabiticaResponseTag response = postForObject(createUrl(CREATE_TAG).asString(), tag, HabiticaResponseTag.class);
+        if (!response.getSuccess()) return null;
+        response.getData().setInternalHabitica(this);
+        return response.getData();
+    }
+
+    @Override
+    public Tag updateTag(Tag tag) {
+        HabiticaResponseTag response = put(createUrl(UPDATE_TAG).asString(), tag, HabiticaResponseTag.class,tag.getId());
+        if (!response.getSuccess()) return null;
+        response.getData().setInternalHabitica(this);
+        return response.getData();
+    }
+
+    @Override
+    public void deleteTag(String tagId) {
+        delete(createUrl(DELETE_TAG).asString(),tagId);
+    }
+
     /**
      * Internal methods
      */
