@@ -99,6 +99,15 @@ public class DivineServiceImplement implements DivineService {
         importTasksFromTrello();
 
     }
+
+    @Override
+    public void exportTasksToHabitica() {
+        for(TaskType taskType:trelloService.getActiveList()){
+            for(Task task:taskRepository.findByType(taskType)){
+                habiticaService.saveTask(task);
+            }
+        }
+    }
 }
 
 

@@ -1,6 +1,5 @@
 package com.kr4ken.dp.services.impl;
 
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.*;
@@ -9,7 +8,6 @@ import com.kr4ken.dp.config.TrelloConfig;
 import com.kr4ken.dp.models.entity.*;
 import com.kr4ken.dp.models.repository.*;
 import com.kr4ken.dp.services.intf.TrelloService;
-import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -459,79 +457,79 @@ public class TrelloServiceImplement implements TrelloService {
         return getTaskFromCard(trelloApi.getCard(taks.getTrelloId()));
     }
 
-    private void mergeCheckListItems(CheckList checkList,TaskCheckList taskCheckList) {
+    private void mergeCheckListItems(CheckList checkList, TaskCheckList taskCheckList) {
         List<CheckItem> trelloItems = checkList.getCheckItems();
         List<TaskCheckListItem> divineItems = taskCheckList.getChecklistItems();
         Set<CheckItem> notUsedCheckItems = new HashSet<>(trelloItems);
         // Проходим по новым элементам
-        for (TaskCheckListItem divineItem :divineItems ) {
+        for (TaskCheckListItem divineItem : divineItems) {
             Boolean exitst = false;
             // Проходим по старым элементам
-            for (CheckItem trelloItem :trelloItems) {
+            for (CheckItem trelloItem : trelloItems) {
                 // Если элемент уже есть в старом чеклисте, то обновляем его
-                if(trelloItem.getId().equals(divineItem.getTrelloId())){
+                if (trelloItem.getId().equals(divineItem.getTrelloId())) {
                     exitst = true;
                     notUsedCheckItems.remove(trelloItem);
-                    trelloItem.setName(divineItem.getName() + "["+ divineItem.getDuration() + "]");
-                    trelloItem.setState(divineItem.getChecked()?"complete":"incomplete");
+                    trelloItem.setName(divineItem.getName() + "[" + divineItem.getDuration() + "]");
+                    trelloItem.setState(divineItem.getChecked() ? "complete" : "incomplete");
                     trelloItem.setPos(divineItem.getPos());
 
-                    trelloApi.updateCheckItem(checkList.getIdCard() ,trelloItem);
+                    trelloApi.updateCheckItem(checkList.getIdCard(), trelloItem);
                 }
             }
             // Если элемента нет среди старых элементов, то добавляем его
-            if(!exitst){
+            if (!exitst) {
                 CheckItem newItem = new CheckItem();
-                newItem.setName(divineItem.getName() + "["+ divineItem.getDuration() + "]");
-                newItem.setState(divineItem.getChecked()?"complete":"incomplete");
+                newItem.setName(divineItem.getName() + "[" + divineItem.getDuration() + "]");
+                newItem.setState(divineItem.getChecked() ? "complete" : "incomplete");
                 newItem.setPos(divineItem.getPos());
 
-                newItem = trelloApi.createCheckItem(checkList.getId() ,newItem);
+                newItem = trelloApi.createCheckItem(checkList.getId(), newItem);
                 divineItem.setTrelloId(newItem.getId());
             }
         }
         // Удаляем все старые элементы, которых нет в новом
-        for(CheckItem rem:notUsedCheckItems){
-            trelloApi.deleteCheckItem(checkList.getId(),rem.getId());
+        for (CheckItem rem : notUsedCheckItems) {
+            trelloApi.deleteCheckItem(checkList.getId(), rem.getId());
         }
     }
 
-    private void mergeCheckLists(Card trelloCard,Task divineTask) {
+    private void mergeCheckLists(Card trelloCard, Task divineTask) {
         List<CheckList> trelloList = trelloCard.getIdChecklists().stream().map(e -> trelloApi.getCheckList(e)).collect(Collectors.toList());
         List<TaskCheckList> divineList = divineTask.getChecklists();
         Set<CheckList> notUsedCheckList = new HashSet<>(trelloList);
         // Проходим по новым элементам
-        for (TaskCheckList divine :divineList ) {
+        for (TaskCheckList divine : divineList) {
             Boolean exitst = false;
             // Проходим по старым элементам
-            for (CheckList trello :trelloList) {
+            for (CheckList trello : trelloList) {
                 // Если элемент уже есть в старом чеклисте, то обновляем его
-                if(trello.getId().equals(divine.getTrelloId())){
+                if (trello.getId().equals(divine.getTrelloId())) {
                     exitst = true;
                     notUsedCheckList.remove(trello);
                     trello.setName(divine.getName());
-                    mergeCheckListItems(trello,divine);
+                    mergeCheckListItems(trello, divine);
                 }
             }
             // Если элемента нет среди старых элементов, то добавляем его
-            if(!exitst){
+            if (!exitst) {
                 CheckList newCheckList = new CheckList();
                 newCheckList.setName(divine.getName());
                 newCheckList.setIdCard(trelloCard.getId());
-                trelloApi.createCheckList(newCheckList.getIdCard(),newCheckList);
+                trelloApi.createCheckList(newCheckList.getIdCard(), newCheckList);
                 divine.setTrelloId(newCheckList.getId());
-                for (TaskCheckListItem divineItem :divine.getChecklistItems() ) {
+                for (TaskCheckListItem divineItem : divine.getChecklistItems()) {
                     CheckItem newItem = new CheckItem();
-                    newItem.setName(divineItem.getName() + "["+ divineItem.getDuration() + "]");
-                    newItem.setState(divineItem.getChecked()?"complete":"incomplete");
+                    newItem.setName(divineItem.getName() + "[" + divineItem.getDuration() + "]");
+                    newItem.setState(divineItem.getChecked() ? "complete" : "incomplete");
                     newItem.setPos(divineItem.getPos());
 
-                    newItem = trelloApi.createCheckItem(newCheckList.getId() ,newItem);
+                    newItem = trelloApi.createCheckItem(newCheckList.getId(), newItem);
                     divineItem.setTrelloId(newItem.getId());
                 }
             }
         }
-        for(CheckList rem:notUsedCheckList){
+        for (CheckList rem : notUsedCheckList) {
             trelloApi.deleteCheckList(rem.getId());
         }
     }
@@ -563,7 +561,7 @@ public class TrelloServiceImplement implements TrelloService {
         // Чек-листы
         if (task.getChecklists() != null) {
             //Проверить работоспособность
-            mergeCheckLists(card,task);
+            mergeCheckLists(card, task);
         }
         // Лист Карточки
         card.setIdList(task.getType().getTrelloId());
@@ -600,7 +598,7 @@ public class TrelloServiceImplement implements TrelloService {
         else
             newLabelsId.add(trelloConfig.getNurgentTaskLabel());
         // Атрибут
-        switch (task.getAttribute()){
+        switch (task.getAttribute()) {
             case Str:
                 newLabelsId.add(trelloConfig.getStrTaskLabel());
                 break;
@@ -638,5 +636,14 @@ public class TrelloServiceImplement implements TrelloService {
             trelloApi.deleteCard(task.getTrelloId());
         }
         return task;
+    }
+
+    @Override
+    public List<TaskType> getActiveList() {
+        String input = trelloConfig.getInputTaskList();
+        String distr = trelloConfig.getDistributeTaskList();
+        String pause = trelloConfig.getPauseTaskList();
+        String complete = trelloConfig.getCompleteTaskList();
+        return taskTypeRepository.findAll().stream().filter(taskType -> !taskType.getTrelloId().equals(input) && !taskType.getTrelloId().equals(distr) && !taskType.getTrelloId().equals(pause) && !taskType.getTrelloId().equals(complete)).collect(Collectors.toList());
     }
 }

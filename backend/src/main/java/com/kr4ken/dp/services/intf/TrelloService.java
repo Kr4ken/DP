@@ -42,4 +42,9 @@ public interface TrelloService {
 
     TaskType deleteTaskType(TaskType taskType);
     Task deleteTask(Task task);
+
+    // Вспомогательное
+    //Получить список типов задач, которые сейчас активны
+    List<TaskType> getActiveList();
+
 }

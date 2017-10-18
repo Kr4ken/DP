@@ -11,6 +11,7 @@ import java.util.List;
  * Сервис обеспечивающий всю логику при работе приложения
  */
 public interface DivineService {
+    // Trello
     void importTasksFromTrello();
 
     void importTaskFromTrello(Long id);
@@ -18,6 +19,13 @@ public interface DivineService {
     void importTaskTypesFromTrello();
 
     void importTaskTypeFromTrello(Long id);
+
+    // Habitica
+
+    void exportTasksToHabitica();
+
+
+
 
     void TasksTrelloToHabitica();
 
