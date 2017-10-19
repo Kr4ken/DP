@@ -5,6 +5,7 @@ import com.kr4ken.dp.models.repository.*;
 import com.kr4ken.dp.services.intf.DivineService;
 import com.kr4ken.dp.services.intf.HabiticaService;
 import com.kr4ken.dp.services.intf.TrelloService;
+import com.kr4ken.dp.utils.TaskUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,11 +40,11 @@ public class DivineServiceImplement implements DivineService {
         this.habiticaService = habiticaService;
         this.taskCheckListRepository = taskCheckListRepository;
         this.taskCheckListItemRepository = taskCheckListItemRepository;
-        this.taskSpecialRepository  = taskSpecialRepository;
+        this.taskSpecialRepository = taskSpecialRepository;
     }
 
     @Override
-    public void importTaskTypesFromTrello(){
+    public void importTaskTypesFromTrello() {
         trelloService.getTaskTypes()
                 .forEach(e -> {
                     Optional<TaskType> current = taskTypeRepository.findByTrelloId(e.getTrelloId());
@@ -102,11 +103,67 @@ public class DivineServiceImplement implements DivineService {
 
     @Override
     public void exportTasksToHabitica() {
-        for(TaskType taskType:trelloService.getActiveList()){
-            for(Task task:taskRepository.findByType(taskType)){
+        for (TaskType taskType : trelloService.getActiveList()) {
+            for (Task task : taskRepository.findByType(taskType)) {
                 habiticaService.saveTask(task);
             }
         }
+    }
+
+    @Override
+    public void scoreTaskFromHabitica(String habiticaId) {
+        Optional<Task> task = taskRepository.findByTrelloId(habiticaId);
+        if (task.isPresent())
+            scoreTaskFromHabitica(task.get());
+    }
+
+    @Override
+    public void scoreTaskFromHabitica(Task task) {
+        // Если выполнил привычку то ничего не делай
+        if (task.getType().equals(trelloService.getHabitType()))
+            return;
+        // Если выполнил каждодневную задачу то если есть подзадачи, то выполни её, если нет ничего не делай
+        if (task.getType().equals(trelloService.getDailyType())) {
+            TaskCheckListItem subTask = TaskUtils.getCurrentSubtask(task);
+            if (subTask != null) {
+                subTask.setChecked(true);
+                taskRepository.save(trelloService.saveTask(task));
+            }
+            habiticaService.saveTask(task);
+            return;
+        }
+        // Иначе задача была из списка todo
+        TaskCheckListItem subTask = TaskUtils.getCurrentSubtask(task);
+        // Если есть подзадача то выполняем её
+        if (subTask != null) {
+            subTask.setChecked(true);
+            taskRepository.save(trelloService.saveTask(task));
+        // Иначе выполняем карточку
+        } else{
+            // Если есть особенности смотрим их
+            if(task.getSpecial()!=null){
+               switch (task.getSpecial().getComplete()){
+                   case Delete:
+                       taskRepository.delete(trelloService.deleteTask(task));
+                       break;
+                   case Move:
+                       task.setType(trelloService.getCompleteType());
+                       taskRepository.save(trelloService.saveTask(task));
+                       break;
+                   case Arhieve:
+                       //TODO: Сделать когда нибудь
+                       break;
+                   default:
+                       task.setType(trelloService.getCompleteType());
+                       taskRepository.save(trelloService.saveTask(task));
+               }
+            }
+            // Если нет особенностей то переносим в список выполненных
+            task.setType(trelloService.getCompleteType());
+            taskRepository.save(trelloService.saveTask(task));
+        }
+        // В конце сохраняем изменения если они были
+        habiticaService.saveTask(task);
     }
 }
 

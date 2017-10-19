@@ -46,5 +46,8 @@ public interface TrelloService {
     // Вспомогательное
     //Получить список типов задач, которые сейчас активны
     List<TaskType> getActiveList();
+    TaskType getHabitType();
+    TaskType getDailyType();
+    TaskType getCompleteType();
 
 }

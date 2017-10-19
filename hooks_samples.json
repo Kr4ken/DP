@@ -1,0 +1,1500 @@
+============================================================ ============================================================ ============================================================
+============================================================ 							HABITICA 						  ============================================================
+============================================================ ============================================================ ============================================================
+============================================================
+TODO
+============================================================
+CHECK
+{
+  "type": "scored",
+  "direction": "up",
+  "delta": 1.4345746680552867,
+  "task": {
+    "dateCompleted": "2017-10-19T04:51:42.627Z",
+    "_id": "d18c4010-538f-4d99-9be1-df6e18d6691b",
+    "userId": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "alias": "59660207f96a052f69f3824a",
+    "text": "{0.0} Записаться на вождение [Вождение]",
+    "updatedAt": "2017-10-19T04:51:42.887Z",
+    "createdAt": "2017-08-07T12:29:13.859Z",
+    "reminders": [],
+    "group": {
+      "approval": {
+        "requested": false,
+        "approved": false,
+        "required": false
+      },
+      "assignedUsers": []
+    },
+    "challenge": {},
+    "attribute": "str",
+    "priority": 1,
+    "value": -12.64779390385669,
+    "tags": [
+      "d1160c62-1b7e-4f5d-b7c9-1c9c081813fb",
+      "95073aef-d47f-4404-b01a-09ed7198c31d"
+    ],
+    "notes": "![Сдать город](http://progressed.io/bar/0?scale=2&suffix=+)",
+    "type": "todo",
+    "checklist": [],
+    "collapseChecklist": false,
+    "completed": true,
+    "id": "d18c4010-538f-4d99-9be1-df6e18d6691b"
+  },
+  "user": {
+    "_id": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "_tmp": {
+      "crit": 1.8963963963963963,
+      "quest": {
+        "progressDelta": 3.0197796762563796
+      }
+    },
+    "stats": {
+      "hp": 12.000000000000004,
+      "mp": 68.2927927927928,
+      "exp": 152,
+      "gp": 84.37646054759061,
+      "lvl": 10,
+      "class": "wizard",
+      "points": 0,
+      "str": 1,
+      "con": 3,
+      "int": 3,
+      "per": 3,
+      "buffs": {
+        "str": 0,
+        "int": 0,
+        "per": 0,
+        "con": 0,
+        "stealth": 0,
+        "streaks": false,
+        "snowball": false,
+        "spookySparkles": false,
+        "shinySeed": false,
+        "seafoam": false
+      },
+      "training": {
+        "int": 0,
+        "per": 0,
+        "str": 0,
+        "con": 0
+      },
+      "toNextLevel": 260,
+      "maxHealth": 50,
+      "maxMP": 78
+    }
+  }
+}UNCHECK
+{
+  "type": "scored",
+  "direction": "down",
+  "delta": -1.434574573551899,
+  "task": {
+    "_id": "d18c4010-538f-4d99-9be1-df6e18d6691b",
+    "userId": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "alias": "59660207f96a052f69f3824a",
+    "text": "{0.0} Записаться на вождение [Вождение]",
+    "updatedAt": "2017-10-19T04:51:47.674Z",
+    "createdAt": "2017-08-07T12:29:13.859Z",
+    "reminders": [],
+    "group": {
+      "approval": {
+        "requested": false,
+        "approved": false,
+        "required": false
+      },
+      "assignedUsers": []
+    },
+    "challenge": {},
+    "attribute": "str",
+    "priority": 1,
+    "value": -14.082366001213872,
+    "tags": [
+      "d1160c62-1b7e-4f5d-b7c9-1c9c081813fb",
+      "95073aef-d47f-4404-b01a-09ed7198c31d"
+    ],
+    "notes": "![Сдать город](http://progressed.io/bar/0?scale=2&suffix=+)",
+    "type": "todo",
+    "checklist": [],
+    "collapseChecklist": false,
+    "completed": false,
+    "id": "d18c4010-538f-4d99-9be1-df6e18d6691b"
+  },
+  "user": {
+    "_id": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "_tmp": {},
+    "stats": {
+      "hp": 12.000000000000004,
+      "mp": 67.2927927927928,
+      "exp": 138,
+      "gp": 82.2532901787338,
+      "lvl": 10,
+      "class": "wizard",
+      "points": 0,
+      "str": 1,
+      "con": 3,
+      "int": 3,
+      "per": 3,
+      "buffs": {
+        "str": 0,
+        "int": 0,
+        "per": 0,
+        "con": 0,
+        "stealth": 0,
+        "streaks": false,
+        "snowball": false,
+        "spookySparkles": false,
+        "shinySeed": false,
+        "seafoam": false
+      },
+      "training": {
+        "int": 0,
+        "per": 0,
+        "str": 0,
+        "con": 0
+      },
+      "toNextLevel": 260,
+      "maxHealth": 50,
+      "maxMP": 78
+    }
+  }
+}
+
+============================================================
+DAILY
+============================================================
+CHECK
+{
+  "type": "scored",
+  "direction": "up",
+  "delta": 1,
+  "task": {
+    "_id": "52a36af4-0a33-4de2-bf8f-fccd29c49248",
+    "isDue": true,
+    "userId": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "alias": "5993fdeca76d3e32e08db25c",
+    "text": "{0.0} Учить JAVA",
+    "updatedAt": "2017-10-19T06:31:51.824Z",
+    "createdAt": "2017-10-18T19:05:11.020Z",
+    "reminders": [],
+    "group": {
+      "approval": {
+        "requested": false,
+        "approved": false,
+        "required": false
+      },
+      "assignedUsers": []
+    },
+    "challenge": {},
+    "attribute": "str",
+    "priority": 1,
+    "value": 1,
+    "tags": [],
+    "notes": "",
+    "type": "daily",
+    "checklist": [],
+    "collapseChecklist": false,
+    "completed": true,
+    "history": [],
+    "yesterDaily": true,
+    "nextDue": [
+      "2017-10-19T19:00:00.000Z",
+      "2017-10-20T19:00:00.000Z",
+      "2017-10-21T19:00:00.000Z",
+      "2017-10-22T19:00:00.000Z",
+      "2017-10-23T19:00:00.000Z",
+      "2017-10-24T19:00:00.000Z"
+    ],
+    "weeksOfMonth": [],
+    "daysOfMonth": [],
+    "streak": 1,
+    "repeat": {
+      "su": true,
+      "s": false,
+      "f": false,
+      "th": true,
+      "w": true,
+      "t": true,
+      "m": true
+    },
+    "startDate": "2017-10-18T00:00:00.000Z",
+    "everyX": 1,
+    "frequency": "daily",
+    "id": "52a36af4-0a33-4de2-bf8f-fccd29c49248"
+  },
+  "user": {
+    "_id": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "_tmp": {
+      "quest": {
+        "progressDelta": 1.1099999999999994
+      }
+    },
+    "stats": {
+      "hp": 12.000000000000004,
+      "mp": 68.2927927927928,
+      "exp": 148,
+      "gp": 83.73329017873381,
+      "lvl": 10,
+      "class": "wizard",
+      "points": 0,
+      "str": 1,
+      "con": 3,
+      "int": 3,
+      "per": 3,
+      "buffs": {
+        "str": 0,
+        "int": 0,
+        "per": 0,
+        "con": 0,
+        "stealth": 0,
+        "streaks": false,
+        "snowball": false,
+        "spookySparkles": false,
+        "shinySeed": false,
+        "seafoam": false
+      },
+      "training": {
+        "int": 0,
+        "per": 0,
+        "str": 0,
+        "con": 0
+      },
+      "toNextLevel": 260,
+      "maxHealth": 50,
+      "maxMP": 78
+    }
+  }
+}
+UNCHECK
+{
+  "type": "scored",
+  "direction": "down",
+  "delta": -0.9999999890939203,
+  "task": {
+    "_id": "52a36af4-0a33-4de2-bf8f-fccd29c49248",
+    "isDue": true,
+    "userId": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "alias": "5993fdeca76d3e32e08db25c",
+    "text": "{0.0} Учить JAVA",
+    "updatedAt": "2017-10-19T06:32:26.129Z",
+    "createdAt": "2017-10-18T19:05:11.020Z",
+    "reminders": [],
+    "group": {
+      "approval": {
+        "requested": false,
+        "approved": false,
+        "required": false
+      },
+      "assignedUsers": []
+    },
+    "challenge": {},
+    "attribute": "str",
+    "priority": 1,
+    "value": 4.255940168063077E-7,
+    "tags": [],
+    "notes": "",
+    "type": "daily",
+    "checklist": [],
+    "collapseChecklist": false,
+    "completed": false,
+    "history": [],
+    "yesterDaily": true,
+    "nextDue": [
+      "2017-10-19T19:00:00.000Z",
+      "2017-10-20T19:00:00.000Z",
+      "2017-10-21T19:00:00.000Z",
+      "2017-10-22T19:00:00.000Z",
+      "2017-10-23T19:00:00.000Z",
+      "2017-10-24T19:00:00.000Z"
+    ],
+    "weeksOfMonth": [],
+    "daysOfMonth": [],
+    "streak": 0,
+    "repeat": {
+      "su": true,
+      "s": false,
+      "f": false,
+      "th": true,
+      "w": true,
+      "t": true,
+      "m": true
+    },
+    "startDate": "2017-10-18T00:00:00.000Z",
+    "everyX": 1,
+    "frequency": "daily",
+    "id": "52a36af4-0a33-4de2-bf8f-fccd29c49248"
+  },
+  "user": {
+    "_id": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "_tmp": {},
+    "stats": {
+      "hp": 12.000000000000004,
+      "mp": 67.2927927927928,
+      "exp": 138,
+      "gp": 82.25329019487481,
+      "lvl": 10,
+      "class": "wizard",
+      "points": 0,
+      "str": 1,
+      "con": 3,
+      "int": 3,
+      "per": 3,
+      "buffs": {
+        "str": 0,
+        "int": 0,
+        "per": 0,
+        "con": 0,
+        "stealth": 0,
+        "streaks": false,
+        "snowball": false,
+        "spookySparkles": false,
+        "shinySeed": false,
+        "seafoam": false
+      },
+      "training": {
+        "int": 0,
+        "per": 0,
+        "str": 0,
+        "con": 0
+      },
+      "toNextLevel": 260,
+      "maxHealth": 50,
+      "maxMP": 78
+    }
+  }
+}============================================================
+HABIT
+============================================================
++
+{
+  "type": "scored",
+  "direction": "up",
+  "delta": 0.9059794491887502,
+  "task": {
+    "_id": "cce76cef-3a46-4b01-9d85-7289a00f05b3",
+    "userId": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "alias": "592682cc6a5587cddd1618d8",
+    "text": "{0.0} Помни",
+    "updatedAt": "2017-10-19T06:34:20.797Z",
+    "createdAt": "2017-07-17T14:52:09.145Z",
+    "reminders": [],
+    "group": {
+      "approval": {
+        "requested": false,
+        "approved": false,
+        "required": false
+      },
+      "assignedUsers": []
+    },
+    "challenge": {},
+    "attribute": "str",
+    "priority": 1,
+    "value": 4.759112954943711,
+    "tags": [],
+    "notes": "",
+    "type": "habit",
+    "history": [
+      {
+        "value": 1,
+        "date": 1500361924072
+      },
+      {
+        "value": 1.9747,
+        "date": 1502171708707
+      },
+      {
+        "value": 2.9253562257358428,
+        "date": 1502343440930
+      },
+      {
+        "value": 3.853133245658556,
+        "date": 1502771312875
+      },
+      {
+        "value": 4.759112700885761,
+        "date": 1503393685853
+      },
+      {
+        "value": 3.8531335057549603,
+        "date": 1507811587266
+      },
+      {
+        "value": 4.759112954943711,
+        "date": 1508394860568
+      }
+    ],
+    "frequency": "daily",
+    "counterDown": 0,
+    "counterUp": 1,
+    "down": true,
+    "up": true,
+    "id": "cce76cef-3a46-4b01-9d85-7289a00f05b3"
+  },
+  "user": {
+    "_id": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "_tmp": {
+      "quest": {
+        "progressDelta": 0.5028185942997556,
+        "collection": 1
+      }
+    },
+    "stats": {
+      "hp": 12.000000000000004,
+      "mp": 67.5427927927928,
+      "exp": 147,
+      "gp": 83.59413977967415,
+      "lvl": 10,
+      "class": "wizard",
+      "points": 0,
+      "str": 1,
+      "con": 3,
+      "int": 3,
+      "per": 3,
+      "buffs": {
+        "str": 0,
+        "int": 0,
+        "per": 0,
+        "con": 0,
+        "stealth": 0,
+        "streaks": false,
+        "snowball": false,
+        "spookySparkles": false,
+        "shinySeed": false,
+        "seafoam": false
+      },
+      "training": {
+        "int": 0,
+        "per": 0,
+        "str": 0,
+        "con": 0
+      },
+      "toNextLevel": 260,
+      "maxHealth": 50,
+      "maxMP": 78
+    }
+  }
+}-
+{
+  "type": "scored",
+  "direction": "down",
+  "delta": -0.9059791890923545,
+  "task": {
+    "_id": "cce76cef-3a46-4b01-9d85-7289a00f05b3",
+    "userId": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "alias": "592682cc6a5587cddd1618d8",
+    "text": "{0.0} Помни",
+    "updatedAt": "2017-10-19T06:34:45.740Z",
+    "createdAt": "2017-07-17T14:52:09.145Z",
+    "reminders": [],
+    "group": {
+      "approval": {
+        "requested": false,
+        "approved": false,
+        "required": false
+      },
+      "assignedUsers": []
+    },
+    "challenge": {},
+    "attribute": "str",
+    "priority": 1,
+    "value": 3.8531337658513563,
+    "tags": [],
+    "notes": "",
+    "type": "habit",
+    "history": [
+      {
+        "value": 1,
+        "date": 1500361924072
+      },
+      {
+        "value": 1.9747,
+        "date": 1502171708707
+      },
+      {
+        "value": 2.9253562257358428,
+        "date": 1502343440930
+      },
+      {
+        "value": 3.853133245658556,
+        "date": 1502771312875
+      },
+      {
+        "value": 4.759112700885761,
+        "date": 1503393685853
+      },
+      {
+        "value": 3.8531335057549603,
+        "date": 1507811587266
+      },
+      {
+        "value": 4.759112954943711,
+        "date": 1508394860568
+      },
+      {
+        "value": 3.8531337658513563,
+        "date": 1508394885451
+      }
+    ],
+    "frequency": "daily",
+    "counterDown": 1,
+    "counterUp": 1,
+    "down": true,
+    "up": true,
+    "id": "cce76cef-3a46-4b01-9d85-7289a00f05b3"
+  },
+  "user": {
+    "_id": "5ef62bde-14d4-4e12-adc2-8523bf042d3c",
+    "_tmp": {},
+    "stats": {
+      "hp": 10.400000000000004,
+      "mp": 67.2927927927928,
+      "exp": 147,
+      "gp": 83.59413977967415,
+      "lvl": 10,
+      "class": "wizard",
+      "points": 0,
+      "str": 1,
+      "con": 3,
+      "int": 3,
+      "per": 3,
+      "buffs": {
+        "str": 0,
+        "int": 0,
+        "per": 0,
+        "con": 0,
+        "stealth": 0,
+        "streaks": false,
+        "snowball": false,
+        "spookySparkles": false,
+        "shinySeed": false,
+        "seafoam": false
+      },
+      "training": {
+        "int": 0,
+        "per": 0,
+        "str": 0,
+        "con": 0
+      },
+      "toNextLevel": 260,
+      "maxHealth": 50,
+      "maxMP": 78
+    }
+  }
+}============================================================ ============================================================ ============================================================
+============================================================ 							TRELLO 						      ============================================================
+============================================================ ============================================================ ============================================================
+MOVE_CARD
+{
+  "model": {
+    "id": "57cff93fe2fa0b3bd900b765",
+    "name": "Прогресс",
+    "desc": "",
+    "descData": null,
+    "closed": false,
+    "idOrganization": "582983c23580559a51d87193",
+    "pinned": false,
+    "url": "https://trello.com/b/E3eS8NEC/%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B5%D1%81%D1%81",
+    "shortUrl": "https://trello.com/b/E3eS8NEC",
+    "prefs": {
+      "permissionLevel": "private",
+      "voting": "disabled",
+      "comments": "members",
+      "invitations": "admins",
+      "selfJoin": false,
+      "cardCovers": true,
+      "cardAging": "regular",
+      "calendarFeedEnabled": true,
+      "background": "58df912ead3e0190cdcdbddb",
+      "backgroundImage": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28",
+      "backgroundImageScaled": [
+        {
+          "width": 140,
+          "height": 100,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/140x100/b81481a0b39d509ab62a21bed0a5ebb9/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 256,
+          "height": 192,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/256x192/13f229b1dc66511bad2a42268e7a8293/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 480,
+          "height": 480,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/09145bf56717d858a99a57870d57a0f2/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 960,
+          "height": 960,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/960x960/a4a73d5aa2943f76f0befc365831b3ca/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1024x1024/e78c9c06aca80796957f4cb59390c43e/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2048,
+          "height": 2048,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2048x2048/051001d918cbb3a2a21b1d25ca8da57f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1280,
+          "height": 1280,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1280x1280/cdf2860696affa7c8e12b36570a9836f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1920,
+          "height": 1920,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1920x1920/6e1c2b2b6444f62d923b7f781aee1312/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1600,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1600/53cae4a2ba0b83ce69a6c290278558f0/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1714,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28"
+        }
+      ],
+      "backgroundTile": false,
+      "backgroundBrightness": "dark",
+      "backgroundBottomColor": null,
+      "backgroundTopColor": null,
+      "canBePublic": true,
+      "canBeOrg": true,
+      "canBePrivate": true,
+      "canInvite": true
+    },
+    "labelNames": {
+      "green": "",
+      "yellow": "Важно",
+      "orange": "Срочно",
+      "red": "Str",
+      "purple": "",
+      "blue": "Int",
+      "sky": "Не важно",
+      "lime": "Не срочно",
+      "pink": "Con",
+      "black": "Per"
+    }
+  },
+  "action": {
+    "id": "59e840a01c623501f2ec4da4",
+    "idMemberCreator": "55fabe26ef2e47c8f0edaf09",
+    "data": {
+      "listAfter": {
+        "name": "Список покупок",
+        "id": "57d7f69546910177fa0d6752"
+      },
+      "listBefore": {
+        "name": "Распределить",
+        "id": "58069017e586ced34eaf4351"
+      },
+      "board": {
+        "shortLink": "E3eS8NEC",
+        "name": "Прогресс",
+        "id": "57cff93fe2fa0b3bd900b765"
+      },
+      "card": {
+        "shortLink": "iFrfUVLZ",
+        "idShort": 387,
+        "name": "Викинг",
+        "id": "59d4ea3c0b1028ffd6fc6dfd",
+        "idList": "57d7f69546910177fa0d6752"
+      },
+      "old": {
+        "idList": "58069017e586ced34eaf4351"
+      }
+    },
+    "type": "updateCard",
+    "date": "2017-10-19T06:05:20.693Z",
+    "memberCreator": {
+      "id": "55fabe26ef2e47c8f0edaf09",
+      "avatarHash": "d4b74e9533eb8db86aa7c290e66a6321",
+      "fullName": "IV",
+      "initials": "IV",
+      "username": "user88592332"
+    },
+    "display": {
+      "translationKey": "action_move_card_from_list_to_list",
+      "entities": {
+        "card": {
+          "type": "card",
+          "idList": "57d7f69546910177fa0d6752",
+          "id": "59d4ea3c0b1028ffd6fc6dfd",
+          "shortLink": "iFrfUVLZ",
+          "text": "Викинг"
+        },
+        "listBefore": {
+          "type": "list",
+          "id": "58069017e586ced34eaf4351",
+          "text": "Распределить"
+        },
+        "listAfter": {
+          "type": "list",
+          "id": "57d7f69546910177fa0d6752",
+          "text": "Список покупок"
+        },
+        "memberCreator": {
+          "type": "member",
+          "id": "55fabe26ef2e47c8f0edaf09",
+          "username": "user88592332",
+          "text": "IV"
+        }
+      }
+    }
+  }
+}
+
+
+{
+  "model": {
+    "id": "57cff93fe2fa0b3bd900b765",
+    "name": "Прогресс",
+    "desc": "",
+    "descData": null,
+    "closed": false,
+    "idOrganization": "582983c23580559a51d87193",
+    "pinned": false,
+    "url": "https://trello.com/b/E3eS8NEC/%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B5%D1%81%D1%81",
+    "shortUrl": "https://trello.com/b/E3eS8NEC",
+    "prefs": {
+      "permissionLevel": "private",
+      "voting": "disabled",
+      "comments": "members",
+      "invitations": "admins",
+      "selfJoin": false,
+      "cardCovers": true,
+      "cardAging": "regular",
+      "calendarFeedEnabled": true,
+      "background": "58df912ead3e0190cdcdbddb",
+      "backgroundImage": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28",
+      "backgroundImageScaled": [
+        {
+          "width": 140,
+          "height": 100,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/140x100/b81481a0b39d509ab62a21bed0a5ebb9/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 256,
+          "height": 192,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/256x192/13f229b1dc66511bad2a42268e7a8293/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 480,
+          "height": 480,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/09145bf56717d858a99a57870d57a0f2/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 960,
+          "height": 960,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/960x960/a4a73d5aa2943f76f0befc365831b3ca/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1024x1024/e78c9c06aca80796957f4cb59390c43e/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2048,
+          "height": 2048,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2048x2048/051001d918cbb3a2a21b1d25ca8da57f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1280,
+          "height": 1280,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1280x1280/cdf2860696affa7c8e12b36570a9836f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1920,
+          "height": 1920,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1920x1920/6e1c2b2b6444f62d923b7f781aee1312/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1600,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1600/53cae4a2ba0b83ce69a6c290278558f0/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1714,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28"
+        }
+      ],
+      "backgroundTile": false,
+      "backgroundBrightness": "dark",
+      "backgroundBottomColor": null,
+      "backgroundTopColor": null,
+      "canBePublic": true,
+      "canBeOrg": true,
+      "canBePrivate": true,
+      "canInvite": true
+    },
+    "labelNames": {
+      "green": "",
+      "yellow": "Важно",
+      "orange": "Срочно",
+      "red": "Str",
+      "purple": "",
+      "blue": "Int",
+      "sky": "Не важно",
+      "lime": "Не срочно",
+      "pink": "Con",
+      "black": "Per"
+    }
+  },
+  "action": {
+    "id": "59e8416ee14f98d1a7af8d06",
+    "idMemberCreator": "55fabe26ef2e47c8f0edaf09",
+    "data": {
+      "board": {
+        "shortLink": "E3eS8NEC",
+        "name": "Прогресс",
+        "id": "57cff93fe2fa0b3bd900b765"
+      },
+      "list": {
+        "name": "Входящие",
+        "id": "5803d69a200ec3ebdcd70f2d"
+      },
+      "card": {
+        "shortLink": "MJTffmlP",
+        "idShort": 398,
+        "name": "DROELOE - Kintsugi",
+        "id": "59e8416ee14f98d1a7af8d05"
+      }
+    },
+    "type": "createCard",
+    "date": "2017-10-19T06:08:46.906Z",
+    "memberCreator": {
+      "id": "55fabe26ef2e47c8f0edaf09",
+      "avatarHash": "d4b74e9533eb8db86aa7c290e66a6321",
+      "fullName": "IV",
+      "initials": "IV",
+      "username": "user88592332"
+    },
+    "display": {
+      "translationKey": "action_create_card",
+      "entities": {
+        "card": {
+          "type": "card",
+          "id": "59e8416ee14f98d1a7af8d05",
+          "shortLink": "MJTffmlP",
+          "text": "DROELOE - Kintsugi"
+        },
+        "list": {
+          "type": "list",
+          "id": "5803d69a200ec3ebdcd70f2d",
+          "text": "Входящие"
+        },
+        "memberCreator": {
+          "type": "member",
+          "id": "55fabe26ef2e47c8f0edaf09",
+          "username": "user88592332",
+          "text": "IV"
+        }
+      }
+    }
+  }
+}
+===========================
+CREATE_CARD
+===========================
+{
+  "model": {
+    "id": "57cff93fe2fa0b3bd900b765",
+    "name": "Прогресс",
+    "desc": "",
+    "descData": null,
+    "closed": false,
+    "idOrganization": "582983c23580559a51d87193",
+    "pinned": false,
+    "url": "https://trello.com/b/E3eS8NEC/%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B5%D1%81%D1%81",
+    "shortUrl": "https://trello.com/b/E3eS8NEC",
+    "prefs": {
+      "permissionLevel": "private",
+      "voting": "disabled",
+      "comments": "members",
+      "invitations": "admins",
+      "selfJoin": false,
+      "cardCovers": true,
+      "cardAging": "regular",
+      "calendarFeedEnabled": true,
+      "background": "58df912ead3e0190cdcdbddb",
+      "backgroundImage": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28",
+      "backgroundImageScaled": [
+        {
+          "width": 140,
+          "height": 100,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/140x100/b81481a0b39d509ab62a21bed0a5ebb9/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 256,
+          "height": 192,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/256x192/13f229b1dc66511bad2a42268e7a8293/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 480,
+          "height": 480,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/09145bf56717d858a99a57870d57a0f2/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 960,
+          "height": 960,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/960x960/a4a73d5aa2943f76f0befc365831b3ca/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1024x1024/e78c9c06aca80796957f4cb59390c43e/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2048,
+          "height": 2048,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2048x2048/051001d918cbb3a2a21b1d25ca8da57f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1280,
+          "height": 1280,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1280x1280/cdf2860696affa7c8e12b36570a9836f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1920,
+          "height": 1920,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1920x1920/6e1c2b2b6444f62d923b7f781aee1312/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1600,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1600/53cae4a2ba0b83ce69a6c290278558f0/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1714,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28"
+        }
+      ],
+      "backgroundTile": false,
+      "backgroundBrightness": "dark",
+      "backgroundBottomColor": null,
+      "backgroundTopColor": null,
+      "canBePublic": true,
+      "canBeOrg": true,
+      "canBePrivate": true,
+      "canInvite": true
+    },
+    "labelNames": {
+      "green": "",
+      "yellow": "Важно",
+      "orange": "Срочно",
+      "red": "Str",
+      "purple": "",
+      "blue": "Int",
+      "sky": "Не важно",
+      "lime": "Не срочно",
+      "pink": "Con",
+      "black": "Per"
+    }
+  },
+  "action": {
+    "id": "59e8416ee14f98d1a7af8d06",
+    "idMemberCreator": "55fabe26ef2e47c8f0edaf09",
+    "data": {
+      "board": {
+        "shortLink": "E3eS8NEC",
+        "name": "Прогресс",
+        "id": "57cff93fe2fa0b3bd900b765"
+      },
+      "list": {
+        "name": "Входящие",
+        "id": "5803d69a200ec3ebdcd70f2d"
+      },
+      "card": {
+        "shortLink": "MJTffmlP",
+        "idShort": 398,
+        "name": "DROELOE - Kintsugi",
+        "id": "59e8416ee14f98d1a7af8d05"
+      }
+    },
+    "type": "createCard",
+    "date": "2017-10-19T06:08:46.906Z",
+    "memberCreator": {
+      "id": "55fabe26ef2e47c8f0edaf09",
+      "avatarHash": "d4b74e9533eb8db86aa7c290e66a6321",
+      "fullName": "IV",
+      "initials": "IV",
+      "username": "user88592332"
+    },
+    "display": {
+      "translationKey": "action_create_card",
+      "entities": {
+        "card": {
+          "type": "card",
+          "id": "59e8416ee14f98d1a7af8d05",
+          "shortLink": "MJTffmlP",
+          "text": "DROELOE - Kintsugi"
+        },
+        "list": {
+          "type": "list",
+          "id": "5803d69a200ec3ebdcd70f2d",
+          "text": "Входящие"
+        },
+        "memberCreator": {
+          "type": "member",
+          "id": "55fabe26ef2e47c8f0edaf09",
+          "username": "user88592332",
+          "text": "IV"
+        }
+      }
+    }
+  }
+}
+===========================
+CHANGE_CARD
+===========================
+{
+  "model": {
+    "id": "57cff93fe2fa0b3bd900b765",
+    "name": "Прогресс",
+    "desc": "",
+    "descData": null,
+    "closed": false,
+    "idOrganization": "582983c23580559a51d87193",
+    "pinned": false,
+    "url": "https://trello.com/b/E3eS8NEC/%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B5%D1%81%D1%81",
+    "shortUrl": "https://trello.com/b/E3eS8NEC",
+    "prefs": {
+      "permissionLevel": "private",
+      "voting": "disabled",
+      "comments": "members",
+      "invitations": "admins",
+      "selfJoin": false,
+      "cardCovers": true,
+      "cardAging": "regular",
+      "calendarFeedEnabled": true,
+      "background": "58df912ead3e0190cdcdbddb",
+      "backgroundImage": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28",
+      "backgroundImageScaled": [
+        {
+          "width": 140,
+          "height": 100,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/140x100/b81481a0b39d509ab62a21bed0a5ebb9/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 256,
+          "height": 192,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/256x192/13f229b1dc66511bad2a42268e7a8293/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 480,
+          "height": 480,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/09145bf56717d858a99a57870d57a0f2/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 960,
+          "height": 960,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/960x960/a4a73d5aa2943f76f0befc365831b3ca/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1024x1024/e78c9c06aca80796957f4cb59390c43e/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2048,
+          "height": 2048,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2048x2048/051001d918cbb3a2a21b1d25ca8da57f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1280,
+          "height": 1280,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1280x1280/cdf2860696affa7c8e12b36570a9836f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1920,
+          "height": 1920,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1920x1920/6e1c2b2b6444f62d923b7f781aee1312/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1600,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1600/53cae4a2ba0b83ce69a6c290278558f0/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1714,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28"
+        }
+      ],
+      "backgroundTile": false,
+      "backgroundBrightness": "dark",
+      "backgroundBottomColor": null,
+      "backgroundTopColor": null,
+      "canBePublic": true,
+      "canBeOrg": true,
+      "canBePrivate": true,
+      "canInvite": true
+    },
+    "labelNames": {
+      "green": "",
+      "yellow": "Важно",
+      "orange": "Срочно",
+      "red": "Str",
+      "purple": "",
+      "blue": "Int",
+      "sky": "Не важно",
+      "lime": "Не срочно",
+      "pink": "Con",
+      "black": "Per"
+    }
+  },
+  "action": {
+    "id": "59e848461036bf71cd6a91e2",
+    "idMemberCreator": "55fabe26ef2e47c8f0edaf09",
+    "data": {
+      "list": {
+        "name": "Входящие",
+        "id": "5803d69a200ec3ebdcd70f2d"
+      },
+      "board": {
+        "shortLink": "E3eS8NEC",
+        "name": "Прогресс",
+        "id": "57cff93fe2fa0b3bd900b765"
+      },
+      "card": {
+        "shortLink": "MJTffmlP",
+        "idShort": 398,
+        "name": "DROELOE - Kintsugi",
+        "id": "59e8416ee14f98d1a7af8d05",
+        "desc": "Just test some changes in card"
+      },
+      "old": {
+        "desc": ""
+      }
+    },
+    "type": "updateCard",
+    "date": "2017-10-19T06:37:58.950Z",
+    "memberCreator": {
+      "id": "55fabe26ef2e47c8f0edaf09",
+      "avatarHash": "d4b74e9533eb8db86aa7c290e66a6321",
+      "fullName": "IV",
+      "initials": "IV",
+      "username": "user88592332"
+    },
+    "display": {
+      "translationKey": "action_changed_description_of_card",
+      "entities": {
+        "card": {
+          "type": "card",
+          "desc": "Just test some changes in card",
+          "id": "59e8416ee14f98d1a7af8d05",
+          "shortLink": "MJTffmlP",
+          "text": "DROELOE - Kintsugi"
+        },
+        "memberCreator": {
+          "type": "member",
+          "id": "55fabe26ef2e47c8f0edaf09",
+          "username": "user88592332",
+          "text": "IV"
+        }
+      }
+    }
+  }
+}
+===========================
+DELETE_CARD
+===========================
+{
+  "model": {
+    "id": "57cff93fe2fa0b3bd900b765",
+    "name": "Прогресс",
+    "desc": "",
+    "descData": null,
+    "closed": false,
+    "idOrganization": "582983c23580559a51d87193",
+    "pinned": false,
+    "url": "https://trello.com/b/E3eS8NEC/%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B5%D1%81%D1%81",
+    "shortUrl": "https://trello.com/b/E3eS8NEC",
+    "prefs": {
+      "permissionLevel": "private",
+      "voting": "disabled",
+      "comments": "members",
+      "invitations": "admins",
+      "selfJoin": false,
+      "cardCovers": true,
+      "cardAging": "regular",
+      "calendarFeedEnabled": true,
+      "background": "58df912ead3e0190cdcdbddb",
+      "backgroundImage": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28",
+      "backgroundImageScaled": [
+        {
+          "width": 140,
+          "height": 100,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/140x100/b81481a0b39d509ab62a21bed0a5ebb9/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 256,
+          "height": 192,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/256x192/13f229b1dc66511bad2a42268e7a8293/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 480,
+          "height": 480,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/09145bf56717d858a99a57870d57a0f2/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 960,
+          "height": 960,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/960x960/a4a73d5aa2943f76f0befc365831b3ca/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1024x1024/e78c9c06aca80796957f4cb59390c43e/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2048,
+          "height": 2048,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2048x2048/051001d918cbb3a2a21b1d25ca8da57f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1280,
+          "height": 1280,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1280x1280/cdf2860696affa7c8e12b36570a9836f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1920,
+          "height": 1920,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1920x1920/6e1c2b2b6444f62d923b7f781aee1312/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1600,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1600/53cae4a2ba0b83ce69a6c290278558f0/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1714,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28"
+        }
+      ],
+      "backgroundTile": false,
+      "backgroundBrightness": "dark",
+      "backgroundBottomColor": null,
+      "backgroundTopColor": null,
+      "canBePublic": true,
+      "canBeOrg": true,
+      "canBePrivate": true,
+      "canInvite": true
+    },
+    "labelNames": {
+      "green": "",
+      "yellow": "Важно",
+      "orange": "Срочно",
+      "red": "Str",
+      "purple": "",
+      "blue": "Int",
+      "sky": "Не важно",
+      "lime": "Не срочно",
+      "pink": "Con",
+      "black": "Per"
+    }
+  },
+  "action": {
+    "id": "59e8486be5715f120d4757b9",
+    "idMemberCreator": "55fabe26ef2e47c8f0edaf09",
+    "data": {
+      "board": {
+        "shortLink": "E3eS8NEC",
+        "name": "Прогресс",
+        "id": "57cff93fe2fa0b3bd900b765"
+      },
+      "list": {
+        "name": "Список покупок",
+        "id": "57d7f69546910177fa0d6752"
+      },
+      "card": {
+        "shortLink": "iFrfUVLZ",
+        "idShort": 387,
+        "id": "59d4ea3c0b1028ffd6fc6dfd"
+      }
+    },
+    "type": "deleteCard",
+    "date": "2017-10-19T06:38:35.456Z",
+    "memberCreator": {
+      "id": "55fabe26ef2e47c8f0edaf09",
+      "avatarHash": "d4b74e9533eb8db86aa7c290e66a6321",
+      "fullName": "IV",
+      "initials": "IV",
+      "username": "user88592332"
+    },
+    "display": {
+      "translationKey": "action_delete_card",
+      "entities": {
+        "idCard": {
+          "type": "text",
+          "text": 387
+        },
+        "list": {
+          "type": "list",
+          "id": "57d7f69546910177fa0d6752",
+          "text": "Список покупок"
+        },
+        "memberCreator": {
+          "type": "member",
+          "id": "55fabe26ef2e47c8f0edaf09",
+          "username": "user88592332",
+          "text": "IV"
+        }
+      }
+    }
+  }
+}
+===========================
+CHANGE_LIST
+===========================
+{
+  "model": {
+    "id": "57cff93fe2fa0b3bd900b765",
+    "name": "Прогресс",
+    "desc": "",
+    "descData": null,
+    "closed": false,
+    "idOrganization": "582983c23580559a51d87193",
+    "pinned": false,
+    "url": "https://trello.com/b/E3eS8NEC/%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B5%D1%81%D1%81",
+    "shortUrl": "https://trello.com/b/E3eS8NEC",
+    "prefs": {
+      "permissionLevel": "private",
+      "voting": "disabled",
+      "comments": "members",
+      "invitations": "admins",
+      "selfJoin": false,
+      "cardCovers": true,
+      "cardAging": "regular",
+      "calendarFeedEnabled": true,
+      "background": "58df912ead3e0190cdcdbddb",
+      "backgroundImage": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28",
+      "backgroundImageScaled": [
+        {
+          "width": 140,
+          "height": 100,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/140x100/b81481a0b39d509ab62a21bed0a5ebb9/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 256,
+          "height": 192,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/256x192/13f229b1dc66511bad2a42268e7a8293/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 480,
+          "height": 480,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/09145bf56717d858a99a57870d57a0f2/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 960,
+          "height": 960,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/960x960/a4a73d5aa2943f76f0befc365831b3ca/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1024x1024/e78c9c06aca80796957f4cb59390c43e/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2048,
+          "height": 2048,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2048x2048/051001d918cbb3a2a21b1d25ca8da57f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1280,
+          "height": 1280,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1280x1280/cdf2860696affa7c8e12b36570a9836f/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 1920,
+          "height": 1920,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/1920x1920/6e1c2b2b6444f62d923b7f781aee1312/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1600,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1600/53cae4a2ba0b83ce69a6c290278558f0/photo-1482686115713-0fbcaced6e28.jpg"
+        },
+        {
+          "width": 2560,
+          "height": 1714,
+          "url": "https://trello-backgrounds.s3.amazonaws.com/SharedBackground/2560x1714/824cafb44f3bb734794e571d430c2750/photo-1482686115713-0fbcaced6e28"
+        }
+      ],
+      "backgroundTile": false,
+      "backgroundBrightness": "dark",
+      "backgroundBottomColor": null,
+      "backgroundTopColor": null,
+      "canBePublic": true,
+      "canBeOrg": true,
+      "canBePrivate": true,
+      "canInvite": true
+    },
+    "labelNames": {
+      "green": "",
+      "yellow": "Важно",
+      "orange": "Срочно",
+      "red": "Str",
+      "purple": "",
+      "blue": "Int",
+      "sky": "Не важно",
+      "lime": "Не срочно",
+      "pink": "Con",
+      "black": "Per"
+    }
+  },
+  "action": {
+    "id": "59e84885c505c3e0e26bade5",
+    "idMemberCreator": "55fabe26ef2e47c8f0edaf09",
+    "data": {
+      "board": {
+        "shortLink": "E3eS8NEC",
+        "name": "Прогресс",
+        "id": "57cff93fe2fa0b3bd900b765"
+      },
+      "list": {
+        "id": "57cff94730ec63839b6b6343",
+        "name": "Учеба/Работаf"
+      },
+      "old": {
+        "name": "Учеба/Работа"
+      }
+    },
+    "type": "updateList",
+    "date": "2017-10-19T06:39:01.896Z",
+    "memberCreator": {
+      "id": "55fabe26ef2e47c8f0edaf09",
+      "avatarHash": "d4b74e9533eb8db86aa7c290e66a6321",
+      "fullName": "IV",
+      "initials": "IV",
+      "username": "user88592332"
+    },
+    "display": {
+      "translationKey": "action_renamed_list",
+      "entities": {
+        "list": {
+          "type": "list",
+          "id": "57cff94730ec63839b6b6343",
+          "text": "Учеба/Работаf"
+        },
+        "name": {
+          "type": "text",
+          "text": "Учеба/Работа"
+        },
+        "memberCreator": {
+          "type": "member",
+          "id": "55fabe26ef2e47c8f0edaf09",
+          "username": "user88592332",
+          "text": "IV"
+        }
+      }
+    }
+  }
+}

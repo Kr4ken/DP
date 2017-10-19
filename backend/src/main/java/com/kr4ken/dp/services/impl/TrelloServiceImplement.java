@@ -646,4 +646,28 @@ public class TrelloServiceImplement implements TrelloService {
         String complete = trelloConfig.getCompleteTaskList();
         return taskTypeRepository.findAll().stream().filter(taskType -> !taskType.getTrelloId().equals(input) && !taskType.getTrelloId().equals(distr) && !taskType.getTrelloId().equals(pause) && !taskType.getTrelloId().equals(complete)).collect(Collectors.toList());
     }
+
+    @Override
+    public TaskType getHabitType() {
+        Optional<TaskType> result = taskTypeRepository.findByTrelloId(trelloConfig.getHabitTaskList());
+        if(result.isPresent())
+            return result.get();
+        return null;
+    }
+
+    @Override
+    public TaskType getDailyType() {
+        Optional<TaskType> result = taskTypeRepository.findByTrelloId(trelloConfig.getDailyTaskList());
+        if(result.isPresent())
+            return result.get();
+        return null;
+    }
+
+    @Override
+    public TaskType getCompleteType() {
+        Optional<TaskType> result = taskTypeRepository.findByTrelloId(trelloConfig.getCompleteTaskList());
+        if(result.isPresent())
+            return result.get();
+        return null;
+    }
 }

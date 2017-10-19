@@ -29,4 +29,7 @@ public interface DivineService {
 
     void TasksTrelloToHabitica();
 
+    void scoreTaskFromHabitica(Task task);
+    void scoreTaskFromHabitica(String habiticaId);
+
 }

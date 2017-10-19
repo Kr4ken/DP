@@ -9,6 +9,7 @@ import com.kr4ken.dp.models.entity.TaskCheckListItem;
 import com.kr4ken.dp.models.repository.TaskRepository;
 import com.kr4ken.dp.models.repository.TaskTypeRepository;
 import com.kr4ken.dp.services.intf.HabiticaService;
+import com.kr4ken.dp.utils.TaskUtils;
 import com.kr4ken.habitica.Habitica;
 import com.kr4ken.habitica.domain.DailyRepeat;
 import com.kr4ken.habitica.domain.Tag;
@@ -115,26 +116,33 @@ public class HabiticaServiceImplement implements HabiticaService {
         TaskCheckListItem subTask = null;
         Integer currentCheckListCount = 0;
         Integer currentCheckedCount = 0;
-        if (task.getChecklists() != null) {
-            currentCheckList = task.getChecklists()
-                    .stream()
-                    .filter(e -> e.getChecklistItems() != null)
-                    .filter(e -> e.getChecklistItems()
-                            .stream()
-                            .anyMatch(taskCheckListItem -> !taskCheckListItem.getChecked()))
-                    .findAny();
-            if (currentCheckList.isPresent()) {
-                for (TaskCheckListItem item : currentCheckList.get().getChecklistItems().stream().sorted(Comparator.comparing(TaskCheckListItem::getPos)).collect(Collectors.toList())) {
-                    if (item.getChecked())
-                        currentCheckedCount++;
-                    else {
-                        subTask = subTask == null ? item : subTask;
-                        subtaskName = subtaskName == null ? item.getName() : subtaskName;
-                    }
-                }
-                currentCheckListCount = currentCheckList.get().getChecklistItems().size();
-            }
+        subTask = TaskUtils.getCurrentSubtask(task);
+        if(subTask!= null) {
+            subtaskName = subTask.getName();
+            currentCheckedCount = Math.toIntExact(TaskUtils.getCheckedCountSubtasks(task));
+            currentCheckListCount = Math.toIntExact(TaskUtils.getCountSubtasks(task));
         }
+
+//        if (task.getChecklists() != null) {
+//            currentCheckList = task.getChecklists()
+//                    .stream()
+//                    .filter(e -> e.getChecklistItems() != null)
+//                    .filter(e -> e.getChecklistItems()
+//                            .stream()
+//                            .anyMatch(taskCheckListItem -> !taskCheckListItem.getChecked()))
+//                    .findAny();
+//            if (currentCheckList.isPresent()) {
+//                for (TaskCheckListItem item : currentCheckList.get().getChecklistItems().stream().sorted(Comparator.comparing(TaskCheckListItem::getPos)).collect(Collectors.toList())) {
+//                    if (item.getChecked())
+//                        currentCheckedCount++;
+//                    else {
+//                        subTask = subTask == null ? item : subTask;
+//                        subtaskName = subtaskName == null ? item.getName() : subtaskName;
+//                    }
+//                }
+//                currentCheckListCount = currentCheckList.get().getChecklistItems().size();
+//            }
+//        }
 //        if (task.getDuration() != null)
 //            text += "{" + task.getDuration().toString() + "} ";
         if (subtaskName != null) {
@@ -173,7 +181,8 @@ public class HabiticaServiceImplement implements HabiticaService {
 
         // Пояснение задачи
         String notes = "";
-        if (currentCheckList != null && currentCheckList.isPresent()) {
+//        if (currentCheckList != null && currentCheckList.isPresent()) {
+        if (currentCheckListCount>0) {
             if (task.getDescription() != null)
                 notes += "![" + task.getDescription() + "](http://progressed.io/bar/" + currentCheckedCount.toString() + "?scale=" + currentCheckListCount + "&suffix=+)";
             else
@@ -184,6 +193,8 @@ public class HabiticaServiceImplement implements HabiticaService {
 
         // Тип
         result.setType(getTaskType(task));
+        if(result.getType().equals("todo"))
+            result.setCompleted(false);
         //Настройка повтора для daily
         result.setFrequency("daily");
         result.setDate(task.getDueDate());
