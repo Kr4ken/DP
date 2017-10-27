@@ -8,6 +8,7 @@ import com.kr4ken.dp.config.TrelloConfig;
 import com.kr4ken.dp.models.entity.*;
 import com.kr4ken.dp.models.repository.*;
 import com.kr4ken.dp.services.intf.TrelloService;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -457,7 +458,8 @@ public class TrelloServiceImplement implements TrelloService {
         return getTaskFromCard(trelloApi.getCard(taks.getTrelloId()));
     }
 
-    private void mergeCheckListItems(CheckList checkList, TaskCheckList taskCheckList) {
+    private Boolean mergeCheckListItems(CheckList checkList, TaskCheckList taskCheckList) {
+        Boolean dirty = false;
         List<CheckItem> trelloItems = checkList.getCheckItems();
         List<TaskCheckListItem> divineItems = taskCheckList.getChecklistItems();
         Set<CheckItem> notUsedCheckItems = new HashSet<>(trelloItems);
@@ -470,31 +472,31 @@ public class TrelloServiceImplement implements TrelloService {
                 if (trelloItem.getId().equals(divineItem.getTrelloId())) {
                     exitst = true;
                     notUsedCheckItems.remove(trelloItem);
-                    trelloItem.setName(divineItem.getName() + "[" + divineItem.getDuration() + "]");
-                    trelloItem.setState(divineItem.getChecked() ? "complete" : "incomplete");
-                    trelloItem.setPos(divineItem.getPos());
-
-                    trelloApi.updateCheckItem(checkList.getIdCard(), trelloItem);
+                    if (mergeCheckListItem(divineItem, trelloItem)) {
+                        dirty = true;
+                        trelloApi.updateCheckItem(checkList.getIdCard(), trelloItem);
+                    }
                 }
             }
             // Если элемента нет среди старых элементов, то добавляем его
             if (!exitst) {
+                dirty = true;
                 CheckItem newItem = new CheckItem();
-                newItem.setName(divineItem.getName() + "[" + divineItem.getDuration() + "]");
-                newItem.setState(divineItem.getChecked() ? "complete" : "incomplete");
-                newItem.setPos(divineItem.getPos());
-
+                mergeCheckListItem(divineItem, newItem);
                 newItem = trelloApi.createCheckItem(checkList.getId(), newItem);
                 divineItem.setTrelloId(newItem.getId());
             }
         }
         // Удаляем все старые элементы, которых нет в новом
         for (CheckItem rem : notUsedCheckItems) {
+            dirty = true;
             trelloApi.deleteCheckItem(checkList.getId(), rem.getId());
         }
+        return dirty;
     }
 
-    private void mergeCheckLists(Card trelloCard, Task divineTask) {
+    private Boolean mergeCheckLists(Card trelloCard, Task divineTask) {
+        Boolean dirty = false;
         List<CheckList> trelloList = trelloCard.getIdChecklists().stream().map(e -> trelloApi.getCheckList(e)).collect(Collectors.toList());
         List<TaskCheckList> divineList = divineTask.getChecklists();
         Set<CheckList> notUsedCheckList = new HashSet<>(trelloList);
@@ -507,13 +509,17 @@ public class TrelloServiceImplement implements TrelloService {
                 if (trello.getId().equals(divine.getTrelloId())) {
                     exitst = true;
                     notUsedCheckList.remove(trello);
-                    trello.setName(divine.getName());
-                    mergeCheckListItems(trello, divine);
+                    if(mergeCheckList(divine,trello)){
+                        dirty = true;
+                        trelloApi.updateCheckList(trello.getId(),trello);
+                    }
                 }
             }
             // Если элемента нет среди старых элементов, то добавляем его
             if (!exitst) {
+                dirty = true;
                 CheckList newCheckList = new CheckList();
+                mergeCheckList(divine,newCheckList);
                 newCheckList.setName(divine.getName());
                 newCheckList.setIdCard(trelloCard.getId());
                 trelloApi.createCheckList(newCheckList.getIdCard(), newCheckList);
@@ -530,8 +536,33 @@ public class TrelloServiceImplement implements TrelloService {
             }
         }
         for (CheckList rem : notUsedCheckList) {
+            dirty = true;
             trelloApi.deleteCheckList(rem.getId());
         }
+        return dirty;
+    }
+
+
+    private Boolean mergeCheckList(TaskCheckList divine, CheckList trello) {
+        Boolean dirty = false;
+        String newName =divine.getName();
+        dirty = !trello.getName().equals(newName);
+        trello.setName(divine.getName());
+        dirty = mergeCheckListItems(trello, divine);
+        return dirty;
+    }
+
+    private Boolean mergeCheckListItem(TaskCheckListItem divineItem, CheckItem trelloItem) {
+        Boolean dirty = false;
+        String newName = divineItem.getName() + "[" + divineItem.getDuration() + "]";
+        String newState = divineItem.getChecked() ? "complete" : "incomplete";
+        Double newPos = divineItem.getPos();
+
+        dirty = !trelloItem.getName().equals(newName) || !trelloItem.getState().equals(newState) || !newPos.equals(trelloItem.getPos());
+        trelloItem.setName(newName);
+        trelloItem.setState(newState);
+        trelloItem.setPos(newPos);
+        return dirty;
     }
 
     @Override
@@ -650,7 +681,7 @@ public class TrelloServiceImplement implements TrelloService {
     @Override
     public TaskType getHabitType() {
         Optional<TaskType> result = taskTypeRepository.findByTrelloId(trelloConfig.getHabitTaskList());
-        if(result.isPresent())
+        if (result.isPresent())
             return result.get();
         return null;
     }
@@ -658,7 +689,7 @@ public class TrelloServiceImplement implements TrelloService {
     @Override
     public TaskType getDailyType() {
         Optional<TaskType> result = taskTypeRepository.findByTrelloId(trelloConfig.getDailyTaskList());
-        if(result.isPresent())
+        if (result.isPresent())
             return result.get();
         return null;
     }
@@ -666,7 +697,7 @@ public class TrelloServiceImplement implements TrelloService {
     @Override
     public TaskType getCompleteType() {
         Optional<TaskType> result = taskTypeRepository.findByTrelloId(trelloConfig.getCompleteTaskList());
-        if(result.isPresent())
+        if (result.isPresent())
             return result.get();
         return null;
     }

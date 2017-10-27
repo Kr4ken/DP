@@ -34,10 +34,10 @@ public class HabiticaHookController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/test")
-    ResponseEntity<?> dropInterestTypeQuery(@RequestBody HabiticaHook hook) {
+    ResponseEntity<?> catchHook(@RequestBody HabiticaHook hook) {
         if (hook.getDirection().equals("up"))
             divineService.scoreTaskFromHabitica(hook.getTask().getAlias());
-        //TODO: Сделать вариант когда unchecked
+        //TODO: Сделать вариант когда down
         return ResponseEntity.ok(HttpEntity.EMPTY);
     }
 }

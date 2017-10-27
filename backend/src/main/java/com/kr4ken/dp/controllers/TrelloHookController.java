@@ -1,5 +1,6 @@
 package com.kr4ken.dp.controllers;
 
+import com.kr4ken.dp.models.hooks.TrelloHook;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +25,9 @@ public class TrelloHookController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/test")
-    ResponseEntity<?> dropInterestTypeQuery(@RequestBody String all){
-        System.out.println(all);
-        return ResponseEntity.ok(all);
+//    ResponseEntity<?> dropInterestTypeQuery(@RequestBody String all){
+    ResponseEntity<?> cathchHook(@RequestBody TrelloHook hook){
+        System.out.println(hook.getType());
+        return ResponseEntity.ok(HttpEntity.EMPTY);
     }
 }

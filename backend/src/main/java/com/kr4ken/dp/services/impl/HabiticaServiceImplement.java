@@ -123,28 +123,6 @@ public class HabiticaServiceImplement implements HabiticaService {
             currentCheckListCount = Math.toIntExact(TaskUtils.getCountSubtasks(task));
         }
 
-//        if (task.getChecklists() != null) {
-//            currentCheckList = task.getChecklists()
-//                    .stream()
-//                    .filter(e -> e.getChecklistItems() != null)
-//                    .filter(e -> e.getChecklistItems()
-//                            .stream()
-//                            .anyMatch(taskCheckListItem -> !taskCheckListItem.getChecked()))
-//                    .findAny();
-//            if (currentCheckList.isPresent()) {
-//                for (TaskCheckListItem item : currentCheckList.get().getChecklistItems().stream().sorted(Comparator.comparing(TaskCheckListItem::getPos)).collect(Collectors.toList())) {
-//                    if (item.getChecked())
-//                        currentCheckedCount++;
-//                    else {
-//                        subTask = subTask == null ? item : subTask;
-//                        subtaskName = subtaskName == null ? item.getName() : subtaskName;
-//                    }
-//                }
-//                currentCheckListCount = currentCheckList.get().getChecklistItems().size();
-//            }
-//        }
-//        if (task.getDuration() != null)
-//            text += "{" + task.getDuration().toString() + "} ";
         if (subtaskName != null) {
             text += "{" + subTask.getDuration().toString() + "} ";
             text += subtaskName + " [" + task.getName() + "]";
@@ -181,7 +159,7 @@ public class HabiticaServiceImplement implements HabiticaService {
 
         // Пояснение задачи
         String notes = "";
-//        if (currentCheckList != null && currentCheckList.isPresent()) {
+        // if (currentCheckList != null && currentCheckList.isPresent()) {
         if (currentCheckListCount>0) {
             if (task.getDescription() != null)
                 notes += "![" + task.getDescription() + "](http://progressed.io/bar/" + currentCheckedCount.toString() + "?scale=" + currentCheckListCount + "&suffix=+)";
