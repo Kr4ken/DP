@@ -138,25 +138,25 @@ public class DivineServiceImplement implements DivineService {
         if (subTask != null) {
             subTask.setChecked(true);
             taskRepository.save(trelloService.saveTask(task));
-        // Иначе выполняем карточку
-        } else{
+            // Иначе выполняем карточку
+        } else {
             // Если есть особенности смотрим их
-            if(task.getSpecial()!=null){
-               switch (task.getSpecial().getComplete()){
-                   case Delete:
-                       taskRepository.delete(trelloService.deleteTask(task));
-                       break;
-                   case Move:
-                       task.setType(trelloService.getCompleteType());
-                       taskRepository.save(trelloService.saveTask(task));
-                       break;
-                   case Arhieve:
-                       //TODO: Сделать когда нибудь
-                       break;
-                   default:
-                       task.setType(trelloService.getCompleteType());
-                       taskRepository.save(trelloService.saveTask(task));
-               }
+            if (task.getSpecial() != null) {
+                switch (task.getSpecial().getComplete()) {
+                    case Delete:
+                        taskRepository.delete(trelloService.deleteTask(task));
+                        break;
+                    case Move:
+                        task.setType(trelloService.getCompleteType());
+                        taskRepository.save(trelloService.saveTask(task));
+                        break;
+                    case Arhieve:
+                        //TODO: Сделать когда нибудь
+                        break;
+                    default:
+                        task.setType(trelloService.getCompleteType());
+                        taskRepository.save(trelloService.saveTask(task));
+                }
             }
             // Если нет особенностей то переносим в список выполненных
             task.setType(trelloService.getCompleteType());
@@ -165,6 +165,26 @@ public class DivineServiceImplement implements DivineService {
         // В конце сохраняем изменения если они были
         habiticaService.saveTask(task);
     }
+
+    @Override
+    public void updateFromTrello(Task task) {
+        // Смотрим из какого списка идет обновление
+        if(!trelloService.getActiveList().contains(task.getType())) {
+           return;
+        }
+        // Если лист рабочий, то обновляем текущую карточку
+        importTaskFromTrello(task.getId());
+
+        // В конце сохраняем изменения если они были
+        habiticaService.saveTask(task);
+    }
+
+    @Override
+    public void updateFromTrello(String trelloId) {
+
+    }
 }
+
+
 
 

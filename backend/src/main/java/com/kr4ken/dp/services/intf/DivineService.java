@@ -25,11 +25,15 @@ public interface DivineService {
     void exportTasksToHabitica();
 
 
-
-
     void TasksTrelloToHabitica();
 
     void scoreTaskFromHabitica(Task task);
+
     void scoreTaskFromHabitica(String habiticaId);
+
+    void updateFromTrello(Task task);
+
+    void updateFromTrello(String trelloId);
+
 
 }

@@ -2,11 +2,15 @@ package com.kr4ken.dp.models.hooks;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Date;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TrelloActionHook {
     private String id;
     private String idMemberCreator;
     private TrelloActionDataHook data;
+    private String type;
+    private Date date;
 
     public TrelloActionHook() {
     }
@@ -34,4 +38,21 @@ public class TrelloActionHook {
     public void setData(TrelloActionDataHook data) {
         this.data = data;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }
+
