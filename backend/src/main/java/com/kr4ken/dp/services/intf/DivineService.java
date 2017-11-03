@@ -16,6 +16,10 @@ public interface DivineService {
 
     void importTaskFromTrello(Long id);
 
+    void importTaskFromTrello(String trelloId);
+
+    void importTaskFromTrelloByTrelloId(String trelloId);
+
     void importTaskTypesFromTrello();
 
     void importTaskTypeFromTrello(Long id);
@@ -24,12 +28,12 @@ public interface DivineService {
 
     void exportTasksToHabitica();
 
-
     void TasksTrelloToHabitica();
 
     void scoreTaskFromHabitica(Task task);
 
     void scoreTaskFromHabitica(String habiticaId);
+
 
     void updateFromTrello(Task task);
 

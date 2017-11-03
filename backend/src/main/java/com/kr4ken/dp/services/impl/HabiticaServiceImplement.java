@@ -173,8 +173,9 @@ public class HabiticaServiceImplement implements HabiticaService {
         result.setType(getTaskType(task));
         if(result.getType().equals("todo"))
             result.setCompleted(false);
-        //Настройка повтора для daily
-        result.setFrequency("daily");
+        //Настройка повтора для недельно, для добавления выходных
+//        result.setFrequency("daily");
+        result.setFrequency("weekly");
         result.setDate(task.getDueDate());
 
         if (update)

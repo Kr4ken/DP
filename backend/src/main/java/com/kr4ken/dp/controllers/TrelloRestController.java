@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+//TODO: Убрать
 @RestController
 @RequestMapping("/trello")
 public class TrelloRestController {
@@ -103,6 +104,7 @@ public class TrelloRestController {
         divineService.importTaskTypeFromTrello(taskTypeId);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
+
     @RequestMapping(method = RequestMethod.POST, value = "/import/tasks")
     ResponseEntity<?> trelloImportTasks() {
         divineService.importTasksFromTrello();

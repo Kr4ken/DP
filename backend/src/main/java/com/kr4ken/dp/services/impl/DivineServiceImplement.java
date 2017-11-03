@@ -87,6 +87,29 @@ public class DivineServiceImplement implements DivineService {
 //        taskRepository.save(task);
     }
 
+
+    @Override
+    public void importTaskFromTrello(String trelloId) {
+        Task task = new Task();
+        task.setTrelloId(trelloId);
+        task = trelloService.getTask(task);
+        mergeTask(task);
+    }
+
+    @Override
+    public void importTaskFromTrelloByTrelloId(String trelloId) {
+        Optional<Task> task = taskRepository.findByTrelloId(trelloId);
+        //Если уже есть то обновляем
+        if(task.isPresent())
+            importTaskFromTrello(task.get().getId());
+        else {
+            //Создаем фейковый таск чтобы вытянуть в него все данные
+        }
+
+
+
+    }
+
     @Override
     public void importTaskTypeFromTrello(Long id) {
         TaskType taskType = taskTypeRepository.findOne(id);
@@ -109,6 +132,23 @@ public class DivineServiceImplement implements DivineService {
             }
         }
     }
+
+
+    public void exportTaskToHabitica(String trelloId) {
+        Optional<Task> task = taskRepository.findByTrelloId(trelloId);
+        if(task.isPresent())
+            exportTaskToHabitica(task.get());
+    }
+
+    public void exportTaskToHabitica(Task task) {
+        // Сделаю доп проверку и здесь
+        // Пока в хабитику закидываю только из активного списка
+        if(trelloService.getActiveList().contains(task.getType())){
+           habiticaService.saveTask(task);
+        }
+    }
+
+
 
     @Override
     public void scoreTaskFromHabitica(String habiticaId) {
@@ -172,8 +212,11 @@ public class DivineServiceImplement implements DivineService {
         if(!trelloService.getActiveList().contains(task.getType())) {
            return;
         }
-        // Если лист рабочий, то обновляем текущую карточку
+
         importTaskFromTrello(task.getId());
+
+
+        // Если лист рабочий, то обновляем текущую карточку
 
         // В конце сохраняем изменения если они были
         habiticaService.saveTask(task);
@@ -181,7 +224,8 @@ public class DivineServiceImplement implements DivineService {
 
     @Override
     public void updateFromTrello(String trelloId) {
-
+        importTaskFromTrello(trelloId);
+        exportTaskToHabitica(trelloId);
     }
 }
 

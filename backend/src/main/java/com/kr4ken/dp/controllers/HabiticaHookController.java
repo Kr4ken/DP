@@ -17,9 +17,9 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
 
-/*
- * Контроллер ловящий хук хабитики
- **/
+/**
+ * Контроллер отвечающий за обработку хуков с хабитики
+ */
 
 @RestController
 @RequestMapping("/habitica_hook")
@@ -27,14 +27,14 @@ public class HabiticaHookController {
     private final DivineService divineService;
 
     @Autowired
-    HabiticaHookController(
-            DivineService divineService
-    ) {
+    HabiticaHookController(DivineService divineService) {
         this.divineService = divineService;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/test")
     ResponseEntity<?> catchHook(@RequestBody HabiticaHook hook) {
+        System.out.println("Catch habitica hook");
+        System.out.println(hook.getType() + " : " + hook.getTask().getText());
         if (hook.getDirection().equals("up"))
             divineService.scoreTaskFromHabitica(hook.getTask().getAlias());
         //TODO: Сделать вариант когда down

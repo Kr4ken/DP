@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
+/**
+ * Класс для получения конфигурационных данных по Habitica
+ */
 @Configuration
 @PropertySource("classpath:habitica.properties")
 public class HabiticaConfig {

@@ -8,6 +8,9 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import java.util.HashMap;
 
+/**
+ * Класс для получения конфигурационных данных по Trello
+ */
 @Configuration
 @PropertySource("classpath:trello.properties")
 public class TrelloConfig {
@@ -138,14 +141,16 @@ public class TrelloConfig {
         return nimportantTaskLabel;
     }
 
-    public HashMap<String,String> getIdNameMap(){
-        return new HashMap<String, String>(){{
-            put(completeTaskList,"complete");
-            put(inputTaskList,"input");
-            put(distributeTaskList,"distribute");
-            put(pauseTaskList,"pause");
-            put(habitTaskList,"habit");
-            put(dailyTaskList,"daily");
+    // Получить мапу всех именных листов с рабочей доски
+    // с их наименованиями
+    public HashMap<String, String> getIdNameMap() {
+        return new HashMap<String, String>() {{
+            put(completeTaskList, "complete");
+            put(inputTaskList, "input");
+            put(distributeTaskList, "distribute");
+            put(pauseTaskList, "pause");
+            put(habitTaskList, "habit");
+            put(dailyTaskList, "daily");
         }};
     }
 }

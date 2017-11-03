@@ -16,6 +16,10 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Контроллер предоставляющий рестфул интерфейс
+ * Для объектов Task - Задача
+ */
 @RestController
 @RequestMapping("/tasks")
 public class TaskRestController {

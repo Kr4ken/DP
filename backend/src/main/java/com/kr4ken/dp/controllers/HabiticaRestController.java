@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+/**
+ * Контроллер отвечающий за взаимодействие с habitica
+ */
+
+//TODO: убрать
+
 @RestController
 @RequestMapping("/habitica")
 public class HabiticaRestController {
@@ -30,25 +36,25 @@ public class HabiticaRestController {
         this.divineService = divineService;
     }
 
-    @RequestMapping(value = "/tasks",method = RequestMethod.GET)
+    @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     Collection<Task> readInterests() {
         return habiticaService.getTasks();
     }
 
-    @RequestMapping(value = "/trello/tasks",method = RequestMethod.GET)
+    @RequestMapping(value = "/trello/tasks", method = RequestMethod.GET)
     Collection<Task> readTrelloInterests() {
         return habiticaService.getTrelloTasks();
     }
 
 
-    @RequestMapping(value = "/tasks/{taskId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/tasks/{taskId}", method = RequestMethod.POST)
     Task readTrelloInterests(@PathVariable Long taskId) {
         return habiticaService.saveTask(taskRepository.findOne(taskId));
     }
 
     // Export
 
-    @RequestMapping(value = "/export/tasks",method = RequestMethod.POST)
+    @RequestMapping(value = "/export/tasks", method = RequestMethod.POST)
     ResponseEntity exportTasks() {
         divineService.exportTasksToHabitica();
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);

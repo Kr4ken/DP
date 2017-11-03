@@ -454,8 +454,8 @@ public class TrelloServiceImplement implements TrelloService {
 
 
     @Override
-    public Task getTask(Task taks) {
-        return getTaskFromCard(trelloApi.getCard(taks.getTrelloId()));
+    public Task getTask(Task task) {
+        return getTaskFromCard(trelloApi.getCard(task.getTrelloId()));
     }
 
     private Boolean mergeCheckListItems(CheckList checkList, TaskCheckList taskCheckList) {

@@ -15,6 +15,11 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Контроллер предоставляющий рестфул интерфейс
+ * Для объектов Interest - интерес
+ */
+
 @RestController
 @RequestMapping("/interests")
 public class InterestRestController {
@@ -26,33 +31,32 @@ public class InterestRestController {
     @Autowired
     InterestRestController(InterestRepository interestRepository,
                            InterestTypeRepository interestTypeRepository,
-                           TrelloService trelloService){
+                           TrelloService trelloService) {
         this.interestRepository = interestRepository;
         this.interestTypeRepository = interestTypeRepository;
         this.trelloService = trelloService;
     }
 
-    private void trelloSync(Interest interest){
+    private void trelloSync(Interest interest) {
         interestRepository.save(trelloService.saveInterest(interest));
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    Collection<Interest> readInterests(@RequestParam Optional<Long> type,@RequestParam Optional<Boolean> sorted) {
-        if(sorted.isPresent() && sorted.get())
+    Collection<Interest> readInterests(@RequestParam Optional<Long> type, @RequestParam Optional<Boolean> sorted) {
+        if (sorted.isPresent() && sorted.get())
             if (type.isPresent())
                 return interestRepository.findByTypeOrderByOrd(interestTypeRepository.findOne(type.get()));
             else
                 return interestRepository.findAllByOrderByOrd();
+        else if (type.isPresent())
+            return interestRepository.findByType(interestTypeRepository.findOne(type.get()));
         else
-            if (type.isPresent())
-                return interestRepository.findByType(interestTypeRepository.findOne(type.get()));
-            else
-                return interestRepository.findAll();
+            return interestRepository.findAll();
 
 
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/current")
+    @RequestMapping(method = RequestMethod.GET, value = "/current")
     List<Interest> readCurrentInterests() {
         return interestTypeRepository.findAll()
                 .stream()
@@ -63,33 +67,33 @@ public class InterestRestController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestBody Interest input, @RequestParam(required = false) Optional<Boolean> trello ) {
+    ResponseEntity<?> add(@RequestBody Interest input, @RequestParam(required = false) Optional<Boolean> trello) {
         Interest result = interestRepository.save(new Interest(input));
-        if(trello.isPresent() && trello.get()){
+        if (trello.isPresent() && trello.get()) {
             trelloSync(result);
         }
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @RequestMapping(method = RequestMethod.PUT,value = "/{interestId}")
-    ResponseEntity<?> add(@RequestBody Interest input,@PathVariable Long interestId, @RequestParam(required = false) Optional<Boolean> trello) {
+    @RequestMapping(method = RequestMethod.PUT, value = "/{interestId}")
+    ResponseEntity<?> add(@RequestBody Interest input, @PathVariable Long interestId, @RequestParam(required = false) Optional<Boolean> trello) {
         Interest one = interestRepository.findOne(interestId);
-        if(one == null){
+        if (one == null) {
             return new ResponseEntity(new InterestNotFoundException(interestId.toString()),
                     HttpStatus.NOT_FOUND);
         }
         one.update(input);
         interestRepository.save(one);
-        if(trello.isPresent() && trello.get()) {
-           trelloSync(one);
+        if (trello.isPresent() && trello.get()) {
+            trelloSync(one);
         }
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(one.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
 
-    @RequestMapping(method = RequestMethod.DELETE,value = "/{interestId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{interestId}")
     ResponseEntity<?> delete(@PathVariable Long interestId, @RequestParam(required = false) Optional<Boolean> trello) {
 
         Interest interest = interestRepository.findOne(interestId);
@@ -98,14 +102,13 @@ public class InterestRestController {
                     HttpStatus.NOT_FOUND);
         }
 
-        if(trello.isPresent() && trello.get()) {
+        if (trello.isPresent() && trello.get()) {
             trelloService.deleteInterest(interest);
         }
         interestTypeRepository.delete(interestId);
 
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
-
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/{interestId}")

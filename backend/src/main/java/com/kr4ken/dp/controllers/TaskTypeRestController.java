@@ -14,6 +14,10 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Контроллер предоставляющий рестфул интерфейс
+ * Для объектов TaskType - Тип задачи
+ */
 @RestController
 @RequestMapping("/taskTypes")
 public class TaskTypeRestController {
@@ -23,7 +27,7 @@ public class TaskTypeRestController {
 
     @Autowired
     TaskTypeRestController(TaskTypeRepository taskTypeRepository,
-                               TrelloService trelloService) {
+                           TrelloService trelloService) {
         this.taskTypeRepository = taskTypeRepository;
         this.trelloService = trelloService;
     }
@@ -68,7 +72,7 @@ public class TaskTypeRestController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/{taskTypeid}")
     ResponseEntity<?> delete(@PathVariable Long taskTypeId, @RequestParam(required = false) Optional<Boolean> trello) {
 
-        TaskType taskType =taskTypeRepository.findOne(taskTypeId);
+        TaskType taskType = taskTypeRepository.findOne(taskTypeId);
         if (taskType == null) {
             return new ResponseEntity(new TaskTypeNotFoundException(taskTypeId.toString()),
                     HttpStatus.NOT_FOUND);

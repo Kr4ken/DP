@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-/*
- * Контроллер ловящий хук трелло
- **/
+/**
+ * Контроллер отвечающий за обработку хуков с Трелло
+ */
 
 @RestController
 @RequestMapping("/trello_hook")
@@ -32,22 +32,21 @@ public class TrelloHookController {
         this.taskRepository = taskRepository;
     }
 
+    // Трелло проверяет работу хука начальным Head запросом
     @RequestMapping(method = RequestMethod.HEAD, value = "/test")
     ResponseEntity<?> initalHeadAnswer() {
         return ResponseEntity.ok(HttpEntity.EMPTY);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/test")
-//    ResponseEntity<?> dropInterestTypeQuery(@RequestBody String all){
     ResponseEntity<?> cathchHook(@RequestBody TrelloHook hook) {
+        System.out.println("Пойман хук Trello");
         System.out.println(hook.getAction().getType());
         // Пофиксить для определенных типов
+//        Пусть для всех типов Действий синхронизирует
         if (hook.getAction().getData().getCard() != null) {
-            Optional<Task> task = taskRepository.findByTrelloId(hook.getAction().getData().getCard().getId());
-            if (task.isPresent())
-                divineService.updateFromTrello(task.get());
-        }
-//        System.out.println(hook.getT);
+            divineService.updateFromTrello(hook.getAction().getData().getCard().getId());
+            }
         return ResponseEntity.ok(HttpEntity.EMPTY);
     }
 }
