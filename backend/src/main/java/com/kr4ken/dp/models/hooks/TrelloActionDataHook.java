@@ -6,6 +6,9 @@ import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.TList;
 
 
+/**
+ * Данные о действиях которые приходят в хуке трелло
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TrelloActionDataHook {
     private String id;

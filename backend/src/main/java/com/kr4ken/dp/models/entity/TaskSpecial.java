@@ -4,6 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * Особенности поведения задачи
+ * которые должны учитываться при работе с ней
+ */
 @Entity
 public class TaskSpecial {
     @Id

@@ -3,6 +3,9 @@ package com.kr4ken.dp.models.hooks;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kr4ken.habitica.domain.Task;
 
+/**
+ * Хук приходящий из хабитики
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HabiticaHook {
     private String type;

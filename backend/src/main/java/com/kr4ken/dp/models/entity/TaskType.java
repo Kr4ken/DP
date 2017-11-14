@@ -3,6 +3,9 @@ package com.kr4ken.dp.models.entity;
 
 import javax.persistence.*;
 
+/**
+ * Тип задачи
+ */
 @Entity
 public class TaskType {
 

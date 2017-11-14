@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Задача
+ */
 @Entity
 public class Task {
     @Id

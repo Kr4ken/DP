@@ -9,8 +9,10 @@ import com.kr4ken.dp.utils.TaskUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class DivineServiceImplement implements DivineService {
@@ -20,6 +22,8 @@ public class DivineServiceImplement implements DivineService {
 
     private final TaskTypeRepository taskTypeRepository;
     private final TaskRepository taskRepository;
+    private final InterestRepository interestRepository;
+    private final InterestTypeRepository interestTypeRepository;
     private final TaskCheckListRepository taskCheckListRepository;
     private final TaskCheckListItemRepository taskCheckListItemRepository;
     private final TaskSpecialRepository taskSpecialRepository;
@@ -30,6 +34,8 @@ public class DivineServiceImplement implements DivineService {
             TrelloService trelloService,
             TaskTypeRepository taskTypeRepository,
             TaskRepository taskRepository,
+            InterestRepository interestRepository,
+            InterestTypeRepository interestTypeRepository,
             TaskCheckListRepository taskCheckListRepository,
             TaskCheckListItemRepository taskCheckListItemRepository,
             TaskSpecialRepository taskSpecialRepository
@@ -41,7 +47,68 @@ public class DivineServiceImplement implements DivineService {
         this.taskCheckListRepository = taskCheckListRepository;
         this.taskCheckListItemRepository = taskCheckListItemRepository;
         this.taskSpecialRepository = taskSpecialRepository;
+        this.interestRepository = interestRepository;
+        this.interestTypeRepository = interestTypeRepository;
     }
+
+    // Интересы
+
+    // Перемещает интерес в другую группу в самый верх списка
+    private void changeType(Interest interest, InterestType interestType) {
+        Collection<Interest> interests = interestRepository.findByTypeOrderByOrd(interestType);
+        interest.setOrd(
+                interests.toArray(new Interest[]{})[0].getOrd()/2
+        );
+        interest.setType(interestType);
+    }
+
+    private Interest mixInterest(Long interestTypeId){
+        Random random = new Random();
+        InterestType interestType = interestTypeRepository.findOne(interestTypeId);
+        Collection<Interest> interests = interestRepository.findByTypeOrderByOrd(interestType);
+        Interest[] interestArray = interests.toArray(new Interest[]{});
+        int max = interestArray.length - 1, min = 0;
+        Integer randomInterest = random.nextInt(max - min + 1) + min;
+        changeType(interestArray[randomInterest], interestType);
+        interestRepository.save(interestArray[randomInterest]);
+        // TODO: сделать условный импорт в трелло
+        if(false)
+            interestRepository.save(trelloService.saveInterest(interestArray[randomInterest]));
+        return interestArray[randomInterest];
+    }
+
+    @Override
+    public Interest mixInterests(Long interestTypeId) {
+        return mixInterest(interestTypeId);
+    }
+
+    @Override
+    public Interest completeInterests(Long interestTypeId) {
+        InterestType it = interestTypeRepository.findOne(interestTypeId);
+        //TODO: сделать параметризацию Вместо COMPLETE_TYPE нужный параметр
+        InterestType itTarget = interestTypeRepository.findByName("COMPLETE_TYPE").get();
+        Collection<Interest> interests = interestRepository.findByTypeOrderByOrd(it);
+        Interest[] interestArray = interests.toArray(new Interest[]{});
+        changeType(interestArray[0], itTarget);
+        interestRepository.save(interestArray[0]);
+        return interestArray[0];
+        // TODO: Доделать
+//        Interest complete = completeInterestType(interestTypeId);
+//        Interest result = mixInterestType(interestTypeId);
+    }
+
+    @Override
+    public Interest referInterests(Long interestTypeId) {
+        return null;
+    }
+
+    @Override
+    public Interest dropInterests(Long interestTypeId) {
+        return null;
+    }
+
+
+    // Таски
 
     @Override
     public void importTaskTypesFromTrello() {

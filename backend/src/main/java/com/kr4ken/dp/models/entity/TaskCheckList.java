@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Чеклист, который содержится в задаче
+ */
 @Entity
 public class TaskCheckList {
     @Id

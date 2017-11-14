@@ -11,7 +11,17 @@ import java.util.List;
  * Сервис обеспечивающий всю логику при работе приложения
  */
 public interface DivineService {
+    // Интересы
+
+    Interest mixInterests(Long interestTypeId);
+    Interest completeInterests(Long interestTypeId);
+    Interest referInterests(Long interestTypeId);
+    Interest dropInterests(Long interestTypeId);
+
     // Trello
+
+    // Импорт
+    // Таски
     void importTasksFromTrello();
 
     void importTaskFromTrello(Long id);
@@ -38,6 +48,4 @@ public interface DivineService {
     void updateFromTrello(Task task);
 
     void updateFromTrello(String trelloId);
-
-
 }

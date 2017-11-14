@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.Optional;
 
-//TODO: Убрать
+/**
+ * Контроллер отвечающий за взаимодействие с трелло
+ */
 @RestController
 @RequestMapping("/trello")
 public class TrelloRestController {
@@ -37,15 +40,31 @@ public class TrelloRestController {
         this.trelloService = trelloService;
     }
 
+    // Запросы
+
+    @RequestMapping(method = RequestMethod.GET, value = "/tasks")
+    Collection<Task> getTasks() {
+        return trelloService.getTasks();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/interests")
+    Collection<Interest> getInterests() {
+        return trelloService.getInterests();
+    }
+
+
     //Импорт
 
     @RequestMapping(method = RequestMethod.POST, value = "/import")
     ResponseEntity<?> trelloImport() {
         trelloImportInterestTypes();
         trelloImportInterests();
+        trelloImportTaskTypes();
+        trelloImportTasks();
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
+    // Интересы
     @RequestMapping(method = RequestMethod.POST, value = "/import/interestTypes")
     ResponseEntity<?> trelloImportInterestTypes() {
         trelloService.getInterestTypes()
@@ -157,11 +176,42 @@ public class TrelloRestController {
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/import/export/{interestId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/export/interests/{interestId}")
     ResponseEntity<?> trelloExportInterest(@PathVariable Long interestId) {
         Interest interest = interestRepository.findOne(interestId);
         interest.update(trelloService.saveInterest(interest));
         interestRepository.save(interest);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
+
+    // Таски
+    @RequestMapping(method = RequestMethod.POST, value = "/export/taskTypes")
+    ResponseEntity<?> trelloExportTaskTypes() {
+//        divineService.exportTaskTypesFromTrello();
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/export/taskTypes/{taskTypeId}")
+    ResponseEntity<?> trelloExportTaskType(@PathVariable Long taskTypeId) {
+//        divineService.exportTaskTypeFromTrello(taskTypeId);
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/export/tasks")
+    ResponseEntity<?> trelloExportTasks() {
+//        divineService.exportTasksFromTrello();
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/export/task/{taskId}")
+    ResponseEntity<?> trelloExportTask(@PathVariable Long taskId) {
+//        divineService.exportTaskFromTrello(taskId);
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+
+
+
+
+
 }

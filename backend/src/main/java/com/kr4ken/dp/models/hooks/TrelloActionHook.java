@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
 
+/**
+ * Метаданные о действиях которые приходят в хуке трелло
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TrelloActionHook {
     private String id;

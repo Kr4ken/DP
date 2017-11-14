@@ -38,25 +38,18 @@ public class HabiticaRestController {
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     Collection<Task> readInterests() {
-        return habiticaService.getTasks();
-    }
-
-    @RequestMapping(value = "/trello/tasks", method = RequestMethod.GET)
-    Collection<Task> readTrelloInterests() {
         return habiticaService.getTrelloTasks();
     }
-
-
-    @RequestMapping(value = "/tasks/{taskId}", method = RequestMethod.POST)
-    Task readTrelloInterests(@PathVariable Long taskId) {
-        return habiticaService.saveTask(taskRepository.findOne(taskId));
-    }
-
-    // Export
 
     @RequestMapping(value = "/export/tasks", method = RequestMethod.POST)
     ResponseEntity exportTasks() {
         divineService.exportTasksToHabitica();
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/export/tasks/{taskId}", method = RequestMethod.POST)
+    ResponseEntity exportTask(@PathVariable Long taskId) {
+        habiticaService.saveTask(taskRepository.findOne(taskId));
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 

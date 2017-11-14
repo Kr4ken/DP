@@ -8,6 +8,9 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Класс содержащий вспомогательные функции для работы с задачами
+ */
 public class TaskUtils {
 
     public static TaskCheckListItem getCurrentSubtask(Task task) {

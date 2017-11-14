@@ -217,3 +217,143 @@ TODO
             "id": "62be05e6-c68c-486c-9624-cb8ca8fd6f3d"
 }
 ```
+
+
+Все запросы 
+
+POST /divine/mix/:id  - Перемешать интересы
+POST /divine/complete/:id  - Завершить интерес
+POST /divine/refer/:id  - Отложить интерес
+POST /divine/drop/:id  - Отбросить интерес
+
+GET /habitica/tasks - Список задач полученных из Хабитики
+GET /habitica/trello/tasks - Список задач полученных из хабитики, но данные берутся по данным треллоИд из внутренней базы
+POST /habitica/tasks/:id - Экспортировать в хабитику конкретный таск
+POST /habitica/epxort/tasks - Экспортировать в хабитику все синхронизируемые таски
+
+GET /interests - Получить список интересов в системе
+GET /interests/:id - Получить интерес
+GET /interests/current - Получить список активных интересов в системе
+POST /interests - Добавить ноый интерес
+PUT /interests/:id - Обновить интерес
+DELETE /interests/:id - Удалить интерес
+
+GET /interestsTypes - Получить список типов интересов в системе
+GET /interestTypes/:id - Получить тип интереса
+POST /interestTypes - Добавить ноый тип интереса
+PUT /interestTypes/:id - Обновить тип интереса
+DELETE /interestTypes/:id - Удалить тип интереса
+
+GET /tasks - Получить список задач в системе
+GET /tasks/:id - Получить задачу
+POST /tasks - Добавить новую задачу
+PUT /tasks/:id - Обновить задачу
+DELETE /tasks/:id - Удалить задачу
+
+GET /taskTypes - Получить список Типов задач в системе
+GET /taskTypes/:id - Получить тип задачи
+POST /taskTypes - Добавить новый Тип задач
+PUT /taskTypes/:id - Обновить Тип задачи
+DELETE /taskTypes/:id - Удалить Тип задачи
+ 
+POST /trello_hook/test  - Хук для трелло
+
+POST /habitica_hook/test  - Хук для хабитики
+
+POST /trello/import - Выполнить все операции импорта из трелло
+POST /trello/import/interestTypes - Импортировать все возможные типы интересов
+POST /trello/import/interestTypes/:id - обновить тип интереса из трелло
+POST /trello/import/interests - Импортировать все интересы из трелло
+POST /trello/import/interests/:id - Обновить интерес из трелло
+POST /trello/import/taskTypes - Импортировать все типы задач из трелло
+POST /trello/import/taskTypes/:id - Обновить тип задачи из трелло
+POST /trello/import/tasks - Импортировать все задачи из трелло
+POST /trello/import/tasks/:id - Обновить задачу из трелло
+
+POST /trello/export - выполнить все операции экспорта
+POST /trello/export/interestTypes - Экспортировать все типы интереса в трелло
+POST /trello/export/interestTypes/:id - 
+POST /trello/export/interests- Импортировать выполнить все операции импорта из трелло
+POST /trello/export/interests/:id - Импортировать выполнить все операции импорта из трелло
+
+
+======================================================================================================================
+Все запросы 
+
+_________
+ACTIONS
+_________
+
+POST /divine/mix/:id  - Перемешать интересы
+POST /divine/complete/:id  - Завершить интерес
+POST /divine/refer/:id  - Отложить интерес
+POST /divine/drop/:id  - Отбросить интерес
+
+POST /habitica/epxort/tasks - Экспортировать в хабитику все синхронизируемые таски
+POST /habitica/epxort/tasks/:id - Экспортировать в хабитику все синхронизируемые таски
+GET /habitica/tasks - Список задач в хабитике
+
+GET /trello/tasks - Список задач в трелло
+GET /trello/interests - Список интересов в трелло
+POST /trello/import - Выполнить все операции импорта из трелло
+POST /trello/import/interestTypes - Импортировать все возможные типы интересов
+POST /trello/import/interestTypes/:id - обновить тип интереса из трелло
+POST /trello/import/interests - Импортировать все интересы из трелло
+POST /trello/import/interests/:id - Обновить интерес из трелло
+POST /trello/import/taskTypes - Импортировать все типы задач из трелло
+POST /trello/import/taskTypes/:id - Обновить тип задачи из трелло
+POST /trello/import/tasks - Импортировать все задачи из трелло
+POST /trello/import/tasks/:id - Обновить задачу из трелло
+POST /trello/export - выполнить все операции экспорта
+POST /trello/export/interestTypes - Экспортировать все типы интереса в трелло
+POST /trello/export/interestTypes/:id -  Экспортировать тип Интереса в трелло
+POST /trello/export/interests- Импортировать выполнить все операции импорта из трелло
+POST /trello/export/interests/:id - Импортировать выполнить все операции импорта из трелло
+POST /trello/export/taskTypes - Экспортировать все типы задач в трелло
+POST /trello/export/taskTypes/:id -  Экспорт типа задач в трелло
+POST /trello/export/tasks- Импортировать выполнить все операции импорта из трелло
+POST /trello/export/tasks/:id - Импортировать выполнить все операции импорта из трелло
+
+_________
+HOOKS 
+_________
+
+POST /trello_hook/test  - Хук для трелло
+
+POST /habitica_hook/test  - Хук для хабитики
+
+_________
+REST
+_________
+
+GET /interests - Получить список интересов в системе
+GET /interests/:id - Получить интерес
+POST /interests - Добавить ноый интерес
+PUT /interests/:id - Обновить интерес
+DELETE /interests/:id - Удалить интерес
+GET /interests/current - Получить список активных интересов в системе
+
+GET /interestsTypes - Получить список типов интересов в системе
+GET /interestTypes/:id - Получить тип интереса
+POST /interestTypes - Добавить ноый тип интереса
+PUT /interestTypes/:id - Обновить тип интереса
+DELETE /interestTypes/:id - Удалить тип интереса
+
+GET /tasks - Получить список задач в системе
+GET /tasks/:id - Получить задачу
+POST /tasks - Добавить новую задачу
+PUT /tasks/:id - Обновить задачу
+DELETE /tasks/:id - Удалить задачу
+
+GET /taskTypes - Получить список Типов задач в системе
+GET /taskTypes/:id - Получить тип задачи
+POST /taskTypes - Добавить новый Тип задач
+PUT /taskTypes/:id - Обновить Тип задачи
+DELETE /taskTypes/:id - Удалить Тип задачи
+ 
+
+
+
+
+
+

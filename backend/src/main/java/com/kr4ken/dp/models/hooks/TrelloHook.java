@@ -5,6 +5,9 @@ import com.kr4ken.habitica.domain.Task;
 
 import java.util.Date;
 
+/**
+ * Хук получаемый из трелло
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TrelloHook {
     private TrelloActionHook action;
