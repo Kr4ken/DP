@@ -8,7 +8,6 @@ import com.kr4ken.dp.config.TrelloConfig;
 import com.kr4ken.dp.models.entity.*;
 import com.kr4ken.dp.models.repository.*;
 import com.kr4ken.dp.services.intf.TrelloService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -697,6 +696,22 @@ public class TrelloServiceImplement implements TrelloService {
     @Override
     public TaskType getCompleteType() {
         Optional<TaskType> result = taskTypeRepository.findByTrelloId(trelloConfig.getCompleteTaskList());
+        if (result.isPresent())
+            return result.get();
+        return null;
+    }
+
+    @Override
+    public InterestType getInterestCompleteType() {
+        Optional<InterestType> result = interestTypeRepository.findByTrelloId(trelloConfig.getInterestCompleteList());
+        if (result.isPresent())
+            return result.get();
+        return null;
+    }
+
+    @Override
+    public InterestType getInterestReferType() {
+        Optional<InterestType> result = interestTypeRepository.findByTrelloId(trelloConfig.getInterestReferList());
         if (result.isPresent())
             return result.get();
         return null;

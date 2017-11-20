@@ -44,11 +44,14 @@ public interface TrelloService {
     Task deleteTask(Task task);
 
     // Вспомогательное
+
     // Получить список типов задач, которые сейчас активны
     List<TaskType> getActiveList();
     // Получить типы задач
     TaskType getHabitType();
     TaskType getDailyType();
     TaskType getCompleteType();
-
+    // Получить типы интересов
+    InterestType getInterestCompleteType();
+    InterestType getInterestReferType();
 }

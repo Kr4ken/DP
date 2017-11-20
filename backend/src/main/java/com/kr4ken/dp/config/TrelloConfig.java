@@ -59,6 +59,12 @@ public class TrelloConfig {
     @Value("${app.task.label.Int}")
     private String intTaskLabel;
 
+    //Interests
+    @Value("${app.interest.complete}")
+    private String interestCompleteList;
+    @Value("${app.interest.refer}")
+    private String interestReferList;
+
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
@@ -139,6 +145,14 @@ public class TrelloConfig {
 
     public String getNimportantTaskLabel() {
         return nimportantTaskLabel;
+    }
+
+    public String getInterestCompleteList() {
+        return interestCompleteList;
+    }
+
+    public String getInterestReferList() {
+        return interestReferList;
     }
 
     // Получить мапу всех именных листов с рабочей доски
