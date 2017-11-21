@@ -45,6 +45,10 @@ public class Interest {
         this.update(other);
     }
 
+    public Interest(String trelloId){
+        this.trelloId = trelloId;
+    }
+
     public Interest(String name, InterestType type) {
         this(name,
                 null,

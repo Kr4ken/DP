@@ -716,4 +716,24 @@ public class TrelloServiceImplement implements TrelloService {
             return result.get();
         return null;
     }
+
+    @Override
+    public Interest sync(Interest interest) {
+        return saveInterest(interest);
+    }
+
+    @Override
+    public InterestType sync(InterestType interestType) {
+        return saveInterestType(interestType);
+    }
+
+    @Override
+    public Task sync(Task task) {
+        return saveTask(task);
+    }
+
+    @Override
+    public TaskType sync(TaskType taskType) {
+        return saveTaskType(taskType);
+    }
 }

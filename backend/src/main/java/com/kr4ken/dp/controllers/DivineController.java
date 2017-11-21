@@ -2,16 +2,14 @@ package com.kr4ken.dp.controllers;
 
 import com.kr4ken.dp.models.entity.Interest;
 import com.kr4ken.dp.models.repository.InterestRepository;
-import com.kr4ken.dp.models.entity.InterestType;
 import com.kr4ken.dp.models.repository.InterestTypeRepository;
 import com.kr4ken.dp.services.intf.DivineService;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Random;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Контроллер который отвечает за логику работы с системой

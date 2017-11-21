@@ -23,6 +23,10 @@ public class InterestType {
     InterestType() { // jpa only
     }
 
+    public InterestType(String trelloId){
+        this.trelloId = trelloId;
+    }
+
     public InterestType(InterestType other) {
         this.update(other);
     }

@@ -7,12 +7,10 @@ import com.kr4ken.dp.services.intf.DivineService;
 import com.kr4ken.dp.services.intf.HabiticaService;
 import com.kr4ken.dp.services.intf.TrelloService;
 import com.kr4ken.dp.utils.TaskUtils;
-import com.sun.org.apache.xpath.internal.operations.Div;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -28,9 +26,6 @@ public class DivineServiceImplement implements DivineService {
     private final TaskRepository taskRepository;
     private final InterestRepository interestRepository;
     private final InterestTypeRepository interestTypeRepository;
-    private final TaskCheckListRepository taskCheckListRepository;
-    private final TaskCheckListItemRepository taskCheckListItemRepository;
-    private final TaskSpecialRepository taskSpecialRepository;
 
     @Autowired
     DivineServiceImplement(
@@ -40,9 +35,6 @@ public class DivineServiceImplement implements DivineService {
             TaskRepository taskRepository,
             InterestRepository interestRepository,
             InterestTypeRepository interestTypeRepository,
-            TaskCheckListRepository taskCheckListRepository,
-            TaskCheckListItemRepository taskCheckListItemRepository,
-            TaskSpecialRepository taskSpecialRepository,
             DivineConfig divineConfig
 
     ) {
@@ -50,9 +42,6 @@ public class DivineServiceImplement implements DivineService {
         this.taskRepository = taskRepository;
         this.trelloService = trelloService;
         this.habiticaService = habiticaService;
-        this.taskCheckListRepository = taskCheckListRepository;
-        this.taskCheckListItemRepository = taskCheckListItemRepository;
-        this.taskSpecialRepository = taskSpecialRepository;
         this.interestRepository = interestRepository;
         this.interestTypeRepository = interestTypeRepository;
         this.divineConfig = divineConfig;
@@ -64,13 +53,13 @@ public class DivineServiceImplement implements DivineService {
     private void changeType(Interest interest, InterestType interestType) {
         Collection<Interest> interests = interestRepository.findByTypeOrderByOrd(interestType);
         interest.setOrd(
-                interests.toArray(new Interest[]{})[0].getOrd()/2
+                interests.toArray(new Interest[]{})[0].getOrd() / 2
         );
         interest.setType(interestType);
     }
 
-    // Ставит в верх списка случайную карточку и типажирует изменения в трелло (Возможно)
-    private Interest mixInterest(Long interestTypeId){
+    // Ставит в верх списка случайную карточку и тиражирует изменения в трелло (Возможно)
+    private Interest mixInterest(Long interestTypeId) {
         Random random = new Random();
         InterestType interestType = interestTypeRepository.findOne(interestTypeId);
         Collection<Interest> interests = interestRepository.findByTypeOrderByOrd(interestType);
@@ -79,7 +68,7 @@ public class DivineServiceImplement implements DivineService {
         Integer randomInterest = random.nextInt(max - min + 1) + min;
         changeType(interestArray[randomInterest], interestType);
         // Синхронизация с трелло
-        if(divineConfig.getTrelloSync())
+        if (divineConfig.getTrelloSync())
             interestRepository.save(trelloService.saveInterest(interestArray[randomInterest]));
         else
             interestRepository.save(interestArray[randomInterest]);
@@ -94,16 +83,14 @@ public class DivineServiceImplement implements DivineService {
 
     private Interest moveAndMixInterest(Long interestTypeId, InterestType newInterestType) {
         InterestType it = interestTypeRepository.findOne(interestTypeId);
-        InterestType itTarget =newInterestType;
         Collection<Interest> interests = interestRepository.findByTypeOrderByOrd(it);
         Interest[] interestArray = interests.toArray(new Interest[]{});
-        changeType(interestArray[0], itTarget);
+        changeType(interestArray[0], newInterestType);
         // Переносим текущий интерес в список выполнено
         // Синхронизация с трелло
-        if(divineConfig.getTrelloSync()) {
+        if (divineConfig.getTrelloSync()) {
             interestRepository.save(trelloService.saveInterest(interestArray[0]));
-        }
-        else {
+        } else {
             interestRepository.save(interestArray[0]);
         }
         // Возвращаем новый выбранный элемент
@@ -113,12 +100,12 @@ public class DivineServiceImplement implements DivineService {
 
     @Override
     public Interest completeInterests(Long interestTypeId) {
-        return moveAndMixInterest(interestTypeId,trelloService.getInterestCompleteType());
+        return moveAndMixInterest(interestTypeId, trelloService.getInterestCompleteType());
     }
 
     @Override
     public Interest referInterests(Long interestTypeId) {
-        return moveAndMixInterest(interestTypeId,trelloService.getInterestReferType());
+        return moveAndMixInterest(interestTypeId, trelloService.getInterestReferType());
     }
 
     @Override
@@ -128,10 +115,9 @@ public class DivineServiceImplement implements DivineService {
         Interest[] interestArray = interests.toArray(new Interest[]{});
         // Переносим текущий интерес в список выполнено
         // Синхронизация с трелло
-        if(divineConfig.getTrelloSync()) {
+        if (divineConfig.getTrelloSync()) {
             interestRepository.delete(trelloService.deleteInterest(interestArray[0]));
-        }
-        else {
+        } else {
             interestRepository.delete(interestArray[0]);
         }
         // Возвращаем новый выбранный элемент
@@ -139,88 +125,7 @@ public class DivineServiceImplement implements DivineService {
     }
 
 
-    // Таски
-
-    @Override
-    public void importTaskTypesFromTrello() {
-        trelloService.getTaskTypes()
-                .forEach(e -> {
-                    Optional<TaskType> current = taskTypeRepository.findByTrelloId(e.getTrelloId());
-                    if (current.isPresent()) {
-                        current.get().update(e);
-                        taskTypeRepository.save(current.get());
-                    } else {
-                        taskTypeRepository.save(e);
-                    }
-                });
-    }
-
-    private void mergeTask(Task task) {
-        Optional<Task> current = taskRepository.findByTrelloId(task.getTrelloId());
-        // Проверяем есть ли уже текущий элемент в моей базе
-        // Если есть то просто обновляем текущее значение
-        if (task.getTrelloId() != null && current.isPresent()) {
-            current.get().update(task);
-            taskRepository.save(current.get());
-        }
-        // Если нет то просто сохраняем
-        else {
-            taskRepository.save(task);
-        }
-    }
-
-    @Override
-    public void importTasksFromTrello() {
-        trelloService.getTasks()
-                .forEach(this::mergeTask);
-
-    }
-
-    @Override
-    public void importTaskFromTrello(Long id) {
-        Task task = taskRepository.findOne(id);
-        Task newTask = trelloService.getTask(task);
-        mergeTask(newTask);
-//        task.update(trelloService.getTask(task));
-//        taskRepository.save(task);
-    }
-
-
-    @Override
-    public void importTaskFromTrello(String trelloId) {
-        Task task = new Task();
-        task.setTrelloId(trelloId);
-        task = trelloService.getTask(task);
-        mergeTask(task);
-    }
-
-    @Override
-    public void importTaskFromTrelloByTrelloId(String trelloId) {
-        Optional<Task> task = taskRepository.findByTrelloId(trelloId);
-        //Если уже есть то обновляем
-        if(task.isPresent())
-            importTaskFromTrello(task.get().getId());
-        else {
-            //Создаем фейковый таск чтобы вытянуть в него все данные
-        }
-
-
-
-    }
-
-    @Override
-    public void importTaskTypeFromTrello(Long id) {
-        TaskType taskType = taskTypeRepository.findOne(id);
-        taskType.update(trelloService.getTaskType(taskType));
-        taskTypeRepository.save(taskType);
-    }
-
-    @Override
-    public void TasksTrelloToHabitica() {
-        importTaskTypesFromTrello();
-        importTasksFromTrello();
-
-    }
+    // Хабитика
 
     @Override
     public void exportTasksToHabitica() {
@@ -231,28 +136,28 @@ public class DivineServiceImplement implements DivineService {
         }
     }
 
+    @Override
+    public void exportTaskToHabitica(Long taskId) {
+        Task task = taskRepository.findOne(taskId);
+        if (task != null)
+            exportTaskToHabitica(task);
+    }
 
-    public void exportTaskToHabitica(String trelloId) {
+
+    private void exportTaskToHabitica(String trelloId) {
         Optional<Task> task = taskRepository.findByTrelloId(trelloId);
-        if(task.isPresent())
-            exportTaskToHabitica(task.get());
+        task.ifPresent(this::exportTaskToHabitica);
     }
 
     public void exportTaskToHabitica(Task task) {
-        // Сделаю доп проверку и здесь
-        // Пока в хабитику закидываю только из активного списка
-        if(trelloService.getActiveList().contains(task.getType())){
-           habiticaService.saveTask(task);
-        }
+        habiticaService.saveTask(task);
     }
-
 
 
     @Override
     public void scoreTaskFromHabitica(String habiticaId) {
         Optional<Task> task = taskRepository.findByTrelloId(habiticaId);
-        if (task.isPresent())
-            scoreTaskFromHabitica(task.get());
+        task.ifPresent(this::scoreTaskFromHabitica);
     }
 
     @Override
@@ -304,20 +209,153 @@ public class DivineServiceImplement implements DivineService {
         habiticaService.saveTask(task);
     }
 
+    // Трелло
+
     @Override
-    public void updateFromTrello(Task task) {
-        // Смотрим из какого списка идет обновление
-        if(!trelloService.getActiveList().contains(task.getType())) {
-           return;
+    public void importInterestTypesFromTrello() {
+        trelloService.getInterestTypes()
+                .forEach(e -> {
+                    Optional<InterestType> current = interestTypeRepository.findByTrelloId(e.getTrelloId());
+                    if (current.isPresent()) {
+                        current.get().update(e);
+                        interestTypeRepository.save(current.get());
+                    } else {
+                        interestTypeRepository.save(e);
+                    }
+                });
+    }
+
+    @Override
+    public void importInterestTypeFromTrello(InterestType interestType) {
+        interestType.update(trelloService.getInterestType(interestType));
+        interestTypeRepository.save(interestType);
+    }
+
+    @Override
+    public void importInterestTypeFromTrello(String interestTypeTrelloId) {
+        InterestType interestType = new InterestType(interestTypeTrelloId);
+        importInterestTypeFromTrello(interestType);
+    }
+
+    @Override
+    public void importInterestTypeFromTrello(Long interestTypeId) {
+        InterestType interestType = interestTypeRepository.findOne(interestTypeId);
+        if (interestType != null)
+            importInterestTypeFromTrello(interestType);
+    }
+
+
+    @Override
+    public void importInterestsFromTrello() {
+        trelloService.getInterests()
+                .forEach(e -> {
+                    Optional<Interest> current = interestRepository.findByTrelloId(e.getTrelloId());
+                    if (current.isPresent()) {
+                        current.get().update(e);
+                        interestRepository.save(current.get());
+                    } else {
+                        interestRepository.save(e);
+                    }
+                });
+    }
+
+    @Override
+    public void importInterestFromTrello(Interest interest) {
+        interest.update(trelloService.getInterest(interest));
+        interestRepository.save(interest);
+
+    }
+
+    @Override
+    public void importInterestFromTrello(String interestTrelloId) {
+        Interest interest = new Interest(interestTrelloId);
+        importInterestFromTrello(interest);
+    }
+
+    @Override
+    public void importInterestFromTrello(Long interestId) {
+        Interest interest = interestRepository.findOne(interestId);
+        if (interest != null)
+            importInterestFromTrello(interest);
+    }
+
+
+    @Override
+    public void importTaskTypesFromTrello() {
+        trelloService.getTaskTypes()
+                .forEach(e -> {
+                    Optional<TaskType> current = taskTypeRepository.findByTrelloId(e.getTrelloId());
+                    if (current.isPresent()) {
+                        current.get().update(e);
+                        taskTypeRepository.save(current.get());
+                    } else {
+                        taskTypeRepository.save(e);
+                    }
+                });
+    }
+
+    @Override
+    public void importTaskTypeFromTrello(TaskType taskType) {
+        taskType.update(trelloService.getTaskType(taskType));
+        taskTypeRepository.save(taskType);
+    }
+
+
+    @Override
+    public void importTaskTypeFromTrello(Long id) {
+        TaskType taskType = taskTypeRepository.findOne(id);
+        if (taskType != null)
+            importTaskTypeFromTrello(taskType);
+    }
+
+    @Override
+    public void importTaskTypeFromTrello(String taskTypeTrelloId) {
+        TaskType taskType = new TaskType(taskTypeTrelloId);
+        importTaskTypeFromTrello(taskType);
+
+    }
+
+    private void mergeTask(Task task) {
+        Optional<Task> current = taskRepository.findByTrelloId(task.getTrelloId());
+        // Проверяем есть ли уже текущий элемент в моей базе
+        // Если есть то просто обновляем текущее значение
+        if (task.getTrelloId() != null && current.isPresent()) {
+            current.get().update(task);
+            taskRepository.save(current.get());
         }
+        // Если нет то просто сохраняем
+        else {
+            taskRepository.save(task);
+        }
+    }
 
-        importTaskFromTrello(task.getId());
+    @Override
+    public void importTasksFromTrello() {
+        trelloService.getTasks()
+                .forEach(this::mergeTask);
+
+    }
+
+    @Override
+    public void importTaskFromTrello(Task task) {
+        Task newTask = trelloService.getTask(task);
+        mergeTask(newTask);
+    }
 
 
-        // Если лист рабочий, то обновляем текущую карточку
+    @Override
+    public void importTaskFromTrello(Long id) {
+        Task task = taskRepository.findOne(id);
+        if (task != null)
+            importTaskFromTrello(task);
+    }
 
-        // В конце сохраняем изменения если они были
-        habiticaService.saveTask(task);
+
+    @Override
+    public void importTaskFromTrello(String taskTrelloId) {
+        Task task = new Task();
+        task.setTrelloId(taskTrelloId);
+        importTaskFromTrello(task);
     }
 
     @Override
@@ -326,115 +364,106 @@ public class DivineServiceImplement implements DivineService {
         exportTaskToHabitica(trelloId);
     }
 
-    @Override
-    public void exportTaskToHabitica(Long taskId) {
+    // Экспорт
 
-    }
-
-    @Override
-    public void importInterestTypesFromTrello() {
-
-    }
-
-    @Override
-    public void importInterestTypeFromTrello(InterestType interstType) {
-
-    }
-
-    @Override
-    public void importInterestTypeFromTrello(String interestTypeId) {
-
-    }
-
-    @Override
-    public void importInterestsFromTrello() {
-
-    }
-
-    @Override
-    public void importInterestFromTrello(Interest interest) {
-
-    }
-
-    @Override
-    public void importInterestFromTrello(String interestId) {
-
-    }
-
-    @Override
-    public void importTaskTypeFromTrello(TaskType taksType) {
-
-    }
-
-    @Override
-    public void importTaskTypeFromTrello(String taskTypeId) {
-
-    }
-
-    @Override
-    public void importTaskFromTrello(Task task) {
-
-    }
 
     @Override
     public void exportInterestTypesToTrello() {
-
+        interestTypeRepository.findAll()
+                .forEach(e -> {
+                    e.update(trelloService.saveInterestType(e));
+                    interestTypeRepository.save(e);
+                });
     }
 
     @Override
-    public void exportInterestTypeToTrello(InterestType interstType) {
-
+    public void exportInterestTypeToTrello(InterestType interestType) {
+        interestType.update(trelloService.saveInterestType(interestType));
+        interestTypeRepository.save(interestType);
     }
 
     @Override
     public void exportInterestTypeToTrello(Long interestTypeId) {
+        InterestType interestType = interestTypeRepository.findOne(interestTypeId);
+        if (interestType != null)
+            exportInterestTypeToTrello(interestType);
 
     }
 
     @Override
     public void exportInterestsToTrello() {
+        interestRepository.findAll()
+                .forEach(e -> {
+                    e.update(trelloService.saveInterest(e));
+                    interestRepository.save(e);
+                });
 
     }
 
     @Override
     public void exportInterestToTrello(Interest interest) {
+        interest.update(trelloService.saveInterest(interest));
+        interestRepository.save(interest);
 
     }
 
     @Override
     public void exportInterestToTrello(Long interestId) {
+        Interest interest = interestRepository.findOne(interestId);
+        if (interest != null)
+            exportInterestToTrello(interest);
 
     }
 
     @Override
     public void exportTaskTypesToTrello() {
+        taskTypeRepository.findAll()
+                .forEach(e -> {
+                    e.update(trelloService.saveTaskType(e));
+                    taskTypeRepository.save(e);
+                });
 
     }
 
     @Override
-    public void exportTaskTypeToTrello(TaskType taksType) {
+    public void exportTaskTypeToTrello(TaskType taskType) {
+        taskType.update(trelloService.saveTaskType(taskType));
+        taskTypeRepository.save(taskType);
 
     }
 
     @Override
     public void exportTaskTypeToTrello(Long taskTypeId) {
+        TaskType taskType = taskTypeRepository.findOne(taskTypeId);
+        if (taskType != null)
+            exportTaskTypeToTrello(taskType);
 
     }
 
     @Override
     public void exportTasksToTrello() {
-
+        taskRepository.findAll()
+                .forEach(e -> {
+                    e.update(trelloService.saveTask(e));
+                    taskRepository.save(e);
+                });
     }
 
     @Override
     public void exportTaskToTrello(Task task) {
+        task.update(trelloService.saveTask(task));
+        taskRepository.save(task);
 
     }
 
     @Override
     public void exportTaskToTrello(Long taskId) {
-
+        Task task = taskRepository.findOne(taskId);
+        if (task != null)
+            exportTaskToTrello(task);
     }
+
+
 }
 
 

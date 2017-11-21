@@ -13,7 +13,7 @@ public interface HabiticaService {
     // Получение
     List<Task> getTasks();
 
-    List<Task> getTrelloTasks();
+    List<Task> getOldTasks();
 
     // Сохранение
     Task saveTask(Task task);

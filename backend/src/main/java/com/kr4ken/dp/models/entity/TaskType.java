@@ -23,6 +23,9 @@ public class TaskType {
     public TaskType(TaskType other) {
         this.update(other);
     }
+    public TaskType(String trelloId){
+        this.trelloId = trelloId;
+    }
 
     // Обновление данных из непустых данных другого типа
     public void update(TaskType other){

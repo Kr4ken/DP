@@ -1,7 +1,9 @@
 package com.kr4ken.dp.controllers;
 
-import com.kr4ken.dp.models.entity.*;
-import com.kr4ken.dp.models.repository.*;
+import com.kr4ken.dp.models.entity.Interest;
+import com.kr4ken.dp.models.entity.Task;
+import com.kr4ken.dp.models.repository.InterestRepository;
+import com.kr4ken.dp.models.repository.InterestTypeRepository;
 import com.kr4ken.dp.services.intf.DivineService;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * Контроллер отвечающий за взаимодействие с трелло
@@ -22,21 +23,15 @@ import java.util.Optional;
 @RequestMapping("/trello")
 public class TrelloRestController {
 
-    private final InterestTypeRepository interestTypeRepository;
-    private final InterestRepository interestRepository;
     private final TrelloService trelloService;
 
     private final DivineService divineService;
 
     @Autowired
-    TrelloRestController(InterestTypeRepository interestTypeRepository,
-                         InterestRepository interestRepository,
-                         TrelloService trelloService,
+    TrelloRestController(TrelloService trelloService,
                          DivineService divineService
     ) {
         this.divineService = divineService;
-        this.interestTypeRepository = interestTypeRepository;
-        this.interestRepository = interestRepository;
         this.trelloService = trelloService;
     }
 
@@ -67,47 +62,25 @@ public class TrelloRestController {
     // Интересы
     @RequestMapping(method = RequestMethod.POST, value = "/import/interestTypes")
     ResponseEntity<?> trelloImportInterestTypes() {
-        trelloService.getInterestTypes()
-                .forEach(e -> {
-                    Optional<InterestType> current = interestTypeRepository.findByTrelloId(e.getTrelloId());
-                    if (current.isPresent()) {
-                        current.get().update(e);
-                        interestTypeRepository.save(current.get());
-                    } else {
-                        interestTypeRepository.save(e);
-                    }
-                });
+        divineService.importInterestTypesFromTrello();
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/import/interestTypes/{interestTypeId}")
     ResponseEntity<?> trelloImportInterestType(@PathVariable Long interestTypeId) {
-        InterestType interestType = interestTypeRepository.findOne(interestTypeId);
-        interestType.update(trelloService.getInterestType(interestType));
-        interestTypeRepository.save(interestType);
+        divineService.importInterestTypeFromTrello(interestTypeId);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/import/interests")
     ResponseEntity<?> trelloImportInterests() {
-        trelloService.getInterests()
-                .forEach(e -> {
-                    Optional<Interest> current = interestRepository.findByTrelloId(e.getTrelloId());
-                    if (current.isPresent()) {
-                        current.get().update(e);
-                        interestRepository.save(current.get());
-                    } else {
-                        interestRepository.save(e);
-                    }
-                });
+        divineService.importInterestsFromTrello();
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/import/interests/{interestId}")
     ResponseEntity<?> trelloImportInterest(@PathVariable Long interestId) {
-        Interest interest = interestRepository.findOne(interestId);
-        interest.update(trelloService.getInterest(interest));
-        interestRepository.save(interest);
+        divineService.importInterestFromTrello(interestId);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
@@ -143,75 +116,59 @@ public class TrelloRestController {
     ResponseEntity<?> trelloExport() {
         trelloExportInterestTypes();
         trelloExportInterests();
+        trelloExportTaskTypes();
+        trelloExportTasks();
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/export/interestTypes")
     ResponseEntity<?> trelloExportInterestTypes() {
-        interestTypeRepository.findAll()
-                .stream()
-                .forEach(e -> {
-                    e.update(trelloService.saveInterestType(e));
-                    interestTypeRepository.save(e);
-                });
+        divineService.exportInterestTypesToTrello();
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/export/interestTypes/{interestTypeId}")
     ResponseEntity<?> trelloExportInterestType(@PathVariable Long interestTypeId) {
-        InterestType interestType = interestTypeRepository.findOne(interestTypeId);
-        interestType.update(trelloService.saveInterestType(interestType));
-        interestTypeRepository.save(interestType);
+        divineService.exportInterestTypeToTrello(interestTypeId);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/export/interests")
     ResponseEntity<?> trelloExportInterests() {
-        interestRepository.findAll()
-                .stream()
-                .forEach(e -> {
-                    e.update(trelloService.saveInterest(e));
-                    interestRepository.save(e);
-                });
+        divineService.exportInterestsToTrello();
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/export/interests/{interestId}")
     ResponseEntity<?> trelloExportInterest(@PathVariable Long interestId) {
-        Interest interest = interestRepository.findOne(interestId);
-        interest.update(trelloService.saveInterest(interest));
-        interestRepository.save(interest);
+        divineService.exportInterestToTrello(interestId);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     // Таски
     @RequestMapping(method = RequestMethod.POST, value = "/export/taskTypes")
     ResponseEntity<?> trelloExportTaskTypes() {
-//        divineService.exportTaskTypesFromTrello();
+        divineService.exportTaskTypesToTrello();
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/export/taskTypes/{taskTypeId}")
     ResponseEntity<?> trelloExportTaskType(@PathVariable Long taskTypeId) {
-//        divineService.exportTaskTypeFromTrello(taskTypeId);
+        divineService.exportTaskTypeToTrello(taskTypeId);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/export/tasks")
     ResponseEntity<?> trelloExportTasks() {
-//        divineService.exportTasksFromTrello();
+        divineService.exportTasksToTrello();
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/export/task/{taskId}")
     ResponseEntity<?> trelloExportTask(@PathVariable Long taskId) {
-//        divineService.exportTaskFromTrello(taskId);
+        divineService.exportTaskToTrello(taskId);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
-
-
-
-
 
 
 }

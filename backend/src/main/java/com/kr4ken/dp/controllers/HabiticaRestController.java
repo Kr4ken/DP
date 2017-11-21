@@ -1,13 +1,16 @@
 package com.kr4ken.dp.controllers;
 
-import com.kr4ken.dp.models.entity.*;
+import com.kr4ken.dp.models.entity.Task;
 import com.kr4ken.dp.models.repository.TaskRepository;
 import com.kr4ken.dp.services.intf.DivineService;
 import com.kr4ken.dp.services.intf.HabiticaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 
@@ -15,7 +18,6 @@ import java.util.Collection;
  * Контроллер отвечающий за взаимодействие с habitica
  */
 
-//TODO: убрать
 
 @RestController
 @RequestMapping("/habitica")
@@ -38,7 +40,7 @@ public class HabiticaRestController {
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     Collection<Task> readInterests() {
-        return habiticaService.getTrelloTasks();
+        return habiticaService.getTasks();
     }
 
     @RequestMapping(value = "/export/tasks", method = RequestMethod.POST)

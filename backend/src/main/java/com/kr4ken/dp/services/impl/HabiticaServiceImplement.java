@@ -48,7 +48,7 @@ public class HabiticaServiceImplement implements HabiticaService {
     }
 
     @Override
-    public List<Task> getTasks() {
+    public List<Task> getOldTasks() {
         ArrayList<Task> result = new ArrayList<>();
         for (com.kr4ken.habitica.domain.Task task : habiticaApi.getUserTasks()) {
             result.add(new Task(task.getAlias(),
@@ -69,11 +69,12 @@ public class HabiticaServiceImplement implements HabiticaService {
     }
 
     @Override
-    public List<Task> getTrelloTasks() {
+    public List<Task> getTasks() {
         return habiticaApi.getUserTasks()
                 .stream()
                 .map(e -> {
                     Optional<Task> task = taskRepository.findByTrelloId(e.getAlias());
+//                    return task.isPresent() ? task.get() : null;
                     return task.isPresent() ? task.get() : null;
                 })
                 .collect(Collectors.toList());

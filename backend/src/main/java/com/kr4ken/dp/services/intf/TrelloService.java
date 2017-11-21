@@ -45,6 +45,12 @@ public interface TrelloService {
 
     // Вспомогательное
 
+    // Чуть более удобная синхронизация
+    Interest sync(Interest interest);
+    InterestType sync(InterestType interestType);
+    Task sync(Task task);
+    TaskType sync(TaskType taskType);
+
     // Получить список типов задач, которые сейчас активны
     List<TaskType> getActiveList();
     // Получить типы задач

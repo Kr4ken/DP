@@ -1,5 +1,6 @@
 package com.kr4ken.dp.controllers;
 
+import com.kr4ken.dp.config.DivineConfig;
 import com.kr4ken.dp.exceptions.InterestNotFoundException;
 import com.kr4ken.dp.models.entity.Interest;
 import com.kr4ken.dp.models.repository.InterestRepository;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,17 +31,23 @@ public class InterestRestController {
     private final InterestTypeRepository interestTypeRepository;
     private final TrelloService trelloService;
 
+    private final DivineConfig divineConfig;
+
     @Autowired
     InterestRestController(InterestRepository interestRepository,
                            InterestTypeRepository interestTypeRepository,
+                           DivineConfig divineConfig,
                            TrelloService trelloService) {
         this.interestRepository = interestRepository;
         this.interestTypeRepository = interestTypeRepository;
         this.trelloService = trelloService;
+        this.divineConfig = divineConfig;
     }
 
-    private void trelloSync(Interest interest) {
-        interestRepository.save(trelloService.saveInterest(interest));
+    private void trelloSync(Interest interest, Optional<Boolean> trello) {
+        Boolean sync = trello.isPresent() ? trello.get() : divineConfig.getTrelloSync();
+        if (sync)
+            interestRepository.save(trelloService.sync(interest));
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -69,26 +78,21 @@ public class InterestRestController {
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> add(@RequestBody Interest input, @RequestParam(required = false) Optional<Boolean> trello) {
         Interest result = interestRepository.save(new Interest(input));
-        if (trello.isPresent() && trello.get()) {
-            trelloSync(result);
-        }
+        trelloSync(result, trello);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{interestId}")
     ResponseEntity<?> add(@RequestBody Interest input, @PathVariable Long interestId, @RequestParam(required = false) Optional<Boolean> trello) {
-        Interest one = interestRepository.findOne(interestId);
-        if (one == null) {
-            return new ResponseEntity(new InterestNotFoundException(interestId.toString()),
-                    HttpStatus.NOT_FOUND);
+        Interest result = interestRepository.findOne(interestId);
+        if (result == null) {
+            return new ResponseEntity(new InterestNotFoundException(interestId.toString()), HttpStatus.NOT_FOUND);
         }
-        one.update(input);
-        interestRepository.save(one);
-        if (trello.isPresent() && trello.get()) {
-            trelloSync(one);
-        }
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(one.getId()).toUri();
+        result.update(input);
+        interestRepository.save(result);
+        trelloSync(result, trello);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
@@ -96,14 +100,15 @@ public class InterestRestController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/{interestId}")
     ResponseEntity<?> delete(@PathVariable Long interestId, @RequestParam(required = false) Optional<Boolean> trello) {
 
-        Interest interest = interestRepository.findOne(interestId);
-        if (interest == null) {
+        Interest result = interestRepository.findOne(interestId);
+        if (result == null) {
             return new ResponseEntity(new InterestNotFoundException(interestId.toString()),
                     HttpStatus.NOT_FOUND);
         }
 
-        if (trello.isPresent() && trello.get()) {
-            trelloService.deleteInterest(interest);
+        Boolean sync = trello.isPresent() ? trello.get() : divineConfig.getTrelloSync();
+        if (sync) {
+            trelloService.deleteInterest(result);
         }
         interestTypeRepository.delete(interestId);
 
