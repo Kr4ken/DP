@@ -734,6 +734,27 @@ public class TrelloServiceImplement implements TrelloService {
 
     @Override
     public TaskType sync(TaskType taskType) {
+
         return saveTaskType(taskType);
+    }
+
+    @Override
+    public InterestType delete(InterestType intrestType) {
+        return deleteInterestType(intrestType);
+    }
+
+    @Override
+    public Interest delete(Interest interest) {
+        return deleteInterest(interest);
+    }
+
+    @Override
+    public TaskType delete(TaskType taskType) {
+        return deleteTaskType(taskType);
+    }
+
+    @Override
+    public Task delete(Task task) {
+        return deleteTask(task);
     }
 }

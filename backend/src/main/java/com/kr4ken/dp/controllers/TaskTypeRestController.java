@@ -1,5 +1,6 @@
 package com.kr4ken.dp.controllers;
 
+import com.kr4ken.dp.config.DivineConfig;
 import com.kr4ken.dp.exceptions.TaskTypeNotFoundException;
 import com.kr4ken.dp.models.entity.TaskType;
 import com.kr4ken.dp.models.repository.TaskTypeRepository;
@@ -25,15 +26,21 @@ public class TaskTypeRestController {
     private final TaskTypeRepository taskTypeRepository;
     private final TrelloService trelloService;
 
+    private final DivineConfig divineConfig;
+
     @Autowired
     TaskTypeRestController(TaskTypeRepository taskTypeRepository,
+                           DivineConfig divineConfig,
                            TrelloService trelloService) {
         this.taskTypeRepository = taskTypeRepository;
         this.trelloService = trelloService;
+        this.divineConfig = divineConfig;
     }
 
-    private void trelloSync(TaskType taskType) {
-        taskTypeRepository.save(trelloService.saveTaskType(taskType));
+    private void trelloSync(TaskType taskType, Optional<Boolean> trello) {
+        Boolean sync = trello.isPresent() ? trello.get() : divineConfig.getTrelloSync();
+        if (sync)
+            taskTypeRepository.save(trelloService.saveTaskType(taskType));
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -44,9 +51,7 @@ public class TaskTypeRestController {
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> add(@RequestBody TaskType input, @RequestParam(required = false) Optional<Boolean> trello) {
         TaskType result = taskTypeRepository.save(new TaskType(input));
-        if (trello.isPresent() && trello.get()) {
-            trelloSync(result);
-        }
+        trelloSync(result, trello);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
@@ -62,9 +67,7 @@ public class TaskTypeRestController {
         taskType.update(input);
 
         taskTypeRepository.save(taskType);
-        if (trello.isPresent() && trello.get()) {
-            trelloSync(taskType);
-        }
+        trelloSync(taskType, trello);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(taskType.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
@@ -77,8 +80,8 @@ public class TaskTypeRestController {
             return new ResponseEntity(new TaskTypeNotFoundException(taskTypeId.toString()),
                     HttpStatus.NOT_FOUND);
         }
-
-        if (trello.isPresent() && trello.get()) {
+        Boolean sync = trello.isPresent() ? trello.get() : divineConfig.getTrelloSync();
+        if (sync) {
             trelloService.deleteTaskType(taskType);
         }
         taskTypeRepository.delete(taskTypeId);

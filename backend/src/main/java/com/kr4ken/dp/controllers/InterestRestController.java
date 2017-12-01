@@ -108,7 +108,7 @@ public class InterestRestController {
 
         Boolean sync = trello.isPresent() ? trello.get() : divineConfig.getTrelloSync();
         if (sync) {
-            trelloService.deleteInterest(result);
+            trelloService.delete(result);
         }
         interestTypeRepository.delete(interestId);
 

@@ -37,6 +37,13 @@ public interface TrelloService {
     Task saveTask(Task task);
 
     // Удаление
+    // Более удобное удаление
+    InterestType delete(InterestType intrestType);
+    Interest delete(Interest interest);
+    TaskType delete(TaskType taskType);
+    Task delete(Task task);
+
+
     InterestType deleteInterestType(InterestType intrestType);
     Interest deleteInterest(Interest interest);
 

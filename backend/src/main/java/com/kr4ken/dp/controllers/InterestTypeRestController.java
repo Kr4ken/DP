@@ -1,5 +1,6 @@
 package com.kr4ken.dp.controllers;
 
+import com.kr4ken.dp.config.DivineConfig;
 import com.kr4ken.dp.exceptions.InterestTypeNotFoundException;
 import com.kr4ken.dp.models.entity.InterestType;
 import com.kr4ken.dp.models.repository.InterestTypeRepository;
@@ -26,15 +27,21 @@ public class InterestTypeRestController {
     private final InterestTypeRepository interestTypeRepository;
     private final TrelloService trelloService;
 
+    private final DivineConfig divineConfig;
+
     @Autowired
     InterestTypeRestController(InterestTypeRepository interestTypeRepository,
+                               DivineConfig divineConfig,
                                TrelloService trelloService) {
         this.interestTypeRepository = interestTypeRepository;
         this.trelloService = trelloService;
+        this.divineConfig = divineConfig;
     }
 
-    private void trelloSync(InterestType interestType) {
-        interestTypeRepository.save(trelloService.saveInterestType(interestType));
+    private void trelloSync(InterestType interestType, Optional<Boolean> trello) {
+        Boolean sync = trello.isPresent() ? trello.get() : divineConfig.getTrelloSync();
+        if (sync)
+            interestTypeRepository.save(trelloService.sync(interestType));
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -45,9 +52,7 @@ public class InterestTypeRestController {
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> add(@RequestBody InterestType input, @RequestParam(required = false) Optional<Boolean> trello) {
         InterestType result = interestTypeRepository.save(new InterestType(input));
-        if (trello.isPresent() && trello.get()) {
-            trelloSync(result);
-        }
+        trelloSync(result, trello);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
@@ -59,13 +64,9 @@ public class InterestTypeRestController {
             return new ResponseEntity(new InterestTypeNotFoundException(interestTypeId.toString()),
                     HttpStatus.NOT_FOUND);
         }
-
         interestType.update(input);
-
         interestTypeRepository.save(interestType);
-        if (trello.isPresent() && trello.get()) {
-            trelloSync(interestType);
-        }
+        trelloSync(interestType, trello);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(interestType.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
@@ -79,8 +80,9 @@ public class InterestTypeRestController {
                     HttpStatus.NOT_FOUND);
         }
 
-        if (trello.isPresent() && trello.get()) {
-            trelloService.deleteInterestType(interestType);
+        Boolean sync = trello.isPresent() ? trello.get() : divineConfig.getTrelloSync();
+        if (sync) {
+            trelloService.delete(interestType);
         }
         interestTypeRepository.delete(interestTypeId);
 

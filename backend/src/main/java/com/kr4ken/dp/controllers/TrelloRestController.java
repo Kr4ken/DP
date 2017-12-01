@@ -2,8 +2,6 @@ package com.kr4ken.dp.controllers;
 
 import com.kr4ken.dp.models.entity.Interest;
 import com.kr4ken.dp.models.entity.Task;
-import com.kr4ken.dp.models.repository.InterestRepository;
-import com.kr4ken.dp.models.repository.InterestTypeRepository;
 import com.kr4ken.dp.services.intf.DivineService;
 import com.kr4ken.dp.services.intf.TrelloService;
 import org.springframework.beans.factory.annotation.Autowired;

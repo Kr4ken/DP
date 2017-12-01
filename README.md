@@ -5,6 +5,11 @@
 
 Для большинства запросов можно указать параметр `trello` чтобы синхронизировать действие с Трелло
 
+---
+REST
+---
+
+---
 InterestType
 ---
 Различные типы интересов
@@ -26,8 +31,7 @@ InterestType
 | PUT  | /interestTypes/{id} | Обновить тип интереса с id |
 | DELETE  | /interestTypes/{id} | Удалить тип интереса с id  |
 
-
-
+---
 Interests
 ---
 Интересы 
@@ -57,24 +61,122 @@ Interests
 | PUT | /interests/{id} | Обновляет информацию о конкретном интересе |
 | DELETE | /interests/{id} | Удаляет конкретный интерес |
 
-Trello
 ---
-Это не объекты, а операции которые выполняются с трелло
+Task
+---
+Задачи
+```json
+{
+	"trelloId": "Id карточки в трелло ",
+        "name": "Наименование задачи",
+        "description" : "Описание задачи",
+        "img" : "Url картинки",
+        "urgent" : true,
+        "important": true,
+        "special":  {
+        	"complete":"Delete"
+        },
+        "type": {
+        "id":0},
+        "dueDate": "01-01-2011T18:45:33:2204Z",
+        "checklists" :[ {
+        	"id":1,
+        	"name":"Наименование чеклиста",
+        	"trelloId":"ID чеклиста в трелло",
+        	"checklistItems":[
+        		{
+        		"id":1,
+        		"pos":123.4,
+        		"duration":1.4,
+	        	"trelloId":"ID чекитема в трелло",
+	        	"name":"Наименование чекитема",
+	        	"checked":true
+        	}],
+
+        }],
+        "attribute":"Int",
+        "duration":1.5
+}
+```
+| Метод | Путь | Описание |
+| ----  | ---- | ----  |
+| GET | /tasks/ | Список задач в системе |
+| GET | /tasks/{id} | Выводит информацию о конкретной задаче |
+| POST | /tasks/ | Добавляет новую задачу в список |
+| PUT | /tasks/{id} | Обновляет информацию о конкретной задаче |
+| DELETE | /tasks/{id} | Удаляет конкретную задачу |
+
+---
+TaskType
+---
+Различные типы задач
+
+```json
+{
+  "id":1,
+  "name":"Наименование типа задачи",
+  "description":"Описание типа задачи",
+  "trelloId":"Id соответствующего листа в трелло"
+}
+```
 
 | Метод | Путь | Описание |
 | ----  | ---- | ----  |
+| GET  | /taskTypes/ | Получить список всех типов задач  |
+| GET  | /taskTypes/{id} | Получить данные типа задачи с id  |
+| POST  | /taskTypes/ | Создать новый тип задачи  |
+| PUT  | /taskTypes/{id} | Обновить тип задачи с id |
+| DELETE  | /taskTypes/{id} | Удалить тип задачи с id  |
+
+---
+ACTIONS
+---
+
+---
+Trello
+---
+Это не объекты, а операции которые выполняются с трелло
+GET /trello/tasks - Список задач в трелло
+GET /trello/interests - Список интересов в трелло
+
+| Метод | Путь | Описание |
+| ----  | ---- | ----  |
+|*Заросы*||
+| GET | /trello/tasks | Список задач из Трелло |
+| GET | /trello/interests | Список интересов из Трелло |
 |*Импорт*||
 | POST | /trello/import | Импорт типов интересов и интересов из Трелло |
 | POST | /trello/import/interestTypes | Импорт типов интересов из Трелло |
 | POST | /trello/import/interestTypes/{id} | Обновление значений типа интереса из Трелло |
 | POST | /trello/import/interests | Импорт интересов из Трелло |
 | POST | /trello/import/interests/{id} | Обновление интереса из Трелло |
+| POST | /trello/import/taskTypes | Импорт типов задач из Трелло |
+| POST | /trello/import/taskTypes/{id} | Обновление значений типа задачи из Трелло |
+| POST | /trello/import/tasks | Импорт задач из Трелло |
+| POST | /trello/import/tasks/{id} | Обновление задачи из Трелло |
 |*Экспорт*||
 | POST | /trello/export | Экспорт типов интересов и интересов в Трелло |
 | POST | /trello/export/interestTypes | Экспорт типов интересов в Трелло |
 | POST | /trello/export/interestTypes/{id} | Обновление значений типа интереса в Трелло |
 | POST | /trello/export/interests | Экспорт интересов в Трелло |
 | POST | /trello/export/interests/{id} | Обновление интереса в Трелло |
+| POST | /trello/export/taskTypes | Экспорт типов задач в Трелло |
+| POST | /trello/export/taskTypes/{id} | Обновление значений типа задачи в Трелло |
+| POST | /trello/export/tasks | Экспорт задачи в Трелло |
+| POST | /trello/export/tasks/{id} | Обновление задачи в Трелло |
+
+Habitica
+---
+Это не объекты, а операции которые выполняются с трелло
+
+| Метод | Путь | Описание |
+| ----  | ---- | ----  |
+|*Заросы*||
+| GET | /habitica/tasks | Список задач полученных из Хабитики|
+| GET | /habitica/trello/tasks | Список задач полученных из хабитики, но данные берутся по данным треллоИд из внутренней базы|
+|*Экспорт*||
+| POST | /habitica/export/tasks | Экспортировать в хабитику все синхронизируемые таски |
+| POST | /habitica/export/tasks/{id} | Экспортировать в хабитику конкретный таск |
 
 Divine
 ---
@@ -89,271 +191,26 @@ Divine
 | POST | /divine/drop/{id} | Удаление текущего интереса и выбор нового случайного интереса для конкретного типа (id)|
 
 ---
-Task
+HOOKS 
 ---
 
+---
+Trello Hook
+---
+Хук для отлова событий трелло
 
-#Trello Card <-> DivineTask
+| Метод | Путь | Описание |
+| ----  | ---- | ----  |
+| POST  | /trello_hook/test | Ловит хуки с трелло  |
 
-```json
-//Запрос
-// /cards/:id
-{
-  "id": Task.trelloId,
-  "closed": Task.type == Closed.type,
-  "dueComplete": Task.dueDate > Date.today && Task.Type == Closed.type,
-  "desc": Task.description"[special]("Task.special")",
-  "due": Task.dueDate,
-  "idChecklists": [
-    // доп запрос 
-    // /cards/:id/checklists
-      {
-        "id": Task.checklists[n].trelloId,
-        "name": Task.checklists[n].name
-        "checkItems": [
-          {
-            "state": Task.checklists[n].checklistItems[k].checked ?"complete":"incomplete",
-            "id": Task.checklists[n].checklistItems[k].trelloId,
-            "name": Task.checklists[n].checklistItems[k].name"["Task.checklists[n].checklistItems[k].duration"]",
-            "pos": Task.checklists[n].checklistItems[k].pos
-          }]
-    }
-  ],
-  "idList": Task.type.trelloId,
-  "idAttachmentCover":{
-    // доп запрос 
-    // /cards/:id/attachments/:idAttachmentCover
-    "id": "59e6f59e46812311f8783a82",
-    "url": Task.img
+---
+Habitica Hook
+---
+Хук для отлова событий хабитики
 
-  },
-   "idLabels": [
-    Task.important? idLabels.consist(IMPORTANT_LABEL):idLabels.consist(NOT_IMPORTANT_LABEL)
-    Task.urgent? idLabels.consist(URGENT_LABEL):idLabels.consist(NOT_URGENT_LABEL)
-    Task.Attribute? idLabels.consist(ATTRIBUTE_LABEL)
-  ],
-  //Чтобы в качестве обложки выбирался тот аттачмент который нужен
-  "manualCoverAttachment": true,
-  "name":Task.name + "["Task.duration"]"
-}
-}
-```
-
-#Habitica Task <-> DivineTask
-
-============================================================
-DAILY
-============================================================
-```json
-{
-            "userId": "userid",
-            "alias": Task.trelloId,
-            "text":"{"task.duration"}" " task.checklist[0].{firstNotCompleteItem}?task.checklist[0].{firstNotCompleteItem}" ["Task.name"]":Task.Name,
-            "attribute": Task.attribute,
-            "priority": 1,
-            "value": 0,
-            "tags": [
-              Task.Type? TYPE_TAG
-              Task.Urgent? URGENT_TAG
-              Task.Important? IMPORTANT_TAG
-            ],
-            "notes": task.checklist? "!["Task.description"(http://progressed.io/bar/task.checklist[0].{completeCount}?scale=task.checklist[0].{count}&suffix=+)":Task.description
-            "type": Task.type.Daily,
-            "completed": false,
-            "repeat": {
-                "su": true,
-                "s": false,
-                "f": false,
-                "th": true,
-                "w": true,
-                "t": true,
-                "m": true
-            },
-            "id": "597b4880-041c-4774-bf8b-9d75c7263ded"
-}
-```
-============================================================
-HABIT
-============================================================
-```json
-{
-            "userId": "userId",
-            "alias": Task.trelloId,
-            "text":"{"task.duration"}" " task.checklist[0].{firstNotCompleteItem}?task.checklist[0].{firstNotCompleteItem}" ["Task.name"]":Task.Name,
-            "attribute": Task.attribute,
-            "priority": 1,
-            "value": 0,
-            "tags": [
-              Task.Type? TYPE_TAG
-              Task.Urgent? URGENT_TAG
-              Task.Important? IMPORTANT_TAG
-            ],
-            "notes": task.checklist? "!["Task.description"(http://progressed.io/bar/task.checklist[0].{completeCount}?scale=task.checklist[0].{count}&suffix=+)":Task.description
-            "type": Task.Type.Habit,
-            "frequency": "daily",
-            "id": "a08e462f-f780-4b17-8b0a-bededd41efc3"
-}
-```
-============================================================
-TODO
-============================================================
-```json
-{
-            "userId": "userId",
-            "alias": Task.trelloId,
-            "text":"{"task.duration"}" " task.checklist[0].{firstNotCompleteItem}?task.checklist[0].{firstNotCompleteItem}" ["Task.name"]":Task.Name,
-            "date": Task.dueDate,
-            "attribute": Task.attribute,
-            "priority": 1,
-            "value": 0,
-            "tags": [
-              Task.Type? TYPE_TAG
-              Task.Urgent? URGENT_TAG
-              Task.Important? IMPORTANT_TAG
-            ],
-            "notes": task.checklist? "!["Task.description"(http://progressed.io/bar/task.checklist[0].{completeCount}?scale=task.checklist[0].{count}&suffix=+)":Task.description
-            "type": Task.Type.Todo,
-            "completed": false,
-            "id": "62be05e6-c68c-486c-9624-cb8ca8fd6f3d"
-}
-```
-
-
-Все запросы 
-
-POST /divine/mix/:id  - Перемешать интересы
-POST /divine/complete/:id  - Завершить интерес
-POST /divine/refer/:id  - Отложить интерес
-POST /divine/drop/:id  - Отбросить интерес
-
-GET /habitica/tasks - Список задач полученных из Хабитики
-GET /habitica/trello/tasks - Список задач полученных из хабитики, но данные берутся по данным треллоИд из внутренней базы
-POST /habitica/tasks/:id - Экспортировать в хабитику конкретный таск
-POST /habitica/epxort/tasks - Экспортировать в хабитику все синхронизируемые таски
-
-GET /interests - Получить список интересов в системе
-GET /interests/:id - Получить интерес
-GET /interests/current - Получить список активных интересов в системе
-POST /interests - Добавить ноый интерес
-PUT /interests/:id - Обновить интерес
-DELETE /interests/:id - Удалить интерес
-
-GET /interestsTypes - Получить список типов интересов в системе
-GET /interestTypes/:id - Получить тип интереса
-POST /interestTypes - Добавить ноый тип интереса
-PUT /interestTypes/:id - Обновить тип интереса
-DELETE /interestTypes/:id - Удалить тип интереса
-
-GET /tasks - Получить список задач в системе
-GET /tasks/:id - Получить задачу
-POST /tasks - Добавить новую задачу
-PUT /tasks/:id - Обновить задачу
-DELETE /tasks/:id - Удалить задачу
-
-GET /taskTypes - Получить список Типов задач в системе
-GET /taskTypes/:id - Получить тип задачи
-POST /taskTypes - Добавить новый Тип задач
-PUT /taskTypes/:id - Обновить Тип задачи
-DELETE /taskTypes/:id - Удалить Тип задачи
- 
-POST /trello_hook/test  - Хук для трелло
-
-POST /habitica_hook/test  - Хук для хабитики
-
-POST /trello/import - Выполнить все операции импорта из трелло
-POST /trello/import/interestTypes - Импортировать все возможные типы интересов
-POST /trello/import/interestTypes/:id - обновить тип интереса из трелло
-POST /trello/import/interests - Импортировать все интересы из трелло
-POST /trello/import/interests/:id - Обновить интерес из трелло
-POST /trello/import/taskTypes - Импортировать все типы задач из трелло
-POST /trello/import/taskTypes/:id - Обновить тип задачи из трелло
-POST /trello/import/tasks - Импортировать все задачи из трелло
-POST /trello/import/tasks/:id - Обновить задачу из трелло
-
-POST /trello/export - выполнить все операции экспорта
-POST /trello/export/interestTypes - Экспортировать все типы интереса в трелло
-POST /trello/export/interestTypes/:id - 
-POST /trello/export/interests- Импортировать выполнить все операции импорта из трелло
-POST /trello/export/interests/:id - Импортировать выполнить все операции импорта из трелло
-
-
-======================================================================================================================
-Все запросы 
-
-_________
-ACTIONS
-_________
-
-POST /divine/mix/:id  - Перемешать интересы
-POST /divine/complete/:id  - Завершить интерес
-POST /divine/refer/:id  - Отложить интерес
-POST /divine/drop/:id  - Отбросить интерес
-
-POST /habitica/epxort/tasks - Экспортировать в хабитику все синхронизируемые таски
-POST /habitica/epxort/tasks/:id - Экспортировать в хабитику все синхронизируемые таски
-GET /habitica/tasks - Список задач в хабитике
-
-GET /trello/tasks - Список задач в трелло
-GET /trello/interests - Список интересов в трелло
-POST /trello/import - Выполнить все операции импорта из трелло
-POST /trello/import/interestTypes - Импортировать все возможные типы интересов
-POST /trello/import/interestTypes/:id - обновить тип интереса из трелло
-POST /trello/import/interests - Импортировать все интересы из трелло
-POST /trello/import/interests/:id - Обновить интерес из трелло
-POST /trello/import/taskTypes - Импортировать все типы задач из трелло
-POST /trello/import/taskTypes/:id - Обновить тип задачи из трелло
-POST /trello/import/tasks - Импортировать все задачи из трелло
-POST /trello/import/tasks/:id - Обновить задачу из трелло
-POST /trello/export - выполнить все операции экспорта
-POST /trello/export/interestTypes - Экспортировать все типы интереса в трелло
-POST /trello/export/interestTypes/:id -  Экспортировать тип Интереса в трелло
-POST /trello/export/interests- Импортировать выполнить все операции импорта из трелло
-POST /trello/export/interests/:id - Импортировать выполнить все операции импорта из трелло
-POST /trello/export/taskTypes - Экспортировать все типы задач в трелло
-POST /trello/export/taskTypes/:id -  Экспорт типа задач в трелло
-POST /trello/export/tasks- Импортировать выполнить все операции импорта из трелло
-POST /trello/export/tasks/:id - Импортировать выполнить все операции импорта из трелло
-
-_________
-HOOKS 
-_________
-
-POST /trello_hook/test  - Хук для трелло
-
-POST /habitica_hook/test  - Хук для хабитики
-
-_________
-REST
-_________
-
-GET /interests - Получить список интересов в системе
-GET /interests/:id - Получить интерес
-POST /interests - Добавить ноый интерес
-PUT /interests/:id - Обновить интерес
-DELETE /interests/:id - Удалить интерес
-GET /interests/current - Получить список активных интересов в системе
-
-GET /interestsTypes - Получить список типов интересов в системе
-GET /interestTypes/:id - Получить тип интереса
-POST /interestTypes - Добавить ноый тип интереса
-PUT /interestTypes/:id - Обновить тип интереса
-DELETE /interestTypes/:id - Удалить тип интереса
-
-GET /tasks - Получить список задач в системе
-GET /tasks/:id - Получить задачу
-POST /tasks - Добавить новую задачу
-PUT /tasks/:id - Обновить задачу
-DELETE /tasks/:id - Удалить задачу
-
-GET /taskTypes - Получить список Типов задач в системе
-GET /taskTypes/:id - Получить тип задачи
-POST /taskTypes - Добавить новый Тип задач
-PUT /taskTypes/:id - Обновить Тип задачи
-DELETE /taskTypes/:id - Удалить Тип задачи
- 
-
-
-
+| Метод | Путь | Описание |
+| ----  | ---- | ----  |
+| POST  | /habitica_hook/test | Ловит хуки с хабитики  |
 
 
 

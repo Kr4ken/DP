@@ -1,6 +1,5 @@
 package com.kr4ken.dp.controllers;
 
-import com.kr4ken.dp.models.entity.Task;
 import com.kr4ken.dp.models.hooks.TrelloHook;
 import com.kr4ken.dp.models.repository.TaskRepository;
 import com.kr4ken.dp.services.intf.DivineService;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 /**
  * Контроллер отвечающий за обработку хуков с Трелло
@@ -27,7 +24,7 @@ public class TrelloHookController {
 
     @Autowired
     TrelloHookController(DivineService divineService,
-                          TaskRepository taskRepository) {
+                         TaskRepository taskRepository) {
         this.divineService = divineService;
         this.taskRepository = taskRepository;
     }
@@ -46,7 +43,7 @@ public class TrelloHookController {
 //        Пусть для всех типов Действий синхронизирует
         if (hook.getAction().getData().getCard() != null) {
             divineService.updateFromTrello(hook.getAction().getData().getCard().getId());
-            }
+        }
         return ResponseEntity.ok(HttpEntity.EMPTY);
     }
 }
