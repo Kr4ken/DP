@@ -1,5 +1,7 @@
-package com.kr4ken.dp.models;
+package com.kr4ken.dp.models.repository;
 
+import com.kr4ken.dp.models.entity.Interest;
+import com.kr4ken.dp.models.entity.InterestType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
@@ -11,5 +13,6 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
     Optional<Interest> findByTrelloId(String trelloId);
     Collection<Interest> findByTypeOrderByOrd(InterestType interestType);
     Collection<Interest> findAllByOrderByOrd();
+    Optional<Interest> findFirstByTypeOrderByOrd(InterestType interestType);
 }
 

@@ -87,4 +87,5 @@ fabric.properties
 *.ipr
 **/*.properties
 
+/backend/build
 

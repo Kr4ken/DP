@@ -305,11 +305,34 @@ public class TrelloImpl implements Trello {
     }
 
     @Override
-    public void createCheckItem(String checkListId, CheckItem checkItem)
+    public CheckItem createCheckItem(String checkListId, CheckItem checkItem)
     {
-        postForLocation(createUrl(ADD_CHECKITEMS_TO_CHECKLIST).asString(), checkItem, checkListId);
+        CheckItem result = postForObject(createUrl(ADD_CHECKITEMS_TO_CHECKLIST).asString(), checkItem,CheckItem.class,checkListId);
+        return result;
     }
 
+    @Override
+    public CheckItem updateCheckItem(String cardId, CheckItem checkItem) {
+        CheckItem result = put(createUrl(UPDATE_CHECK_ITEM).asString(), checkItem,CheckItem.class,cardId,checkItem.getId());
+        return result;
+    }
+
+    @Override
+    public CheckList updateCheckList(String checkListId, CheckList checkList) {
+        CheckList result = put(createUrl(UPDATE_CHECK_ITEM).asString(), checkList,CheckList.class,checkListId);
+        return result;
+    }
+
+    @Override
+    public void deleteCheckList(String checklistId) {
+        delete(createUrl(DELETE_CHECK_LIST).asString(),checklistId);
+
+    }
+
+    @Override
+    public void deleteCheckItem(String checklistId, String checkItemId) {
+        delete(createUrl(DELETE_CHECK_ITEM).asString(),checklistId,checkItemId);
+    }
 
     /* Others */
 

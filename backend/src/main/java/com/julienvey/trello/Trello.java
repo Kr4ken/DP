@@ -86,7 +86,17 @@ public interface Trello {
 
     CheckList createCheckList(String cardId, CheckList checkList);
 
-    void createCheckItem(String checkListId, CheckItem checkItem);
+//    void createCheckItem(String checkListId, CheckItem checkItem);
+
+    CheckItem createCheckItem(String checkListId, CheckItem checkItem);
+
+    CheckItem updateCheckItem(String cardId,CheckItem checkItem);
+
+    CheckList updateCheckList(String checkListId,CheckList checkList);
+
+    void deleteCheckList(String checklistId);
+
+    void deleteCheckItem(String checklistId,String checkItemId);
 
     /////////////////
 
